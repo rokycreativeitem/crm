@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Http\Request;
-echo 443;
+
 define('LARAVEL_START', microtime(true));
 
 // Determine if the application is in maintenance mode...
