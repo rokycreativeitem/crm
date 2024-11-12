@@ -1,19 +1,24 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\GanttChartController;
 use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MilestoneController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(function () {
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::controller(ProjectController::class)->group(function () {
@@ -74,6 +79,7 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::get('user/delete/{id}', 'delete')->name('user.delete');
         Route::get('user/edit/{id}', 'edit')->name('user.edit');
         Route::post('user/update/{id}', 'update')->name('user.update');
+        Route::post('user/multi-delete', 'multiDelete')->name('user.multi-delete');
 
     });
 
@@ -87,6 +93,26 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::post('meeting/multi-delete', 'multiDelete')->name('meeting.multi-delete');
         Route::get('meeting/join/{id}', 'join')->name('meeting.join');
 
+    });
+
+    Route::controller(PaymentController::class)->group(function () {
+        Route::get('invoice', 'index')->name('invoice');
+        Route::get('invoice/create', 'create')->name('invoice.create');
+        Route::post('invoice/store', 'store')->name('invoice.store');
+        Route::get('invoice/delete/{id}', 'delete')->name('invoice.delete');
+        Route::get('invoice/edit/{id}', 'edit')->name('invoice.edit');
+        Route::post('invoice/update/{id}', 'update')->name('invoice.update');
+        Route::post('invoice/multi-delete', 'multiDelete')->name('invoice.multi-delete');
+    });
+
+    Route::controller(TimesheetController::class)->group(function () {
+        Route::get('timesheet', 'index')->name('timesheet');
+        Route::get('timesheet/create', 'create')->name('timesheet.create');
+        Route::post('timesheet/store', 'store')->name('timesheet.store');
+        Route::get('timesheet/delete/{id}', 'delete')->name('timesheet.delete');
+        Route::get('timesheet/edit/{id}', 'edit')->name('timesheet.edit');
+        Route::post('timesheet/update/{id}', 'update')->name('timesheet.update');
+        Route::post('timesheet/multi-delete', 'multiDelete')->name('timesheet.multi-delete');
     });
 
     // manage roles
@@ -116,6 +142,28 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
     // assign permission
     Route::controller(RolePermissionController::class)->group(function () {
         Route::post('assign/permissions/store/{role_id}/{permission_id}', 'store')->name('store.permissions');
+    });
+
+    Route::controller(EventController::class)->group(function () {
+        Route::get('events', 'index')->name('events');
+        Route::get('event/create', 'create')->name('event.create');
+        Route::post('event/store', 'store')->name('event.store');
+        Route::get('event/delete/{id}', 'delete')->name('event.delete');
+        Route::get('event/edit/', 'edit')->name('event.edit');
+        Route::post('event/update/{id}', 'update')->name('event.update');
+
+    });
+
+    Route::controller(MessageController::class)->group(function () {
+        Route::post('message/store', 'store')->name('message.store');
+        Route::post('message/thread/store', 'thread_store')->name('message.thread.store');
+        Route::get('message/{message_thread?}', 'message')->name('message');
+        Route::get('message/start/new', 'message_new')->name('message.message_new');
+        Route::get('message/message_left_side_bar', 'message_left_side_bar')->name('message.message_left_side_bar');
+    });
+
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('reports', 'index')->name('reports');
     });
 
 });

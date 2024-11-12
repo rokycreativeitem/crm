@@ -25,7 +25,7 @@ class RoleController extends Controller
 
         Role::insert($role);
         return response()->json([
-            'success' => 'Product has been updated.',
+            'success' => 'Role has been updated.',
         ]);
     }
 

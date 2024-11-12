@@ -198,14 +198,13 @@
             });
 
             // Handle multi-deletion
-            $('#delete-selected').click(function() {
+            $(document).on('click', '#delete-selected', function() {
                 const selectedIds = $('.checkbox-item:checked').map(function() {
                     return $(this).closest('tr').data('id');
                 }).get();
 
                 if (selectedIds.length > 0) {
-                    multiDelete("{{ route(get_current_user_role() . '.timesheet.multi-delete') }}",
-                        selectedIds);
+                    multiDelete("{{ route(get_current_user_role() . '.timesheet.multi-delete') }}", selectedIds);
                     $('#delete-selected').addClass('d-none');
                 } else {
                     alert('Please select at least one file to delete.');
