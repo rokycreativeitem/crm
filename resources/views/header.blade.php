@@ -142,7 +142,7 @@
                     </div>
                     <div>
                         <h6 class="title fs-12px mb-2px">{{ $my_data->name }}</h6>
-                        <p class="sub-title fs-12px">{{ get_current_user_role() }}</p>
+                        <p class="sub-title fs-12px">Admin</p>
                     </div>
                 </div>
                 <ul class="mb-12px pb-12px ol-border-bottom-2">

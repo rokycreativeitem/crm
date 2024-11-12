@@ -24,7 +24,7 @@ class AdminMiddleware
 
         $role = Role::where('id', $user_role)->first();
         if ($role->title != 'admin') {
-            return redirect()->back();
+            dd('admin middleware');
         }
 
         return $next($request);

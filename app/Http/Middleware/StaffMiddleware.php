@@ -19,7 +19,7 @@ class StaffMiddleware
     {
         $role = Role::where('id', Auth::user()->role_id)->first();
         if ($role->title != 'staff') {
-            return redirect()->back();
+            dd('staff middleware');
         }
         return $next($request);
     }

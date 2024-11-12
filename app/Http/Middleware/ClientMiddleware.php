@@ -19,7 +19,7 @@ class ClientMiddleware
     {
         $role = Role::where('id', Auth::user()->role_id)->first();
         if ($role->title != 'client') {
-            return redirect()->back();
+            dd('client middleware');
         }
         return $next($request);
     }
