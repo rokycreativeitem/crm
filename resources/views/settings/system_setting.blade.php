@@ -1,0 +1,97 @@
+@extends('layouts.admin')
+@push('title', get_phrase('System setting'))
+
+@section('content')
+    <!-- Mani section header and breadcrumb -->
+    <div class="ol-card radius-8px">
+        <div class="ol-card-body my-3 py-4 px-20px">
+            <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
+                <h4 class="title fs-16px">
+                    <i class="fi-rr-settings-sliders me-2"></i>
+                    {{ get_phrase('System Settings') }}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-7">
+            <div class="ol-card p-4">
+                <div class="ol-card-body">
+                    <div class="col-lg-12">
+                        <form class="required-form" action="{{ route('admin.system_settings.update') }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="system_name">{{ get_phrase('Website name') }}<span>*</span></label>
+                                <input type="text" name = "system_name" id = "system_name" class="form-control ol-form-control" value="{{ get_settings('system_name') }}" required>
+                            </div>
+
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="system_title">{{ get_phrase('Website title') }}<span>*</span></label>
+                                <input type="text" name = "system_title" id = "system_title" class="form-control ol-form-control" value="{{ get_settings('system_title') }}" required>
+                            </div>
+
+                            <div class="fpb-7 mb-3">
+                                <label for="website_keywords" class="form-label ol-form-label">{{ get_phrase('Website keywords') }}</label>
+                                <input type="text" class="form-control ol-form-control bootstrap-tag-input" id = "website_keywords" name="website_keywords" data-role="tagsinput" style="width: 100%;" value="{{ get_settings('website_keywords') }}" />
+                            </div>
+
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="website_description">{{ get_phrase('Website description') }}</label>
+                                <textarea name="website_description" id = "website_description" class="form-control ol-form-control" rows="5">{{ get_settings('website_description') }}</textarea>
+                            </div>
+
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="author">{{ get_phrase('Author') }}</label>
+                                <input type="text" name = "author" id = "author" class="form-control ol-form-control" value="{{ get_settings('author') }}">
+                            </div>
+
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="slogan">{{ get_phrase('Slogan') }}<span>*</span></label>
+                                <input type="text" name = "slogan" id = "slogan" class="form-control ol-form-control" value="{{ get_settings('slogan') }}" required>
+                            </div>
+
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="system_email">{{ get_phrase('System email') }}<span>*</span></label>
+                                <input type="text" name = "system_email" id = "system_email" class="form-control ol-form-control" value="{{ get_settings('system_email') }}" required>
+                            </div>
+
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="address">{{ get_phrase('Address') }}</label>
+                                <textarea name="address" id = "address" class="form-control ol-form-control" rows="5">{{ get_settings('address') }}</textarea>
+                            </div>
+
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="phone">{{ get_phrase('Phone') }}</label>
+                                <input type="text" name = "phone" id = "phone" class="form-control ol-form-control" value="{{ get_settings('phone') }}">
+                            </div>
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="language">{{ get_phrase('System language') }}</label>
+                                <select class="form-control ol-form-control select2" data-toggle="select2" name="language" id="language">
+                                    <option value="english" @if (get_settings('language') == 'english') selected @endif>
+                                        {{ get_phrase('English') }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="footer_text">{{ get_phrase('Footer text') }}</label>
+                                <input type="text" name = "footer_text" id = "footer_text" class="form-control ol-form-control" value="{{ get_settings('footer_text') }}">
+                            </div>
+
+                            <div class="fpb-7 mb-3">
+                                <label class="form-label ol-form-label" for="footer_link">{{ get_phrase('Footer link') }}</label>
+                                <input type="text" name = "footer_link" id = "footer_link" class="form-control ol-form-control" value="{{ get_settings('footer_link') }}">
+                            </div>
+
+                            <button type="submit" class="btn ol-btn-primary" onclick="checkRequiredFields()">{{ get_phrase('Save Changes') }}</button>
+                        </form>
+
+
+                    </div>
+                </div> <!-- end card body-->
+            </div> <!-- end card -->
+        </div><!-- end col-->
+    </div>
+@endsection
+@push('js')@endpush
+@include('ajax')

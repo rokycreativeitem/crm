@@ -13,9 +13,11 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
+use App\Models\Updater;
 use Illuminate\Support\Facades\Route;
 
 Route::view('demo', 'demo');
@@ -166,6 +168,30 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     Route::controller(ReportController::class)->group(function () {
         Route::get('reports', 'index')->name('reports');
+    });
+
+    Route::controller(SettingsController::class)->group(function () {
+        Route::get('system_settings', 'system_settings')->name('system_settings');
+        Route::post('system_settings/update', 'system_settings_update')->name('system_settings.update');
+
+        Route::get('payment_settings', 'payment_settings')->name('payment_settings');
+        Route::post('payment_settings/update', 'payment_settings_update')->name('payment_settings.update');
+
+        Route::get('notification_settings', 'notification_settings')->name('notification_settings');
+        Route::any('notification_settings/store/{param1}/{id?}', 'notification_settings_store')->name('notification_settings.store');
+
+        Route::get('manage_language', 'manage_language')->name('manage_language');
+        Route::post('language/store', 'language_store')->name('language.store');
+        Route::post('language/direction/update', 'language_direction_update')->name('language.direction.update');
+        Route::post('language/import', 'language_import')->name('language.import');
+        Route::get('language/delete/{id}', 'language_delete')->name('language.delete');
+
+        Route::get('language/phrase/edit/{lan_id}', 'edit_phrase')->name('language.phrase.edit');
+        Route::post('language/phrase/update/{phrase_id?}', 'update_phrase')->name('language.phrase.update');
+        Route::get('language/phrase/import/{lan_id}', 'phrase_import')->name('language.phrase.import');
+
+        Route::get('about', 'about')->name('about');
+        Route::any('save_valid_purchase_code/{action_type?}', 'save_valid_purchase_code')->name('save_valid_purchase_code');
     });
 
 });
