@@ -716,7 +716,7 @@ class PendingRequest
     /**
      * Throw an exception if a server or client error occurred and the given condition evaluates to false.
      *
-     * @param  bool  $condition
+     * @param  callable|bool  $condition
      * @return $this
      */
     public function throwUnless($condition)
@@ -939,8 +939,11 @@ class PendingRequest
                 });
             } catch (ConnectException $e) {
                 $exception = new ConnectionException($e->getMessage(), 0, $e);
+                $request = new Request($e->getRequest());
 
-                $this->dispatchConnectionFailedEvent(new Request($e->getRequest()), $exception);
+                $this->factory->recordRequestResponsePair($request, null);
+
+                $this->dispatchConnectionFailedEvent($request, $exception);
 
                 throw $exception;
             }
@@ -1029,7 +1032,7 @@ class PendingRequest
                 });
             })
             ->otherwise(function (OutOfBoundsException|TransferException $e) {
-                if ($e instanceof ConnectException) {
+                if ($e instanceof ConnectException || ($e instanceof RequestException && ! $e->hasResponse())) {
                     $exception = new ConnectionException($e->getMessage(), 0, $e);
 
                     $this->dispatchConnectionFailedEvent(new Request($e->getRequest()), $exception);
@@ -1265,12 +1268,11 @@ class PendingRequest
     public function pushHandlers($handlerStack)
     {
         return tap($handlerStack, function ($stack) {
-            $stack->push($this->buildBeforeSendingHandler());
-
             $this->middleware->each(function ($middleware) use ($stack) {
                 $stack->push($middleware);
             });
 
+            $stack->push($this->buildBeforeSendingHandler());
             $stack->push($this->buildRecorderHandler());
             $stack->push($this->buildStubHandler());
         });
