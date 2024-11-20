@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\FileUploader;
-use App\Models\Project;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -108,15 +107,13 @@ class UserController extends Controller
 
     public function multiDelete(Request $request)
     {
-        $ids = $request->ids;
-        // $model = ucwords($request->type);
-        $model = 'App\\Models\\' . ucwords($request->type);
-        if (is_array($ids)) {
-            foreach($ids as $id) {
-                $model::where('id', $id)->delete();
-            }
-            return response()->json(['success' => get_phrase(ucwords($request->type).' '."deleted successfully!")]);
+        $ids = $request->input('data');
+
+        if (!empty($ids)) {
+            User::whereIn('id', $ids)->delete();
+            return response()->json(['success' => 'Users deleted successfully!']);
         }
-        return response()->json(['error' => get_phrase('No users selected for deletion.')], 400);
+
+        return response()->json(['error' => 'No users selected for deletion.'], 400);
     }
 }

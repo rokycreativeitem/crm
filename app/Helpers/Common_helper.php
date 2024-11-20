@@ -6,27 +6,11 @@ use App\Models\Role;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 if (!function_exists('get_phrase')) {
     function get_phrase($phrase)
     {
         return $phrase;
-    }
-}
-
-if (!function_exists('currency')) {
-    function currency($price = "")
-    {
-        // $currency_position = DB::table('system_settings')->where('key', 'currency_position')->value('value');
-        // $code = DB::table('system_settings')->where('key', 'system_currency')->value('value');
-        $symbol = DB::table('currencies')->where('id', 2)->value('symbol');
-        $currency_position = 'left';
-        if($currency_position == 'left'){
-            return $symbol.''.$price;
-        } else {
-            return $price.''.$symbol;
-        }
     }
 }
 

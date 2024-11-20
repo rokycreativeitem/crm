@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('demo', 'demo');
 
-
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -33,7 +32,6 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::post('project/update/{code}', 'update')->name('project.update');
         Route::get('project/{code}/{tab?}', 'show')->name('project.details');
         Route::post('project/multi-delete', 'multiDelete')->name('project.multi-delete');
-
 
     });
 

@@ -1,5 +1,3 @@
-<!-- jQuery -->
-<script type="text/javascript" src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
 <script>
     "use strict";
     $(document).ready(function() {
