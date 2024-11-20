@@ -4,7 +4,7 @@
 @push('css')@endpush
 
 @section('content')
-    <div class="ol-card radius-8px print-d-none">
+    {{-- <div class="ol-card radius-8px print-d-none">
         <div class="ol-card-body my-3 py-3 px-20px">
             <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
                 <h4 class="title fs-16px">
@@ -75,7 +75,7 @@
             </div>
 
         </div>
-    </div>
+    </div> --}}
 
 
     <!-- Start Admin area -->
@@ -198,19 +198,19 @@
             });
 
             // Handle multi-deletion
-            $('#delete-selected').click(function() {
-                const selectedIds = $('.checkbox-item:checked').map(function() {
-                    return $(this).closest('tr').data('code');
-                }).get();
+            // $('#delete-selected').click(function() {
+            //     const selectedIds = $('.checkbox-item:checked').map(function() {
+            //         return $(this).closest('tr').data('code');
+            //     }).get();
 
-                if (selectedIds.length > 0) {
-                    multiDelete("{{ route(get_current_user_role() . '.project.multi-delete') }}",
-                        selectedIds);
-                    $('#delete-selected').addClass('d-none');
-                } else {
-                    alert('Please select at least one file to delete.');
-                }
-            });
+            //     if (selectedIds.length > 0) {
+            //         multiDelete("{{ route(get_current_user_role() . '.project.multi-delete') }}",
+            //             selectedIds);
+            //         $('#delete-selected').addClass('d-none');
+            //     } else {
+            //         alert('Please select at least one file to delete.');
+            //     }
+            // });
         });
     </script>
 @endpush
