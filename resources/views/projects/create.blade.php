@@ -10,7 +10,6 @@
                     <div class="fpb-7 mb-3">
                         <label class="form-label ol-form-label">{{ get_phrase('Select Client') }}</label>
                         <select class="form-control ol-form-control ol-select2" data-toggle="select2" name="client_id" required>
-                            <option value="">{{ get_phrase('Select a client') }}</option>
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">{{ $client->name }}</option>
                             @endforeach

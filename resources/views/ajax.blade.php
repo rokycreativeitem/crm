@@ -12,7 +12,7 @@
         $("#ajaxForm").validate({
             rules: {
                 title: {
-                    required: true,
+
                     minlength: 4
                 },
                 customField: {
