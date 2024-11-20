@@ -262,16 +262,9 @@
             error(response.error)
         }
 
-        if (response.loadScript) {
-            alert(response.loadScript)
-        }
-
         if (response.validationError) {
             error(JSON.stringify(response.validationError))
         }
-
-        const selector = response.loadTable ?? 'table.table';
-        $(selector).load(location.href + ' ' + selector)
     }
 
     // When the "Select All" checkbox is changed

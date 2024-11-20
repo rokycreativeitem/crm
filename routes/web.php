@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->middleware('redirect');
@@ -18,6 +19,8 @@ Route::middleware('auth')->group(function () {
     // Route::get('/settings/project_modules_list/{id}', [AdminController::class, 'settings_project_modules_list'] )->name('admin.settings.product.modules.list');
 
 });
+
+Route::get('server-side-datatable', [ProjectController::class, 'server_side_table'])->name('server.side.datatable');
 
 Route::middleware('check.permission')->group(function () {
     Route::get('check-access', function () {
