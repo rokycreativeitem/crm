@@ -15,7 +15,7 @@ class Repository implements ArrayAccess, ConfigContract
     /**
      * All of the configuration items.
      *
-     * @var array<string,mixed>
+     * @var array
      */
     protected $items = [];
 
@@ -60,8 +60,8 @@ class Repository implements ArrayAccess, ConfigContract
     /**
      * Get many configuration values.
      *
-     * @param  array<string|int,mixed>  $keys
-     * @return array<string,mixed>
+     * @param  array  $keys
+     * @return array
      */
     public function getMany($keys)
     {

@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Milestone;
-use App\Models\Project;
 use App\Models\Role;
 use App\Models\Task;
 use App\Models\User;
@@ -15,17 +14,20 @@ if (!function_exists('get_phrase')) {
     }
 }
 
-if (!function_exists('currency')) {
-    function currency($price = "")
+if (!function_exists('get_settings')) {
+    function get_settings($type = "", $return_type = false)
     {
-        // $currency_position = DB::table('system_settings')->where('key', 'currency_position')->value('value');
-        // $code = DB::table('system_settings')->where('key', 'system_currency')->value('value');
-        $symbol = DB::table('currencies')->where('id', 2)->value('symbol');
-        $currency_position = 'left';
-        if($currency_position == 'left'){
-            return $symbol.''.$price;
+        $value = DB::table('settings')->where('type', $type);
+        if ($value->count() > 0) {
+            if ($return_type === true) {
+                return json_decode($value->value('description'), true);
+            } elseif ($return_type === "object") {
+                return json_decode($value->value('description'));
+            } else {
+                return $value->value('description');
+            }
         } else {
-            return $price.''.$symbol;
+            return false;
         }
     }
 }
@@ -39,12 +41,6 @@ if (!function_exists('get_user_role')) {
     }
 }
 
-if (!function_exists('get_current_user_role')) {
-    function get_settings($param)
-    {
-        return $param;
-    }
-}
 if (!function_exists('get_current_user_role')) {
     function get_current_user_role()
     {

@@ -28,7 +28,6 @@ use const E_WARNING;
 use function array_keys;
 use function array_values;
 use function debug_backtrace;
-use function defined;
 use function error_reporting;
 use function restore_error_handler;
 use function set_error_handler;
@@ -44,8 +43,6 @@ use PHPUnit\TextUI\Configuration\SourceFilter;
 use PHPUnit\Util\ExcludeList;
 
 /**
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
- *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
 final class ErrorHandler
@@ -60,7 +57,7 @@ final class ErrorHandler
     private readonly SourceFilter $sourceFilter;
 
     /**
-     * @var ?array{functions: list<non-empty-string>, methods: list<array{className: class-string, methodName: non-empty-string}>}
+     * @psalm-var array{functions: list<non-empty-string>, methods: list<array{className: class-string, methodName: non-empty-string}>}
      */
     private ?array $deprecationTriggers = null;
 
@@ -86,15 +83,6 @@ final class ErrorHandler
             return false;
         }
 
-        /**
-         * E_STRICT is deprecated since PHP 8.4.
-         *
-         * @see https://github.com/sebastianbergmann/phpunit/issues/5956
-         */
-        if (defined('E_STRICT') && $errorNumber === @E_STRICT) {
-            $errorNumber = E_NOTICE;
-        }
-
         $test = Event\Code\TestMethodBuilder::fromCallStack();
 
         $ignoredByBaseline = $this->ignoredByBaseline($errorFile, $errorLine, $errorString);
@@ -102,6 +90,7 @@ final class ErrorHandler
 
         switch ($errorNumber) {
             case E_NOTICE:
+            case E_STRICT:
                 Event\Facade::emitter()->testTriggeredPhpNotice(
                     $test,
                     $errorString,
@@ -164,13 +153,11 @@ final class ErrorHandler
                 break;
 
             case E_USER_DEPRECATED:
-                $deprecationFrame = $this->guessDeprecationFrame();
-
                 Event\Facade::emitter()->testTriggeredDeprecation(
                     $test,
                     $errorString,
-                    $deprecationFrame['file'] ?? $errorFile,
-                    $deprecationFrame['line'] ?? $errorLine,
+                    $errorFile,
+                    $errorLine,
                     $suppressed,
                     $ignoredByBaseline,
                     $ignoredByTest,
@@ -237,7 +224,7 @@ final class ErrorHandler
     }
 
     /**
-     * @param array{functions: list<non-empty-string>, methods: list<array{className: class-string, methodName: non-empty-string}>} $deprecationTriggers
+     * @psalm-param array{functions: list<non-empty-string>, methods: list<array{className: class-string, methodName: non-empty-string}>} $deprecationTriggers
      */
     public function useDeprecationTriggers(array $deprecationTriggers): void
     {
@@ -245,9 +232,9 @@ final class ErrorHandler
     }
 
     /**
-     * @param non-empty-string $file
-     * @param positive-int     $line
-     * @param non-empty-string $description
+     * @psalm-param non-empty-string $file
+     * @psalm-param positive-int $line
+     * @psalm-param non-empty-string $description
      */
     private function ignoredByBaseline(string $file, int $line, string $description): bool
     {
@@ -292,12 +279,12 @@ final class ErrorHandler
         return IssueTrigger::indirect();
     }
 
-    /**
-     * @return list<array{file: string, line: int, class?: string, function?: string, type: string}>
-     */
     private function filteredStackTrace(bool $filterDeprecationTriggers): array
     {
-        $trace = $this->errorStackTrace();
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+
+        // self::filteredStackTrace(), self::trigger(), self::__invoke()
+        unset($trace[0], $trace[1], $trace[2]);
 
         if ($this->deprecationTriggers === null || !$filterDeprecationTriggers) {
             return array_values($trace);
@@ -305,7 +292,9 @@ final class ErrorHandler
 
         foreach (array_keys($trace) as $frame) {
             foreach ($this->deprecationTriggers['functions'] as $function) {
-                if ($this->frameIsFunction($trace[$frame], $function)) {
+                if (!isset($trace[$frame]['class']) &&
+                    isset($trace[$frame]['function']) &&
+                    $trace[$frame]['function'] === $function) {
                     unset($trace[$frame]);
 
                     continue 2;
@@ -313,7 +302,10 @@ final class ErrorHandler
             }
 
             foreach ($this->deprecationTriggers['methods'] as $method) {
-                if ($this->frameIsMethod($trace[$frame], $method)) {
+                if (isset($trace[$frame]['class']) &&
+                    $trace[$frame]['class'] === $method['className'] &&
+                    isset($trace[$frame]['function']) &&
+                    $trace[$frame]['function'] === $method['methodName']) {
                     unset($trace[$frame]);
 
                     continue 2;
@@ -322,70 +314,5 @@ final class ErrorHandler
         }
 
         return array_values($trace);
-    }
-
-    /**
-     * @return ?array{file: non-empty-string, line: positive-int}
-     */
-    private function guessDeprecationFrame(): ?array
-    {
-        if ($this->deprecationTriggers === null) {
-            return null;
-        }
-
-        $trace = $this->errorStackTrace();
-
-        foreach ($trace as $frame) {
-            foreach ($this->deprecationTriggers['functions'] as $function) {
-                if ($this->frameIsFunction($frame, $function)) {
-                    return $frame;
-                }
-            }
-
-            foreach ($this->deprecationTriggers['methods'] as $method) {
-                if ($this->frameIsMethod($frame, $method)) {
-                    return $frame;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @return list<array{file: string, line: int, class?: class-string, function?: string, type: string}>
-     */
-    private function errorStackTrace(): array
-    {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-
-        $i = 0;
-
-        do {
-            unset($trace[$i]);
-        } while (self::class === ($trace[++$i]['class'] ?? null));
-
-        return array_values($trace);
-    }
-
-    /**
-     * @param array{class? : class-string, function?: non-empty-string} $frame
-     * @param non-empty-string                                          $function
-     */
-    private function frameIsFunction(array $frame, string $function): bool
-    {
-        return !isset($frame['class']) && isset($frame['function']) && $frame['function'] === $function;
-    }
-
-    /**
-     * @param array{class? : class-string, function?: non-empty-string}    $frame
-     * @param array{className: class-string, methodName: non-empty-string} $method
-     */
-    private function frameIsMethod(array $frame, array $method): bool
-    {
-        return isset($frame['class']) &&
-            $frame['class'] === $method['className'] &&
-            isset($frame['function']) &&
-            $frame['function'] === $method['methodName'];
     }
 }

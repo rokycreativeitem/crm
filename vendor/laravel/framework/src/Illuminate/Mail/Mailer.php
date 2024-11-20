@@ -408,9 +408,9 @@ class Mailer implements MailerContract, MailQueueContract
      * Add the content to a given message.
      *
      * @param  \Illuminate\Mail\Message  $message
-     * @param  string|null  $view
-     * @param  string|null  $plain
-     * @param  string|null  $raw
+     * @param  string  $view
+     * @param  string  $plain
+     * @param  string  $raw
      * @param  array  $data
      * @return void
      */
@@ -465,7 +465,7 @@ class Mailer implements MailerContract, MailQueueContract
      * Queue a new mail message for sending.
      *
      * @param  \Illuminate\Contracts\Mail\Mailable|string|array  $view
-     * @param  \BackedEnum|string|null  $queue
+     * @param  string|null  $queue
      * @return mixed
      *
      * @throws \InvalidArgumentException
@@ -486,7 +486,7 @@ class Mailer implements MailerContract, MailQueueContract
     /**
      * Queue a new mail message for sending on the given queue.
      *
-     * @param  \BackedEnum|string|null  $queue
+     * @param  string  $queue
      * @param  \Illuminate\Contracts\Mail\Mailable  $view
      * @return mixed
      */

@@ -21,7 +21,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\Middleware\TrustHosts;
 use Illuminate\Http\Middleware\TrustProxies;
-use Illuminate\Queue\Console\WorkCommand;
 use Illuminate\Queue\Queue;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Facade;
@@ -179,7 +178,6 @@ trait InteractsWithTestCaseLifecycle
         TrustProxies::flushState();
         TrustHosts::flushState();
         ValidateCsrfToken::flushState();
-        WorkCommand::flushState();
 
         if ($this->callbackException) {
             throw $this->callbackException;

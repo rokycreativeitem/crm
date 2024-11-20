@@ -100,21 +100,6 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Build a database connection instance from the given configuration.
-     *
-     * @param  array  $config
-     * @return \Illuminate\Database\ConnectionInterface
-     */
-    public function build(array $config)
-    {
-        return $this->connectUsing(
-            $config['name'] ?? 'ondemand',
-            $config,
-            true,
-        );
-    }
-
-    /**
      * Get a database connection instance from the given configuration.
      *
      * @param  string  $name

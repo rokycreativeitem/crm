@@ -611,10 +611,8 @@ trait InteractsWithPivotTable
             return $value->pluck($this->relatedKey)->all();
         }
 
-        if ($value instanceof BaseCollection || is_array($value)) {
-            return collect($value)->map(function ($item) {
-                return $item instanceof Model ? $item->{$this->relatedKey} : $item;
-            })->all();
+        if ($value instanceof BaseCollection) {
+            return $value->toArray();
         }
 
         return (array) $value;

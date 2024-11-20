@@ -10,8 +10,6 @@ use Illuminate\Support\Env;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-use function Laravel\Prompts\password;
-
 #[AsCommand(name: 'env:decrypt')]
 class EnvironmentDecryptCommand extends Command
 {
@@ -64,12 +62,10 @@ class EnvironmentDecryptCommand extends Command
     {
         $key = $this->option('key') ?: Env::get('LARAVEL_ENV_ENCRYPTION_KEY');
 
-        if (! $key && $this->input->isInteractive()) {
-            $key = password('What is the decryption key?');
-        }
-
         if (! $key) {
-            $this->fail('A decryption key is required.');
+            $this->components->error('A decryption key is required.');
+
+            return Command::FAILURE;
         }
 
         $cipher = $this->option('cipher') ?: 'AES-256-CBC';
@@ -83,15 +79,21 @@ class EnvironmentDecryptCommand extends Command
         $outputFile = $this->outputFilePath();
 
         if (Str::endsWith($outputFile, '.encrypted')) {
-            $this->fail('Invalid filename.');
+            $this->components->error('Invalid filename.');
+
+            return Command::FAILURE;
         }
 
         if (! $this->files->exists($encryptedFile)) {
-            $this->fail('Encrypted environment file not found.');
+            $this->components->error('Encrypted environment file not found.');
+
+            return Command::FAILURE;
         }
 
         if ($this->files->exists($outputFile) && ! $this->option('force')) {
-            $this->fail('Environment file already exists.');
+            $this->components->error('Environment file already exists.');
+
+            return Command::FAILURE;
         }
 
         try {
@@ -102,7 +104,9 @@ class EnvironmentDecryptCommand extends Command
                 $encrypter->decrypt($this->files->get($encryptedFile))
             );
         } catch (Exception $e) {
-            $this->fail($e->getMessage());
+            $this->components->error($e->getMessage());
+
+            return Command::FAILURE;
         }
 
         $this->components->info('Environment successfully decrypted.');

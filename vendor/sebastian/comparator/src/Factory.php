@@ -97,7 +97,6 @@ final class Factory
         $this->registerDefaultComparator(new DOMNodeComparator);
         $this->registerDefaultComparator(new SplObjectStorageComparator);
         $this->registerDefaultComparator(new ExceptionComparator);
-        $this->registerDefaultComparator(new EnumerationComparator);
         $this->registerDefaultComparator(new ObjectComparator);
         $this->registerDefaultComparator(new ResourceComparator);
         $this->registerDefaultComparator(new ArrayComparator);

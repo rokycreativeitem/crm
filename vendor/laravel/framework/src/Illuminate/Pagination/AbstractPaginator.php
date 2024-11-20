@@ -12,11 +12,7 @@ use Stringable;
 use Traversable;
 
 /**
- * @template TKey of array-key
- *
- * @template-covariant TValue
- *
- * @mixin \Illuminate\Support\Collection<TKey, TValue>
+ * @mixin \Illuminate\Support\Collection
  */
 abstract class AbstractPaginator implements Htmlable, Stringable
 {
@@ -25,7 +21,7 @@ abstract class AbstractPaginator implements Htmlable, Stringable
     /**
      * All of the items being paginated.
      *
-     * @var \Illuminate\Support\Collection<TKey, TValue>
+     * @var \Illuminate\Support\Collection
      */
     protected $items;
 
@@ -314,7 +310,7 @@ abstract class AbstractPaginator implements Htmlable, Stringable
     /**
      * Get the slice of items being paginated.
      *
-     * @return array<TKey, TValue>
+     * @return array
      */
     public function items()
     {
@@ -653,7 +649,7 @@ abstract class AbstractPaginator implements Htmlable, Stringable
     /**
      * Get an iterator for the items.
      *
-     * @return \ArrayIterator<TKey, TValue>
+     * @return \ArrayIterator
      */
     public function getIterator(): Traversable
     {
@@ -693,7 +689,7 @@ abstract class AbstractPaginator implements Htmlable, Stringable
     /**
      * Get the paginator's underlying collection.
      *
-     * @return \Illuminate\Support\Collection<TKey, TValue>
+     * @return \Illuminate\Support\Collection
      */
     public function getCollection()
     {
@@ -703,7 +699,7 @@ abstract class AbstractPaginator implements Htmlable, Stringable
     /**
      * Set the paginator's underlying collection.
      *
-     * @param  \Illuminate\Support\Collection<TKey, TValue>  $collection
+     * @param  \Illuminate\Support\Collection  $collection
      * @return $this
      */
     public function setCollection(Collection $collection)

@@ -21,7 +21,7 @@ class ValidatePostSize
         $max = $this->getPostMaxSize();
 
         if ($max > 0 && $request->server('CONTENT_LENGTH') > $max) {
-            throw new PostTooLargeException('The POST data is too large.');
+            throw new PostTooLargeException;
         }
 
         return $next($request);

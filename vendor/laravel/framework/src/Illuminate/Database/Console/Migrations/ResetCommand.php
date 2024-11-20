@@ -2,7 +2,6 @@
 
 namespace Illuminate\Database\Console\Migrations;
 
-use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Console\Prohibitable;
 use Illuminate\Database\Migrations\Migrator;
@@ -57,7 +56,7 @@ class ResetCommand extends BaseCommand
     {
         if ($this->isProhibited() ||
             ! $this->confirmToProceed()) {
-            return Command::FAILURE;
+            return 1;
         }
 
         return $this->migrator->usingConnection($this->option('database'), function () {

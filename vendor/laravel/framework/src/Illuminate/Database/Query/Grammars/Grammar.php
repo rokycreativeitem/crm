@@ -1430,16 +1430,6 @@ class Grammar extends BaseGrammar
     }
 
     /**
-     * Compile a query to get the number of open connections for a database.
-     *
-     * @return string|null
-     */
-    public function compileThreadCount()
-    {
-        return null;
-    }
-
-    /**
      * Determine if the grammar supports savepoints.
      *
      * @return bool
@@ -1526,7 +1516,7 @@ class Grammar extends BaseGrammar
      */
     public function substituteBindingsIntoRawSql($sql, $bindings)
     {
-        $bindings = array_map(fn ($value) => $this->escape($value, is_resource($value) || gettype($value) === 'resource (closed)'), $bindings);
+        $bindings = array_map(fn ($value) => $this->escape($value), $bindings);
 
         $query = '';
 

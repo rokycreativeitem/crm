@@ -107,6 +107,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content pt-2">
             <div class="modal-body text-center">
+
                 <div class="d-flex justify-content-center">
                     <span class="icon-confirm">
                         <svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -129,7 +130,6 @@
         </div>
     </div>
 </div>
-
 <script>
     "use strict";
 
@@ -143,10 +143,6 @@
                     url: url,
                     success: function(response) {
                         $("#confirmModal").modal('hide');
-                        var table = new DataTable('.table');
-                        setTimeout(function () {
-                            table.ajax.reload();
-                        }, 1000);
                         processServerResponse(response);
                     }
                 });
@@ -177,9 +173,9 @@
                 <p class="title">{{ get_phrase('Are you sure') }}?</p>
                 <p class="">{{ get_phrase('Do you really want to delete these records') }}?</p>
             </div>
-            <div class="d-flex align-items-center justify-content-center mb-4">
-                <button type="button" class="btn ol-btn-secondary fw-500 me-1" data-bs-dismiss="modal">{{ get_phrase('Cancel') }}</button>
-                <a href="javascript:void(0)" class="confirm-btn btn ol-btn-danger fw-500 ms-1">{{ get_phrase('Delete') }}</a>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn ol-btn-secondary fw-500" data-bs-dismiss="modal">{{ get_phrase('Cancel') }}</button>
+                <a class="confirm-btn btn ol-btn-danger fw-500">{{ get_phrase('Delete') }}</a>
             </div>
         </div>
     </div>
@@ -187,29 +183,18 @@
 <script>
     "use strict";
 
-    function multiDelete(selectedIds, database_type) {
+    function multiDelete(url, project_codes) {
         $("#multiDelete").modal('show');
 
         $('.confirm-btn').click(function(e) {
             e.preventDefault();
 
-            var url = "{{ route(get_current_user_role() . '.user.multi-delete') }}";
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: {
-                    ids: selectedIds,
-                    type: database_type,
-                    _token: '{{ csrf_token() }}',
-                },
-                success: function (response) {
-                    if (response.success) {
-                        processServerResponse(response);
+            ajaxCall("{{ route(get_current_user_role() . '.project.multi-delete') }}", project_codes)
+                .done(function(res) {
+                    if (res.success) {
                         $("#multiDelete").modal('hide');
-                        $('.server-side-datatable').DataTable().ajax.reload(null, false);
                     }
-                },
-            });
+                });
         });
     }
 </script>

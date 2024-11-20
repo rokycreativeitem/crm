@@ -9,28 +9,26 @@
  */
 namespace PHPUnit\TextUI\Command;
 
-use const PHP_EOL;
-use function count;
-use function ksort;
+use function array_merge;
+use function array_unique;
+use function sort;
 use function sprintf;
 use function str_starts_with;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\PhptTestCase;
 
 /**
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
- *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
 final readonly class ListGroupsCommand implements Command
 {
     /**
-     * @var list<PhptTestCase|TestCase>
+     * @psalm-var list<TestCase|PhptTestCase>
      */
     private array $tests;
 
     /**
-     * @param list<PhptTestCase|TestCase> $tests
+     * @psalm-param list<TestCase|PhptTestCase> $tests
      */
     public function __construct(array $tests)
     {
@@ -39,46 +37,32 @@ final readonly class ListGroupsCommand implements Command
 
     public function execute(): Result
     {
-        /** @var array<non-empty-string, positive-int> $groups */
         $groups = [];
 
         foreach ($this->tests as $test) {
             if ($test instanceof PhptTestCase) {
-                if (!isset($groups['default'])) {
-                    $groups['default'] = 1;
-                } else {
-                    $groups['default']++;
-                }
+                $groups[] = 'default';
 
                 continue;
             }
 
-            foreach ($test->groups() as $group) {
-                if (!isset($groups[$group])) {
-                    $groups[$group] = 1;
-                } else {
-                    $groups[$group]++;
-                }
-            }
+            $groups = array_merge($groups, $test->groups());
         }
 
-        ksort($groups);
+        $groups = array_unique($groups);
 
-        $buffer = sprintf(
-            'Available test group%s:' . PHP_EOL,
-            count($groups) > 1 ? 's' : '',
-        );
+        sort($groups);
 
-        foreach ($groups as $group => $numberOfTests) {
+        $buffer = 'Available test group(s):' . PHP_EOL;
+
+        foreach ($groups as $group) {
             if (str_starts_with($group, '__phpunit_')) {
                 continue;
             }
 
             $buffer .= sprintf(
-                ' - %s (%d test%s)' . PHP_EOL,
+                ' - %s' . PHP_EOL,
                 $group,
-                $numberOfTests,
-                $numberOfTests > 1 ? 's' : '',
             );
         }
 

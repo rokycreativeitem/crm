@@ -12,8 +12,6 @@ namespace PHPUnit\TextUI\XmlConfiguration;
 use function version_compare;
 
 /**
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
- *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
 final readonly class MigrationBuilder
@@ -76,14 +74,10 @@ final readonly class MigrationBuilder
             RemoveCacheResultFileAttribute::class,
             RemoveCoverageElementCacheDirectoryAttribute::class,
         ],
-
-        '11.4' => [
-            RemoveCoverageElementIncludeUncoveredFilesAttribute::class,
-        ],
     ];
 
     /**
-     * @return non-empty-list<Migration>
+     * @throws MigrationBuilderException
      */
     public function build(string $fromVersion): array
     {

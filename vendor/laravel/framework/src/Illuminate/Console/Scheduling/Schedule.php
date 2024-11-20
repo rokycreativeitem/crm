@@ -2,7 +2,6 @@
 
 namespace Illuminate\Console\Scheduling;
 
-use BadMethodCallException;
 use Closure;
 use DateTimeInterface;
 use Illuminate\Bus\UniqueLock;
@@ -18,14 +17,9 @@ use Illuminate\Support\ProcessUtils;
 use Illuminate\Support\Traits\Macroable;
 use RuntimeException;
 
-/**
- * @mixin \Illuminate\Console\Scheduling\PendingEventAttributes
- */
 class Schedule
 {
-    use Macroable {
-        __call as macroCall;
-    }
+    use Macroable;
 
     const SUNDAY = 0;
 
@@ -84,20 +78,6 @@ class Schedule
     protected $mutexCache = [];
 
     /**
-     * The attributes to pass to the event.
-     *
-     * @var \Illuminate\Console\Scheduling\PendingEventAttributes
-     */
-    protected $attributes;
-
-    /**
-     * The schedule group attributes stack.
-     *
-     * @var array<int, PendingEventAttributes>
-     */
-    protected array $groupStack = [];
-
-    /**
      * Create a new schedule instance.
      *
      * @param  \DateTimeZone|string|null  $timezone
@@ -138,8 +118,6 @@ class Schedule
         $this->events[] = $event = new CallbackEvent(
             $this->eventMutex, $callback, $parameters, $this->timezone
         );
-
-        $this->mergePendingAttributes($event);
 
         return $event;
     }
@@ -277,45 +255,7 @@ class Schedule
 
         $this->events[] = $event = new Event($this->eventMutex, $command, $this->timezone);
 
-        $this->mergePendingAttributes($event);
-
         return $event;
-    }
-
-    /**
-     * Create new schedule group.
-     *
-     * @param  \Illuminate\Console\Scheduling\Event  $event
-     * @return void
-     */
-    public function group(Closure $events)
-    {
-        $this->groupStack[] = $this->attributes;
-
-        $events($this);
-
-        array_pop($this->groupStack);
-    }
-
-    /**
-     * Merge the current group attributes with the given event.
-     *
-     * @param  \Illuminate\Console\Scheduling\Event  $event
-     * @return void
-     */
-    protected function mergePendingAttributes(Event $event)
-    {
-        if (isset($this->attributes)) {
-            $this->attributes->mergeAttributes($event);
-
-            unset($this->attributes);
-        }
-
-        if (! empty($this->groupStack)) {
-            $group = end($this->groupStack);
-
-            $group->mergeAttributes($event);
-        }
     }
 
     /**
@@ -438,29 +378,5 @@ class Schedule
         }
 
         return $this->dispatcher;
-    }
-
-    /**
-     * Dynamically handle calls into the schedule instance.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        if (static::hasMacro($method)) {
-            return $this->macroCall($method, $parameters);
-        }
-
-        if (method_exists(PendingEventAttributes::class, $method)) {
-            $this->attributes ??= new PendingEventAttributes($this);
-
-            return $this->attributes->$method(...$parameters);
-        }
-
-        throw new BadMethodCallException(sprintf(
-            'Method %s::%s does not exist.', static::class, $method
-        ));
     }
 }
