@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('server-side-datatable', [ProjectController::class, 'server_side_table'])->name('server.side.datatable');
+// Route::get('server-side-datatable', [ProjectController::class, 'server_side_table'])->name('server.side.datatable');
 
 Route::middleware('check.permission')->group(function () {
     Route::get('check-access', function () {

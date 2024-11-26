@@ -81,7 +81,7 @@
     <!-- Start Admin area -->
     <div class="row">
         <div class="col-12">
-            @if (request()->query('layout') == 'grid')
+            @if ($layout == 'grid')
                 @include('projects.grid')
             @else
                 @include('projects.list')

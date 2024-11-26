@@ -10,7 +10,7 @@
     });
 
    // server side data table rendering
-   function server_side_datatable(columnsParam, type) {
+   function server_side_datatable(columnsParam) {
         let columnsArray = Array.isArray(columnsParam) ? columnsParam : JSON.parse(columnsParam);
         if (!Array.isArray(columnsArray)) {
             console.error("{{get_phrase('The columns parameter should be an array or a JSON-encoded array')}}.");
@@ -19,16 +19,26 @@
         let columns = columnsArray.map(columnKey => {
             return { data: columnKey };
         });
+
         var table = new DataTable('.server-side-datatable', {
             processing: true,
             serverSide: true,
             info: true,
             ajax: {
-                url: "{{ route('server.side.datatable') }}",
+                url: "{{ route(get_current_user_role().'.projects',['layout'=>'list']) }}",
                 type: 'GET',
                 data: function (d) {
                     d.customSearch = $('#custom-search-box').val();
-                    d.type = type;
+                    d.status = $('#status').val();
+                    d.client = $('#client').val();
+                    d.staff = $('#staff').val();
+                    d.minPrice = $('#min-price').val();
+                    d.maxPrice = $('#max-price').val();
+                    d.category = $('#category').val();
+                },
+                error: function (xhr, error, thrown) {
+                    console.log(xhr.responseText); // Log the response
+                    // alert('An error occurred: ' + xhr.status + ' ' + thrown); // Show alert with status and error
                 }
             },
             columns: columns,
@@ -38,6 +48,14 @@
             paging: true,
         });
 
+        table.on('xhr', function (e, settings, json, xhr) {
+            if (json && json.filter_count !== undefined) {
+                console.log('Filter count:', json.filter_count);
+                if (json.filter_count > 0) {
+                    $('#filter-count-display').text(json.filter_count).removeClass('d-none');
+                }
+            }
+        });
 
         $('#custom-search-box').on('keyup', function(e) {
             table.ajax.reload();
@@ -52,7 +70,7 @@
 
 
     $( document ).ready(function() {
-        $('#delete-selected').click(function () {
+        $('#delete-selected').on('click', function () {
             var selectedIds = [];
             $('.table-checkbox:checked').each(function () {
                 var rowId = $(this).closest('tr').find('.datatable-row-id').val();
@@ -67,6 +85,10 @@
             } else {
                 alert('Please select at least one file to delete.');
             }
+        });
+
+        $('#filter').on('click', function(){
+            $('.server-side-datatable').DataTable().ajax.reload(null, false);
         });
     });
 
