@@ -74,7 +74,7 @@
                                                     @else
                                                         <span class="float-end badge bg-danger mt-1 text-capitalize">{{ $application_details['product_license'] }}</span>
                                                         <button class="btn custom_btns ol-btn-primary float-end me-2 py-0 text-13px"
-                                                            onclick="ajaxModal('{{ route('modal', ['admin.setting.save_purchase_code', 'action_type' => 'show']) }}', '{{ get_phrase('Enter valid purchase code') }}')">{{ get_phrase('Enter valid purchase code') }}</button>
+                                                            onclick="ajaxModal('{{ get_phrase('Enter valid purchase code') }}','{{ route(get_current_user_role().'.setting.save_purchase_code', 'action_type' => 'show']) }}')">{{ get_phrase('Enter valid purchase code') }}</button>
                                                     @endif
                                                 </p>
 

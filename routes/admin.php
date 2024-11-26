@@ -167,7 +167,10 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     });
 
     Route::controller(ReportController::class)->group(function () {
-        Route::get('reports', 'index')->name('reports');
+
+        Route::get('project_report', 'project_report')->name('project_report');
+        Route::get('client_report', 'client_report')->name('client_report');
+
     });
 
     Route::controller(SettingsController::class)->group(function () {

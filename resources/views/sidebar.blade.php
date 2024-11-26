@@ -230,8 +230,9 @@
                         </div>
                     </a>
                 </li>
-                <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.reports') active showMenu @endif ">
-                    <a href="{{ route(get_current_user_role() . '.reports') }}">
+
+                <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.project_report' || $current_route == get_current_user_role() . '.client_report') active showMenu @endif">
+                    <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path d="M6.66699 4.79169C6.32533 4.79169 6.04199 4.50835 6.04199 4.16669V1.66669C6.04199 1.32502 6.32533 1.04169 6.66699 1.04169C7.00866 1.04169 7.29199 1.32502 7.29199 1.66669V4.16669C7.29199 4.50835 7.00866 4.79169 6.66699 4.79169Z" fill="currentColor" />
                             <path d="M13.333 4.79169C12.9913 4.79169 12.708 4.50835 12.708 4.16669V1.66669C12.708 1.32502 12.9913 1.04169 13.333 1.04169C13.6747 1.04169 13.958 1.32502 13.958 1.66669V4.16669C13.958 4.50835 13.6747 4.79169 13.333 4.79169Z" fill="currentColor" />
@@ -251,6 +252,14 @@
                             <span>{{ get_phrase('Reports') }}</span>
                         </div>
                     </a>
+                    <ul class="first-sub-menu">
+                        <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.project_report') active showMenu @endif">
+                            <a href="{{ route(get_current_user_role() . '.project_report') }}">{{ get_phrase('Project Report') }}</a>
+                        </li>
+                        <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.client_report') active showMenu @endif">
+                            <a href="{{ route(get_current_user_role() . '.client_report') }}">{{ get_phrase('Client Report') }}</a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="sidebar-first-li first-li-have-sub @if (
                     $current_route == get_current_user_role() . '.system_settings' ||

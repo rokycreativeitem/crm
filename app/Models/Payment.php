@@ -16,6 +16,18 @@ class Payment extends Model
         'project_id',
         'user_id',
         'payment',
-        'timestamp',
+        'payment_method',
+        'status',
+        'timestamps',
     ];
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class, 'project_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'client_id');
+    }
 }
