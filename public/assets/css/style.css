@@ -5891,3 +5891,10 @@ div.dt-container .dt-paging .dt-paging-button.disabled:active {
     background: #f7f7f9;
     box-shadow: none;
 }
+
+#pieChart {
+    display: block !important;
+    box-sizing: border-box !important;
+    height: 850px !important;
+    width: 850px !important;
+}

@@ -97,6 +97,7 @@
         </div>
 
         <div class="table-responsive overflow-auto course_list d-none" id="project_list">
+
             <table class="table eTable eTable-2 " id="datatable">
                 <thead>
                     <tr>
@@ -136,7 +137,7 @@
                             <td>
                                 <div class="dAdmin_profile d-flex align-items-center min-w-200px">
                                     <div class="dAdmin_profile_name">
-                                        <h4 class="title fs-12px">{{ $payment->timestamps }}</h4>
+                                        <h4 class="title fs-12px">{{ $payment->time }}</h4>
                                     </div>
                                 </div>
                             </td>
@@ -194,8 +195,6 @@
                     }
                 }
             });
-
-
 
             // Handle multi-deletion
             $('#delete-selected').click(function() {

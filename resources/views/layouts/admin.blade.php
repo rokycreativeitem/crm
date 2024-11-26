@@ -87,6 +87,9 @@
     <!-- Your Custom Scripts -->
     <script type="text/javascript" src='{{ asset('assets/js/index.global.js') }}'></script>
     <script type="text/javascript" src="{{ asset('assets/js/script.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/charts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/chart.js') }}"></script>
+
 
     @include('init_js')
     @include('toastr')

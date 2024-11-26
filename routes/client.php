@@ -1,15 +1,21 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\GanttChartController;
 use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MilestoneController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -89,6 +95,26 @@ Route::middleware(['auth', 'verified', 'client', 'check.permission'])->group(fun
 
     });
 
+    Route::controller(PaymentController::class)->group(function () {
+        Route::get('invoice', 'index')->name('invoice');
+        Route::get('invoice/create', 'create')->name('invoice.create');
+        Route::post('invoice/store', 'store')->name('invoice.store');
+        Route::get('invoice/delete/{id}', 'delete')->name('invoice.delete');
+        Route::get('invoice/edit/{id}', 'edit')->name('invoice.edit');
+        Route::post('invoice/update/{id}', 'update')->name('invoice.update');
+        Route::post('invoice/multi-delete', 'multiDelete')->name('invoice.multi-delete');
+    });
+
+    Route::controller(TimesheetController::class)->group(function () {
+        Route::get('timesheet', 'index')->name('timesheet');
+        Route::get('timesheet/create', 'create')->name('timesheet.create');
+        Route::post('timesheet/store', 'store')->name('timesheet.store');
+        Route::get('timesheet/delete/{id}', 'delete')->name('timesheet.delete');
+        Route::get('timesheet/edit/{id}', 'edit')->name('timesheet.edit');
+        Route::post('timesheet/update/{id}', 'update')->name('timesheet.update');
+        Route::post('timesheet/multi-delete', 'multiDelete')->name('timesheet.multi-delete');
+    });
+
     // manage roles
     Route::controller(RoleController::class)->group(function () {
         Route::get('roles', 'index')->name('roles');
@@ -116,6 +142,58 @@ Route::middleware(['auth', 'verified', 'client', 'check.permission'])->group(fun
     // assign permission
     Route::controller(RolePermissionController::class)->group(function () {
         Route::post('assign/permissions/store/{role_id}/{permission_id}', 'store')->name('store.permissions');
+    });
+
+    Route::controller(EventController::class)->group(function () {
+        Route::get('events', 'index')->name('events');
+        Route::get('event/create', 'create')->name('event.create');
+        Route::post('event/store', 'store')->name('event.store');
+        Route::get('event/delete/{id}', 'delete')->name('event.delete');
+        Route::get('event/edit/', 'edit')->name('event.edit');
+        Route::post('event/update/{id}', 'update')->name('event.update');
+
+    });
+
+    Route::controller(MessageController::class)->group(function () {
+        Route::post('message/store', 'store')->name('message.store');
+        Route::post('message/thread/store', 'thread_store')->name('message.thread.store');
+        Route::get('message/{message_thread?}', 'message')->name('message');
+        Route::get('message/start/new', 'message_new')->name('message.message_new');
+        Route::get('message/message_left_side_bar', 'message_left_side_bar')->name('message.message_left_side_bar');
+    });
+
+    Route::controller(ReportController::class)->group(function () {
+
+        Route::get('admin_report', 'admin_report')->name('admin_report');
+
+        Route::get('client_report', 'client_report')->name('client_report');
+
+        Route::get('purchase_history', 'purchase_history')->name('purchase_history');
+        Route::get('purchase_history/invoice/{id?}', 'purchase_history_invoice')->name('purchase_history.invoice');
+    });
+
+    Route::controller(SettingsController::class)->group(function () {
+        Route::get('system_settings', 'system_settings')->name('system_settings');
+        Route::post('system_settings/update', 'system_settings_update')->name('system_settings.update');
+
+        Route::get('payment_settings', 'payment_settings')->name('payment_settings');
+        Route::post('payment_settings/update', 'payment_settings_update')->name('payment_settings.update');
+
+        Route::get('notification_settings', 'notification_settings')->name('notification_settings');
+        Route::any('notification_settings/store/{param1}/{id?}', 'notification_settings_store')->name('notification_settings.store');
+
+        Route::get('manage_language', 'manage_language')->name('manage_language');
+        Route::post('language/store', 'language_store')->name('language.store');
+        Route::post('language/direction/update', 'language_direction_update')->name('language.direction.update');
+        Route::post('language/import', 'language_import')->name('language.import');
+        Route::get('language/delete/{id}', 'language_delete')->name('language.delete');
+
+        Route::get('language/phrase/edit/{lan_id}', 'edit_phrase')->name('language.phrase.edit');
+        Route::post('language/phrase/update/{phrase_id?}', 'update_phrase')->name('language.phrase.update');
+        Route::get('language/phrase/import/{lan_id}', 'phrase_import')->name('language.phrase.import');
+
+        Route::get('about', 'about')->name('about');
+        Route::any('save_valid_purchase_code/{action_type?}', 'save_valid_purchase_code')->name('save_valid_purchase_code');
     });
 
 });

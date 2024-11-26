@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
-
-    public $timestamps = false;
+    protected $fillable = ['title'];
+    public $timestamps  = false;
 
     public function files()
     {
