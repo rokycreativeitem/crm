@@ -36,7 +36,9 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::post('project/multi-delete', 'multiDelete')->name('project.multi-delete');
 
         Route::get('project-categories', 'categories')->name('project.categories');
-
+        Route::get('project-category/create', 'category_create')->name('project.category.create');
+        Route::post('project-category/store', 'category_store')->name('project.category.store');
+        Route::get('project-category/delete/{id}', 'category_delete')->name('project.category.delete');
     });
 
     Route::controller(MilestoneController::class)->group(function () {

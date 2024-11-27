@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\File;
 use App\Models\Meeting;
 use App\Models\Milestone;
@@ -11,6 +12,7 @@ use App\Models\Role;
 use App\Models\Task;
 use App\Models\Timesheet;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -45,7 +47,7 @@ class ProjectController extends Controller
             return view('projects.ajax_grid', $page_data);
         }
         if($request->ajax() && $layout != 'grid'){
-            return Project::server_side_data($request->customSearch, $request->category, $request->status, $request->client, $request->staff, $request->minPrice, $request->maxPrice);                      
+            return app(ServerSideDataController::class)->project_server_side($request->customSearch, $request->category, $request->status, $request->client, $request->staff, $request->minPrice, $request->maxPrice);                      
         }
        
         if (get_current_user_role() == 'client') {
@@ -184,9 +186,32 @@ class ProjectController extends Controller
         return response()->json(['error' => get_phrase('No users selected for deletion.')], 400);
     }
 
-    public function categories() {
-        $page_data['categories'] = [];
+    public function categories(Request $request) {
+        if($request->ajax()){
+           return app(ServerSideDataController::class)->category_server_side($request->customSearch, $request->category, $request->status, $request->client, $request->staff, $request->minPrice, $request->maxPrice);
+        }
+        $page_data['categories'] = Category::get();
         return view('projects.category.index', $page_data);
+    }
+
+    public function category_create() {
+        $page_data['categories'] = Category::where('parent', 0)->get();
+        return view('projects.category.create', $page_data);
+    }
+
+    public function category_store(Request $request) {
+        $data['name'] = $request->name;
+        $data['parent'] = $request->parent;
+        $data['status'] = $request->status;
+        $data['created_at'] = Carbon::now();
+        $data['updated_at'] = Carbon::now();
+        Category::insert($data);
+        return response()->json(['success' => 'Category created successfully!']);
+    }
+
+    public function category_delete($id) {
+        Category::where('id', $id)->delete();
+        return response()->json(['success' => 'Category deleted successfully!']);
     }
 
 

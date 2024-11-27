@@ -10,7 +10,7 @@
     });
 
    // server side data table rendering
-   function server_side_datatable(columnsParam) {
+   function server_side_datatable(columnsParam, url) {
         let columnsArray = Array.isArray(columnsParam) ? columnsParam : JSON.parse(columnsParam);
         if (!Array.isArray(columnsArray)) {
             console.error("{{get_phrase('The columns parameter should be an array or a JSON-encoded array')}}.");
@@ -25,20 +25,19 @@
             serverSide: true,
             info: true,
             ajax: {
-                url: "{{ route(get_current_user_role().'.projects',['layout'=>'list']) }}",
+                url: url,
                 type: 'GET',
                 data: function (d) {
-                    d.customSearch = $('#custom-search-box').val();
-                    d.status = $('#status').val();
-                    d.client = $('#client').val();
-                    d.staff = $('#staff').val();
-                    d.minPrice = $('#min-price').val();
-                    d.maxPrice = $('#max-price').val();
-                    d.category = $('#category').val();
+                    d.customSearch = $('#custom-search-box').val() || null;
+                    d.status = $('#status').val() || 'all';
+                    d.client = $('#client').val() || 'all';
+                    d.staff = $('#staff').val() || 'all';
+                    d.minPrice = $('#min-price').val() || 0;
+                    d.maxPrice = $('#max-price').val() || 'all';
+                    d.category = $('#category').val() || 'all';
                 },
                 error: function (xhr, error, thrown) {
-                    console.log(xhr.responseText); // Log the response
-                    // alert('An error occurred: ' + xhr.status + ' ' + thrown); // Show alert with status and error
+                    console.log(xhr.responseText);
                 }
             },
             columns: columns,
@@ -53,6 +52,7 @@
                 console.log('Filter count:', json.filter_count);
                 if (json.filter_count > 0) {
                     $('#filter-count-display').text(json.filter_count).removeClass('d-none');
+                    $('#filterDropdownButton').addClass('p3-0');
                 }
             }
         });

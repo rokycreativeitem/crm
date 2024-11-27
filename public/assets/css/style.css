@@ -4865,6 +4865,9 @@ input.daterangepicker {
 .custom-dropdown {
     position: relative;
     width: min-content;
+    border-radius: 6px !important;
+    background: #f7f7f9;
+    border: 1px solid #E4E7F1;
 }
 
 .dropdown-list {
@@ -6130,7 +6133,16 @@ table.dataTable > tbody > tr > td {
     border: none;
 }
 .filter-dropdown button {
-    border: 1px solid #E4E7F1;
+    border-radius: 6px;
+}
+.filter-dropdown button:hover {
+    background: #f7f7f9 !important;
+    border: 0;
+    border-radius: 6px;
+}
+.dropdown-header {
+    border-right: 1px solid #e5e5e5 !important;
+    z-index: 9;
 }
 .filter-dropdown .filter-count-display {
     background: #212534;
@@ -6138,6 +6150,12 @@ table.dataTable > tbody > tr > td {
     border-radius: 50px;
     font-size: 11px;
     padding: 2px 5px;
+    margin: 0 5px;
+}
+.filer-left-border {
+    border-left: 2px solid #E4E7F1 !important;
+    padding: 0 5px;
+    background: transparent;
 }
 .filter-dropdown .dropdown-menu, .filter-dropdown .dropdown-menu button, .filter-dropdown .dropdown-menu select {
     font-size: 14px !important;
