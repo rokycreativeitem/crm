@@ -37,8 +37,10 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
         Route::get('project-categories', 'categories')->name('project.categories');
         Route::get('project-category/create', 'category_create')->name('project.category.create');
-        Route::post('project-category/store', 'category_store')->name('project.category.store');
+        Route::post('project-category/store/{id?}', 'category_store')->name('project.category.store');
         Route::get('project-category/delete/{id}', 'category_delete')->name('project.category.delete');
+        Route::get('project-category/edit/{id}', 'category_edit')->name('project.category.edit');
+        // Route::post('project-category/update/{id}', 'category_update')->name('project.category.update');
     });
 
     Route::controller(MilestoneController::class)->group(function () {

@@ -95,6 +95,7 @@ $(document).ready(function () {
         let formData = new FormData(this);
         let url = $(this).attr('action');
         let method = $(this).attr('method') || 'POST';
+
         $.ajax({
             type: method,
             url: url,

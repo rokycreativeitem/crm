@@ -175,8 +175,12 @@ class ServerSideDataController extends Controller
             return $category?->name;
         })
         ->addColumn('parent', function ($category) {
-            $category_parent = Category::find($category->id);
-            return $category_parent->name;
+            if($category->parent != 0) {
+                $category_parent = Category::find($category->parent);
+                return $category_parent?->name;
+            }else {
+                return '';
+            }
         })
         ->addColumn('status', function ($category) {
             $statusLabel = '';
@@ -189,7 +193,7 @@ class ServerSideDataController extends Controller
         })
         ->addColumn('options', function ($category) {
             // Generate routes dynamically
-            $editRoute = route(get_current_user_role() . '.project.edit', $category->id);
+            $editRoute = route(get_current_user_role() . '.project.category.edit', $category->id);
             $deleteRoute = route(get_current_user_role() . '.project.category.delete', $category->id);
             $viewRoute = route(get_current_user_role() . '.project.details', $category->id);
             
@@ -219,4 +223,6 @@ class ServerSideDataController extends Controller
         ->with('filter_count', count($filter_count))
         ->make(true); 
     }
+
+
 }

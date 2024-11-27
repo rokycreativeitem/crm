@@ -22,7 +22,7 @@
                             </span>
                             <input type="text" class="form-control" id="custom-search-box" placeholder="Search">
                         </div>
-                        <a href="" class="grid-icon {{ request('layout') === 'grid' ? 'active' : '' }}">
+                        {{-- <a href="" class="grid-icon {{ request('layout') === 'grid' ? 'active' : '' }}">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#clip0_185_2549)">
                                     <path
@@ -52,7 +52,7 @@
                                 <path d="M17.5 12.7083H2.5C2.15833 12.7083 1.875 12.425 1.875 12.0833C1.875 11.7417 2.15833 11.4583 2.5 11.4583H17.5C17.8417 11.4583 18.125 11.7417 18.125 12.0833C18.125 12.425 17.8417 12.7083 17.5 12.7083Z" fill="#6B708A"/>
                                 <path d="M17.5 16.875H2.5C2.15833 16.875 1.875 16.5917 1.875 16.25C1.875 15.9083 2.15833 15.625 2.5 15.625H17.5C17.8417 15.625 18.125 15.9083 18.125 16.25C18.125 16.5917 17.8417 16.875 17.5 16.875Z" fill="#6B708A"/>
                             </svg>                                        
-                        </a>
+                        </a> --}}
                         <button onclick="rightCanvas('{{ route(get_current_user_role() . '.project.category.create') }}', 'Create project')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
                             <span class="fi-rr-plus"></span>
                             <span>{{ get_phrase('Add new') }}</span>

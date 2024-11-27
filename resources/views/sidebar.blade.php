@@ -136,7 +136,7 @@
                         </div>
                     </a>
                     <ul class="first-sub-menu">
-                        <li class="sidebar-second-li @if ($current_route == get_current_user_role() . 'project.categories') active showMenu @endif">
+                        <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.project.categories') active showMenu @endif">
                             <a href="{{ route(get_current_user_role() . '.project.categories') }}">{{ get_phrase('Categories') }}</a>
                         </li>
                         <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.projects') active showMenu @endif">

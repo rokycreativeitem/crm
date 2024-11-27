@@ -199,19 +199,29 @@ class ProjectController extends Controller
         return view('projects.category.create', $page_data);
     }
 
-    public function category_store(Request $request) {
+    public function category_store(Request $request, $id = "") {
         $data['name'] = $request->name;
         $data['parent'] = $request->parent;
         $data['status'] = $request->status;
         $data['created_at'] = Carbon::now();
-        $data['updated_at'] = Carbon::now();
-        Category::insert($data);
-        return response()->json(['success' => 'Category created successfully!']);
+        if ($id) {
+            $data['updated_at'] = Carbon::now();
+            Category::where('id', $id)->update($data);
+        }else{
+            Category::insert($data);
+        }
+        return response()->json(['success' => 'Category ' . ($id ? 'updated' : 'created') . ' successfully!']);
     }
 
     public function category_delete($id) {
         Category::where('id', $id)->delete();
         return response()->json(['success' => 'Category deleted successfully!']);
+    }
+
+    public function category_edit($id) {
+        $page_data['categories'] = Category::where('parent', 0)->get();
+        $page_data['category'] = Category::where('id', $id)->first();
+        return view('projects.category.edit', $page_data);
     }
 
 

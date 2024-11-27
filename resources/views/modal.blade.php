@@ -187,7 +187,7 @@
 <script>
     "use strict";
 
-    function multiDelete(selectedIds, database_type) {
+    function multiDelete(selectedIds, database_type, url) {
         $("#multiDelete").modal('show');
 
         $('.confirm-btn').click(function(e) {
