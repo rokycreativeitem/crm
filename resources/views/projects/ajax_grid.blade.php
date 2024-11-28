@@ -1,3 +1,13 @@
+@if(isset($filter_count))
+    <script>
+        var count = {{$filter_count}};
+        if(count > 0) {
+            $('#filter-count-display').text(count);
+            $('#filter-count-display').removeClass('d-none');
+            $('#filter-reset').removeClass('d-none');
+        }
+    </script>
+@endif
 <div class="row pe-0">
     @foreach ($projects as $project)
     <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3 pt-3">
@@ -159,7 +169,3 @@
         {{$projects->links()}}
     </div>
 </div>
-{{-- 
-<script>
-    $("#custom-search-box").val('{{ $search ?? '' }}')
-</script> --}}

@@ -54,6 +54,7 @@ class ServerSideDataController extends Controller
 
         $maxPrice = (int) $maxPrice;
         $minPrice = (int) $minPrice;
+        
         if ($minPrice > 0 && is_numeric($minPrice) && is_numeric($maxPrice)) {
             $filter_count[] = $minPrice ?? $maxPrice;
             $query->whereBetween('budget', [$minPrice, $maxPrice]);

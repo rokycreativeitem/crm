@@ -34,12 +34,46 @@ class ProjectController extends Controller
         $user = Auth::user();
         $page_data['layout'] = $layout;
         $page_data['page_item'] = 12;
-      
         if ($request->ajax() && $request->layout == 'grid') {
             $pagination = $request->page_item ?? $page_data['page_item'];
-            if($request->search) {
-                $page_data['projects'] = Project::where('title', 'like', '%' . $request->search . '%')->paginate($pagination);
-                $page_data['search'] = $request->search;
+            if($request) {
+                $filter_count = [];
+                $projects = Project::query();
+                if ($request->customSearch) {
+                    $projects = Project::where('title', 'like', '%' . $request->customSearch . '%');
+                }
+                if ($request->category != 'all') {
+                    $filter_count[] = $request->category;
+                    $projects = $projects->where('category_id', $request->category);
+                }
+                if ($request->status != 'all') {
+                    $filter_count[] = $request->status;
+                    $projects = $projects->where('status', $request->status);
+                }
+                if ($request->client != 'all') {
+                    $filter_count[] = $request->client;
+                    $projects = $projects->where('client_id', $request->client);
+                }
+                if ($request->staff != 'all') {
+                    $filter_count[] = $request->staff;
+                    $staff = json_encode($request->staff);
+                    $staff = str_replace('[','',$staff);
+                    $staff = str_replace(']','',$staff);
+                    $projects = $projects->where('staffs', 'like', '%' . $staff . '%');
+                }
+
+                $maxPrice = (int) str_replace('$','',$request->maxPrice);
+                $minPrice = (int) str_replace('$','',$request->minPrice);
+                // $maxPrice = (int) $request->maxPrice;
+                // $minPrice = (int) $request->minPrice;
+                if ($minPrice > 0 && is_numeric($minPrice) && is_numeric($maxPrice)) {
+                    $filter_count[] = $minPrice ?? $maxPrice;
+                    $projects->whereBetween('budget', [$minPrice, $maxPrice]);
+                }
+                
+                $page_data['projects'] = $projects->paginate($pagination);
+                $page_data['filter_count'] = count($filter_count);
+                $page_data['search'] = $request->customSearch;
             }else{
                 $page_data['projects'] = Project::paginate($pagination);
             }
@@ -47,7 +81,7 @@ class ProjectController extends Controller
             return view('projects.ajax_grid', $page_data);
         }
         if($request->ajax() && $layout != 'grid'){
-            return app(ServerSideDataController::class)->project_server_side($request->customSearch, $request->category, $request->status, $request->client, $request->staff, $request->minPrice, $request->maxPrice);                      
+            return app(ServerSideDataController::class)->project_server_side($request->customSearch, $request->category, $request->status, $request->client, $request->staff, str_replace('$','',$request->minPrice), str_replace('$','',$request->maxPrice));                 
         }
        
         if (get_current_user_role() == 'client') {
@@ -60,6 +94,7 @@ class ProjectController extends Controller
 
         $page_data['clients'] = User::where('role_id', 2)->get();
         $page_data['staffs'] = User::where('role_id', 3)->get();
+        $page_data['categories'] = Category::where('parent','!=',0)->get();
 
         return view('projects.index', $page_data);
     }
@@ -79,6 +114,7 @@ class ProjectController extends Controller
 
     public function create()
     {
+        $page_data['categories'] = Category::where('parent','!=',0)->get();
         $page_data['projects'] = Project::get();
         $client                = Role::where('title', 'client')->first();
         $page_data['clients']  = User::where('role_id', $client->id)->get();
@@ -141,7 +177,7 @@ class ProjectController extends Controller
     public function edit($code)
     {
         $project['project'] = Project::where('code', $code)->first();
-
+        $project['categories'] = Category::where('parent','!=',0)->get();
         $client             = Role::where('title', 'client')->first();
         $project['clients'] = User::where('role_id', $client->id)->get();
 

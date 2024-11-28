@@ -56,6 +56,7 @@
                 console.log('Filter count:', json.filter_count);
                 if (json.filter_count > 0) {
                     $('#filter-count-display').text(json.filter_count).removeClass('d-none');
+                    $('#filter-reset').removeClass('d-none');
                     $('#filterDropdownButton').addClass('p3-0');
                 }
             }
@@ -92,6 +93,12 @@
         });
 
         $('#filter').on('click', function() {
+            $('.server-side-datatable').DataTable().ajax.reload(null, false);
+        });
+        $('#filter-reset').on('click', function(){
+            $('#status, #client, #staff, #category').val('all')
+            $('.minPrice').val(0)
+            $('.filter-count-display, #filter-reset').addClass('d-none');
             $('.server-side-datatable').DataTable().ajax.reload(null, false);
         });
     });

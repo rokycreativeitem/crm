@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="{{asset('assets/css/nouislider.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/jquery-ui.css')}}">
+@php
+    $max_value = App\Models\Project::select(DB::raw('CAST(budget AS UNSIGNED) as numeric_budget'))
+    ->orderBy('numeric_budget', 'desc')
+    ->value('numeric_budget');
+@endphp
+
+
+<script src="{{asset('assets/js/jquery-ui.min.js')}}"></script>
+<script src="{{asset('assets/js/nouislider.min.js')}}"></script>
+<script>
+var max = {{$max_value}};
+const dropdownItems = document.querySelectorAll('.dropdown-menu');
+dropdownItems.forEach(item => {
+    item.addEventListener('click', function (e) {
+        e.stopPropagation(); // Prevent the dropdown from closing
+    });
+});
+
+var slider = document.getElementById('budget-slider');
+var min = 0;
+
+noUiSlider.create(slider, {
+    start: [min, max], // Initial range values
+    connect: true,
+    range: {
+        'min': min,
+        'max': max
+    },
+    tooltips: [true, true], // Show tooltips for both handles
+    format: {
+        to: function (value) {
+            return '{{currency()}}' + value.toFixed(0);
+        },
+        from: function (value) {
+            return Number(value.replace('{{currency()}}', ''));
+        }
+    }
+});
+
+slider.noUiSlider.on('update', function (values, handle) {
+    document.getElementById('min-price').value = values[0];
+    document.getElementById('max-price').value = values[1];
+    document.getElementById('maxPrice').innerHTML = values[1];
+    document.getElementById('minPrice').innerHTML = values[0];
+});
+</script>
