@@ -1,11 +1,8 @@
-
-<link rel="stylesheet" href="{{asset('assets/css/nouislider.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/css/jquery-ui.css')}}">
-
 <div class="row">
     <div class="col-12">
         <div class="ol-card">
             <div class="ol-card-body p-3 position-relative">
+
 
                 <div class="ol-card radius-8px print-d-none">
                     <div class="ol-card-body px-2">
@@ -18,9 +15,13 @@
                                 <div class="input-group dt-custom-search">
                                     <span class="input-group-text">
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M0.733496 7.66665C0.733496 11.4885 3.84493 14.6 7.66683 14.6C11.4887 14.6 14.6002 11.4885 14.6002 7.66665C14.6002 3.84475 11.4887 0.733313 7.66683 0.733313C3.84493 0.733313 0.733496 3.84475 0.733496 7.66665ZM1.9335 7.66665C1.9335 4.50847 4.50213 1.93331 7.66683 1.93331C10.8315 1.93331 13.4002 4.50847 13.4002 7.66665C13.4002 10.8248 10.8315 13.4 7.66683 13.4C4.50213 13.4 1.9335 10.8248 1.9335 7.66665Z" fill="#99A1B7" stroke="#99A1B7" stroke-width="0.2"/>
-                                            <path d="M14.2426 15.0907C14.3623 15.2105 14.5149 15.2667 14.6666 15.2667C14.8184 15.2667 14.9709 15.2105 15.0907 15.0907C15.3231 14.8583 15.3231 14.475 15.0907 14.2426L12.7774 11.9293C12.545 11.6969 12.1617 11.6969 11.9293 11.9293C11.6969 12.1617 11.6969 12.545 11.9293 12.7774L14.2426 15.0907Z" fill="#99A1B7" stroke="#99A1B7" stroke-width="0.2"/>
-                                        </svg>                                            
+                                            <path
+                                                d="M0.733496 7.66665C0.733496 11.4885 3.84493 14.6 7.66683 14.6C11.4887 14.6 14.6002 11.4885 14.6002 7.66665C14.6002 3.84475 11.4887 0.733313 7.66683 0.733313C3.84493 0.733313 0.733496 3.84475 0.733496 7.66665ZM1.9335 7.66665C1.9335 4.50847 4.50213 1.93331 7.66683 1.93331C10.8315 1.93331 13.4002 4.50847 13.4002 7.66665C13.4002 10.8248 10.8315 13.4 7.66683 13.4C4.50213 13.4 1.9335 10.8248 1.9335 7.66665Z"
+                                                fill="#99A1B7" stroke="#99A1B7" stroke-width="0.2" />
+                                            <path
+                                                d="M14.2426 15.0907C14.3623 15.2105 14.5149 15.2667 14.6666 15.2667C14.8184 15.2667 14.9709 15.2105 15.0907 15.0907C15.3231 14.8583 15.3231 14.475 15.0907 14.2426L12.7774 11.9293C12.545 11.6969 12.1617 11.6969 11.9293 11.9293C11.6969 12.1617 11.6969 12.545 11.9293 12.7774L14.2426 15.0907Z"
+                                                fill="#99A1B7" stroke="#99A1B7" stroke-width="0.2" />
+                                        </svg>
                                     </span>
                                     <input type="text" class="form-control" id="custom-search-box" placeholder="Search">
                                 </div>
@@ -49,38 +50,31 @@
                                 </a>
                                 <a href="{{ route('admin.projects', ['layout' => 'list']) }}" class="grid-icon {{ request('layout') === 'list' || request('layout') == '' ? 'active' : '' }}">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M17.5 4.375H2.5C2.15833 4.375 1.875 4.09167 1.875 3.75C1.875 3.40833 2.15833 3.125 2.5 3.125H17.5C17.8417 3.125 18.125 3.40833 18.125 3.75C18.125 4.09167 17.8417 4.375 17.5 4.375Z" fill="#6B708A"/>
-                                        <path d="M17.5 8.54166H2.5C2.15833 8.54166 1.875 8.25832 1.875 7.91666C1.875 7.57499 2.15833 7.29166 2.5 7.29166H17.5C17.8417 7.29166 18.125 7.57499 18.125 7.91666C18.125 8.25832 17.8417 8.54166 17.5 8.54166Z" fill="#6B708A"/>
-                                        <path d="M17.5 12.7083H2.5C2.15833 12.7083 1.875 12.425 1.875 12.0833C1.875 11.7417 2.15833 11.4583 2.5 11.4583H17.5C17.8417 11.4583 18.125 11.7417 18.125 12.0833C18.125 12.425 17.8417 12.7083 17.5 12.7083Z" fill="#6B708A"/>
-                                        <path d="M17.5 16.875H2.5C2.15833 16.875 1.875 16.5917 1.875 16.25C1.875 15.9083 2.15833 15.625 2.5 15.625H17.5C17.8417 15.625 18.125 15.9083 18.125 16.25C18.125 16.5917 17.8417 16.875 17.5 16.875Z" fill="#6B708A"/>
-                                    </svg>                                        
+                                        <path d="M17.5 4.375H2.5C2.15833 4.375 1.875 4.09167 1.875 3.75C1.875 3.40833 2.15833 3.125 2.5 3.125H17.5C17.8417 3.125 18.125 3.40833 18.125 3.75C18.125 4.09167 17.8417 4.375 17.5 4.375Z" fill="#6B708A" />
+                                        <path d="M17.5 8.54166H2.5C2.15833 8.54166 1.875 8.25832 1.875 7.91666C1.875 7.57499 2.15833 7.29166 2.5 7.29166H17.5C17.8417 7.29166 18.125 7.57499 18.125 7.91666C18.125 8.25832 17.8417 8.54166 17.5 8.54166Z" fill="#6B708A" />
+                                        <path d="M17.5 12.7083H2.5C2.15833 12.7083 1.875 12.425 1.875 12.0833C1.875 11.7417 2.15833 11.4583 2.5 11.4583H17.5C17.8417 11.4583 18.125 11.7417 18.125 12.0833C18.125 12.425 17.8417 12.7083 17.5 12.7083Z" fill="#6B708A" />
+                                        <path d="M17.5 16.875H2.5C2.15833 16.875 1.875 16.5917 1.875 16.25C1.875 15.9083 2.15833 15.625 2.5 15.625H17.5C17.8417 15.625 18.125 15.9083 18.125 16.25C18.125 16.5917 17.8417 16.875 17.5 16.875Z" fill="#6B708A" />
+                                    </svg>
                                 </a>
-                          
-                                <div class="custom-dropdown dropdown filter-dropdown btn-group" id="export-btn">
-                                    <a href="javascript:void(0)" class="dropdown-header btn ol-btn-light d-none" id="filterDropdownButton1"  data-bs-toggle="dropdown" aria-expanded="false">
+
+                                <div class="custom-dropdown dropdown filter-dropdown" id="export-btn">
+                                    <button class="dropdown-header btn ol-btn-light" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7.29327 15.1C6.97327 15.1 6.65993 15.02 6.3666 14.86C5.77993 14.5333 5.4266 13.94 5.4266 13.2733V9.73999C5.4266 9.40666 5.2066 8.90666 4.99993 8.65333L2.5066 6.01333C2.0866 5.59333 1.7666 4.87333 1.7666 4.33333V2.79999C1.7666 1.73333 2.57327 0.899994 3.59993 0.899994H12.3999C13.4133 0.899994 14.2333 1.71999 14.2333 2.73333V4.19999C14.2333 4.89999 13.8133 5.69333 13.4199 6.08666L10.5333 8.63999C10.2533 8.87333 10.0333 9.38666 10.0333 9.79999V12.6667C10.0333 13.26 9.65993 13.9467 9.19327 14.2267L8.27327 14.82C7.97327 15.0067 7.63327 15.1 7.29327 15.1ZM3.59993 1.89999C3.13327 1.89999 2.7666 2.29333 2.7666 2.79999V4.33333C2.7666 4.57999 2.9666 5.05999 3.21993 5.31333L5.75994 7.98666C6.09994 8.40666 6.43327 9.10666 6.43327 9.73333V13.2667C6.43327 13.7 6.73327 13.9133 6.85993 13.98C7.13994 14.1333 7.47993 14.1333 7.73993 13.9733L8.6666 13.38C8.85327 13.2667 9.03994 12.9067 9.03994 12.6667V9.79999C9.03994 9.08666 9.3866 8.29999 9.8866 7.87999L12.7399 5.35333C12.9666 5.12666 13.2399 4.58666 13.2399 4.19333V2.73333C13.2399 2.27333 12.8666 1.89999 12.4066 1.89999H3.59993Z" fill="#99A1B7"/>
-                                            <path d="M3.99995 7.16667C3.90661 7.16667 3.81995 7.14 3.73328 7.09334C3.49995 6.94667 3.42661 6.63334 3.57328 6.4L6.85995 1.13334C7.00661 0.900003 7.31328 0.826669 7.54661 0.973336C7.77995 1.12 7.85328 1.42667 7.70661 1.66L4.41995 6.92667C4.32661 7.08 4.16661 7.16667 3.99995 7.16667Z" fill="#99A1B7"/>
-                                        </svg>                                            
+                                            <path
+                                                d="M7.29327 15.1C6.97327 15.1 6.65993 15.02 6.3666 14.86C5.77993 14.5333 5.4266 13.94 5.4266 13.2733V9.73999C5.4266 9.40666 5.2066 8.90666 4.99993 8.65333L2.5066 6.01333C2.0866 5.59333 1.7666 4.87333 1.7666 4.33333V2.79999C1.7666 1.73333 2.57327 0.899994 3.59993 0.899994H12.3999C13.4133 0.899994 14.2333 1.71999 14.2333 2.73333V4.19999C14.2333 4.89999 13.8133 5.69333 13.4199 6.08666L10.5333 8.63999C10.2533 8.87333 10.0333 9.38666 10.0333 9.79999V12.6667C10.0333 13.26 9.65993 13.9467 9.19327 14.2267L8.27327 14.82C7.97327 15.0067 7.63327 15.1 7.29327 15.1ZM3.59993 1.89999C3.13327 1.89999 2.7666 2.29333 2.7666 2.79999V4.33333C2.7666 4.57999 2.9666 5.05999 3.21993 5.31333L5.75994 7.98666C6.09994 8.40666 6.43327 9.10666 6.43327 9.73333V13.2667C6.43327 13.7 6.73327 13.9133 6.85993 13.98C7.13994 14.1333 7.47993 14.1333 7.73993 13.9733L8.6666 13.38C8.85327 13.2667 9.03994 12.9067 9.03994 12.6667V9.79999C9.03994 9.08666 9.3866 8.29999 9.8866 7.87999L12.7399 5.35333C12.9666 5.12666 13.2399 4.58666 13.2399 4.19333V2.73333C13.2399 2.27333 12.8666 1.89999 12.4066 1.89999H3.59993Z"
+                                                fill="#99A1B7" />
+                                            <path
+                                                d="M3.99995 7.16667C3.90661 7.16667 3.81995 7.14 3.73328 7.09334C3.49995 6.94667 3.42661 6.63334 3.57328 6.4L6.85995 1.13334C7.00661 0.900003 7.31328 0.826669 7.54661 0.973336C7.77995 1.12 7.85328 1.42667 7.70661 1.66L4.41995 6.92667C4.32661 7.08 4.16661 7.16667 3.99995 7.16667Z"
+                                                fill="#99A1B7" />
+                                        </svg>
                                         {{ get_phrase('Filter') }}
-                                        {{-- <span class="filter-count-display" id="filter-count-display"></span> --}}
-                                        <button class="filer-left-border" type="reset"> x </button>
-                                    </a>
-                                        <button class="dropdown-header btn ol-btn-light dropdown-toggle-split" type="button" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M7.29327 15.1C6.97327 15.1 6.65993 15.02 6.3666 14.86C5.77993 14.5333 5.4266 13.94 5.4266 13.2733V9.73999C5.4266 9.40666 5.2066 8.90666 4.99993 8.65333L2.5066 6.01333C2.0866 5.59333 1.7666 4.87333 1.7666 4.33333V2.79999C1.7666 1.73333 2.57327 0.899994 3.59993 0.899994H12.3999C13.4133 0.899994 14.2333 1.71999 14.2333 2.73333V4.19999C14.2333 4.89999 13.8133 5.69333 13.4199 6.08666L10.5333 8.63999C10.2533 8.87333 10.0333 9.38666 10.0333 9.79999V12.6667C10.0333 13.26 9.65993 13.9467 9.19327 14.2267L8.27327 14.82C7.97327 15.0067 7.63327 15.1 7.29327 15.1ZM3.59993 1.89999C3.13327 1.89999 2.7666 2.29333 2.7666 2.79999V4.33333C2.7666 4.57999 2.9666 5.05999 3.21993 5.31333L5.75994 7.98666C6.09994 8.40666 6.43327 9.10666 6.43327 9.73333V13.2667C6.43327 13.7 6.73327 13.9133 6.85993 13.98C7.13994 14.1333 7.47993 14.1333 7.73993 13.9733L8.6666 13.38C8.85327 13.2667 9.03994 12.9067 9.03994 12.6667V9.79999C9.03994 9.08666 9.3866 8.29999 9.8866 7.87999L12.7399 5.35333C12.9666 5.12666 13.2399 4.58666 13.2399 4.19333V2.73333C13.2399 2.27333 12.8666 1.89999 12.4066 1.89999H3.59993Z" fill="#99A1B7"/>
-                                                <path d="M3.99995 7.16667C3.90661 7.16667 3.81995 7.14 3.73328 7.09334C3.49995 6.94667 3.42661 6.63334 3.57328 6.4L6.85995 1.13334C7.00661 0.900003 7.31328 0.826669 7.54661 0.973336C7.77995 1.12 7.85328 1.42667 7.70661 1.66L4.41995 6.92667C4.32661 7.08 4.16661 7.16667 3.99995 7.16667Z" fill="#99A1B7"/>
-                                            </svg>                                            
-                                            {{ get_phrase('Filter') }}
-                                            <span class="filter-count-display d-none" id="filter-count-display"></span>
-                                        </button>
-                                        <button type="button" class="btn ol-btn-light"> x </button>
-                                        
+                                        <span class="filter-count-display d-none" id="filter-count-display"></span>
+                                    </button>
                                     <!-- Dropdown Menu -->
                                     <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
                                         <!-- Category -->
                                         <div class="mb-3">
-                                            <label for="category" class="form-label">{{get_phrase('Category')}}</label>
+                                            <label for="category" class="form-label">{{ get_phrase('Category') }}</label>
                                             <select class="form-control px-14px" name="category" id="category">
                                                 <option value="all">Select status</option>
                                                 <option value="55">55</option>
@@ -88,37 +82,41 @@
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="status" class="form-label">{{get_phrase('Status')}}</label>
+                                            <label for="status" class="form-label">{{ get_phrase('Status') }}</label>
                                             <select class="form-control px-14px" name="status" id="status">
-                                                <option value="all"> {{get_phrase('Select status')}} </option>
-                                                <option value="in_progress"> {{get_phrase('In Progress')}} </option>
-                                                <option value="not_started"> {{get_phrase('Not Started')}} </option>
-                                                <option value="completed"> {{get_phrase('Completed')}} </option>
+                                                <option value="all"> {{ get_phrase('Select status') }} </option>
+                                                <option value="in_progress"> {{ get_phrase('In Progress') }} </option>
+                                                <option value="not_started"> {{ get_phrase('Not Started') }} </option>
+                                                <option value="completed"> {{ get_phrase('Completed') }} </option>
                                             </select>
                                         </div>
                                         <!-- Status -->
                                         <div class="mb-3">
-                                            <label for="status" class="form-label">{{get_phrase('Client')}}</label>
+                                            <label for="status" class="form-label">{{ get_phrase('Client') }}</label>
                                             <select class="form-control px-14px" name="client" id="client">
-                                                <option value="all">{{get_phrase('Select client')}}</option>
+                                                <option value="all">{{ get_phrase('Select client') }}</option>
                                                 @foreach ($clients as $client)
-                                                    <option value="{{$client->id}}">{{$client->name}}</option>
+                                                    <option value="{{ $client->id }}">{{ $client->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <!-- Instructor -->
                                         <div class="mb-3">
-                                            <label for="staff" class="form-label">{{get_phrase('Staff')}}</label>
+                                            <label for="staff" class="form-label">{{ get_phrase('Staff') }}</label>
                                             <select class="form-control px-14px" name="staff" id="staff">
-                                                <option value="all">{{get_phrase('Select staff')}}</option>
+                                                <option value="all">{{ get_phrase('Select staff') }}</option>
                                                 @foreach ($staffs as $staff)
-                                                    <option value="{{$staff->id}}"> {{$staff->name}} </option>
+                                                    <option value="{{ $staff->id }}"> {{ $staff->name }} </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <!-- Price -->
                                         <div class="mb-3">
-                                            <label for="budget" class="form-label">{{get_phrase('Budget')}}</label>
+                                            <label for="budget" class="form-label">{{ get_phrase('Budget') }}</label>
+
+                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css">
+                                            <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
                                             <div class="accordion-item-range">
                                                 <div id="budget-slider"></div>
                                                 <div class="accordion-range-value d-flex align-items-center justify-content-between mt-4">
@@ -134,10 +132,50 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+                                            <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
+
+                                            <script>
+                                                const dropdownItems = document.querySelectorAll('.dropdown-menu');
+                                                dropdownItems.forEach(item => {
+                                                    item.addEventListener('click', function(e) {
+                                                        e.stopPropagation(); // Prevent the dropdown from closing
+                                                    });
+                                                });
+
+                                                var slider = document.getElementById('budget-slider');
+
+                                                noUiSlider.create(slider, {
+                                                    start: [0, 1000], // Initial range values
+                                                    connect: true,
+                                                    range: {
+                                                        'min': 0,
+                                                        'max': 170
+                                                    },
+                                                    tooltips: [true, true], // Show tooltips for both handles
+                                                    format: {
+                                                        to: function(value) {
+                                                            return value.toFixed(0); // Round to nearest integer
+                                                        },
+                                                        from: function(value) {
+                                                            return Number(value.replace('', '')); // Parse number
+                                                        }
+                                                    }
+                                                });
+
+                                                slider.noUiSlider.on('update', function(values, handle) {
+                                                    document.getElementById('min-price').value = values[0];
+                                                    document.getElementById('max-price').value = values[1];
+                                                    document.getElementById('maxPrice').innerHTML = values[1];
+                                                    document.getElementById('minPrice').innerHTML = values[0];
+                                                });
+                                            </script>
+
                                         </div>
                                         <!-- Apply Button -->
                                         <div class="text-end">
-                                            <button type="button" id="filter" class="btn btn-apply px-14px">{{get_phrase('Apply')}}</button>
+                                            <button type="button" id="filter" class="btn btn-apply px-14px">{{ get_phrase('Apply') }}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -147,7 +185,6 @@
                                 </button>
                             </div>
                         </div>
-            
                     </div>
                 </div>
 
@@ -181,9 +218,9 @@
                         <option value="50">50</option>
                         <option value="100">100</option>
                     </select>
-                    <label for="page-length-select" class="ps-2 w-100"> of {{count($projects)}}</label>
+                    <label for="page-length-select" class="ps-2 w-100"> of {{ count($projects) }}</label>
                 </div>
-                
+
                 <input type="hidden" value="project" id="datatable_type">
                 <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
                     <i class="fi fi-rr-trash"></i>
@@ -195,55 +232,11 @@
     </div>
 </div>
 
-@php
-    $max_value = App\Models\Project::select(DB::raw('CAST(budget AS UNSIGNED) as numeric_budget'))->orderBy('numeric_budget', 'desc')->value('numeric_budget');
-    $min_value = App\Models\Project::select(DB::raw('CAST(budget AS UNSIGNED) as numeric_budget'))->orderBy('numeric_budget', 'asc')->value('numeric_budget');
-@endphp
-<script src="{{asset('assets/js/jquery-ui.min.js')}}"></script>
-<script src="{{asset('assets/js/nouislider.min.js')}}"></script>
-<script>
-var max = 1000;
-const dropdownItems = document.querySelectorAll('.dropdown-menu');
-dropdownItems.forEach(item => {
-    item.addEventListener('click', function (e) {
-        e.stopPropagation(); // Prevent the dropdown from closing
-    });
-});
-
-var slider = document.getElementById('budget-slider');
-var min = 0;
-
-noUiSlider.create(slider, {
-    start: [min, max], // Initial range values
-    connect: true,
-    range: {
-        'min': min,
-        'max': max
-    },
-    tooltips: [true, true], // Show tooltips for both handles
-    format: {
-        to: function (value) {
-            return value.toFixed(0); // Round to nearest integer
-        },
-        from: function (value) {
-            return Number(value.replace('', '')); // Parse number
-        }
-    }
-});
-
-slider.noUiSlider.on('update', function (values, handle) {
-    document.getElementById('min-price').value = values[0];
-    document.getElementById('max-price').value = values[1];
-    document.getElementById('maxPrice').innerHTML = values[1];
-    document.getElementById('minPrice').innerHTML = values[0];
-});
-</script>
 @include('components.datatable')
 @push('js')
-
-<script>
-    setTimeout(function(){
-        server_side_datatable('["id","title","code","client","staff","budget","progress","status","options"]','{{ route(get_current_user_role().".projects",["layout"=>"list"]) }}');
-    }, 500);
-</script>
+    <script>
+        setTimeout(function() {
+            server_side_datatable('["id","title","code","client","staff","budget","progress","status","options"]', "{{ route(get_current_user_role() . '.projects', ['layout' => 'list']) }}");
+        }, 500);
+    </script>
 @endpush

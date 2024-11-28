@@ -3,48 +3,50 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Payment;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
 class ServerSideDataController extends Controller
 {
 
-    public function project_server_side($string, $category, $status, $client, $staff, $minPrice, $maxPrice) {
+    public function project_server_side($string, $category, $status, $client, $staff, $minPrice, $maxPrice)
+    {
         $query = Project::query();
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
                 $q->where('title', 'like', "%{$string}%")
-                ->orWhere('code', 'like', "%{$string}%")
-                ->orWhereHas('user', function ($userQuery) use ($string) {
-                    $userQuery->where('name', 'like', "%{$string}%");
-                });
+                    ->orWhere('code', 'like', "%{$string}%")
+                    ->orWhereHas('user', function ($userQuery) use ($string) {
+                        $userQuery->where('name', 'like', "%{$string}%");
+                    });
             });
         }
 
         $filter_count = [];
-        if($category != 'all') {
+        if ($category != 'all') {
             $filter_count[] = $category;
             $query->where(function ($q) use ($category) {
                 $q->where('category_id', $category);
             });
         }
-        if($status != 'all') {
+        if ($status != 'all') {
             $filter_count[] = $status;
             $query->where(function ($q) use ($status) {
                 $q->where('status', $status);
             });
         }
-        if($client != 'all') {
+        if ($client != 'all') {
             $filter_count[] = $client;
             $query->where(function ($q) use ($client) {
                 $q->where('client_id', $client);
             });
         }
-        if($staff != 'all') {
+        if ($staff != 'all') {
             $filter_count[] = $staff;
-            $staff = json_encode($staff);
-            $staff = str_replace('[','',$staff);
-            $staff = str_replace(']','',$staff);
+            $staff          = json_encode($staff);
+            $staff          = str_replace('[', '', $staff);
+            $staff          = str_replace(']', '', $staff);
             $query->where(function ($q) use ($staff) {
                 $q->where('staffs', 'like', "%{$staff}%");
             });
@@ -57,73 +59,73 @@ class ServerSideDataController extends Controller
             $query->whereBetween('budget', [$minPrice, $maxPrice]);
         }
         return datatables()
-        ->eloquent($query)
-        ->addColumn('id', function ($project) {
-            static $key = 1;
-            return '
+            ->eloquent($query)
+            ->addColumn('id', function ($project) {
+                static $key = 1;
+                return '
                 <div class="d-flex align-items-center">
                     <input type="checkbox" class="checkbox-item me-2 table-checkbox">
                     <p class="row-number fs-12px">' . $key++ . '</p>
-                    <input type="hidden" class="datatable-row-id" value="'.$project->id.'">
+                    <input type="hidden" class="datatable-row-id" value="' . $project->id . '">
                 </div>
             ';
-        })
-        ->addColumn('title', function ($project) {
-            return $project?->title;
-        })
-        ->addColumn('code', function ($project) {
-            return $project?->code;
-        })
-        ->addColumn('client', function ($project) {
-            return $project->user->name;
-        })
-        ->addColumn('staff', function ($project) {
-            $staffs = $project->staffs ? json_decode($project->staffs, true) : [];
-            $staffNames = [];
-            foreach ($staffs as $staff) {
-                $user = get_user($staff);
-                if ($user) {
-                    $staffNames[] = $user->name;
+            })
+            ->addColumn('title', function ($project) {
+                return $project?->title;
+            })
+            ->addColumn('code', function ($project) {
+                return $project?->code;
+            })
+            ->addColumn('client', function ($project) {
+                return $project->user->name;
+            })
+            ->addColumn('staff', function ($project) {
+                $staffs     = $project->staffs ? json_decode($project->staffs, true) : [];
+                $staffNames = [];
+                foreach ($staffs as $staff) {
+                    $user = get_user($staff);
+                    if ($user) {
+                        $staffNames[] = $user->name;
+                    }
                 }
-            }
-            return implode(', ', $staffNames);
-        })
-        ->addColumn('budget', function ($project) {
-            return currency($project->budget);
-        })
-        ->addColumn('progress', function ($project) {
-            $progress = $project->progress;
-            return '<div class="dAdmin_profile d-flex align-items-start flex-column min-w-200px">
-                <span class="p-2 pt-0 fs-12px">'.$progress.'%</span>
+                return implode(', ', $staffNames);
+            })
+            ->addColumn('budget', function ($project) {
+                return currency($project->budget);
+            })
+            ->addColumn('progress', function ($project) {
+                $progress = $project->progress;
+                return '<div class="dAdmin_profile d-flex align-items-start flex-column min-w-200px">
+                <span class="p-2 pt-0 fs-12px">' . $progress . '%</span>
                 <div class="progress ms-2">
                     <div class="progress-bar bg-primary" role="progressbar"
-                    style="width: '.$progress.'%; "
-                    aria-valuenow="'.$progress.'" aria-valuemin="0"
+                    style="width: ' . $progress . '%; "
+                    aria-valuenow="' . $progress . '" aria-valuemin="0"
                     aria-valuemax="100">
                     </div>
                 </div>
             </div>';
-        })
-        ->addColumn('status', function ($project) {
-            $status = $project->status;
-            $statusLabel = '';
-            if ($status == 'in_progress') {
-                $statusLabel = '<span class="in_progress">' . get_phrase('In Progress') . '</span>';
-            } elseif ($status == 'not_started') {
-                $statusLabel = '<span class="not_started">' . get_phrase('Not Started') . '</span>';
-            } elseif ($status == 'completed') {
-                $statusLabel = '<span class="completed">' . get_phrase('Completed') . '</span>';
-            }            
-            // Return the wrapped HTML
-            return $statusLabel;
-        })
-        ->addColumn('options', function ($project) {
-            // Generate routes dynamically
-            $editRoute = route(get_current_user_role() . '.project.edit', $project->code);
-            $deleteRoute = route(get_current_user_role() . '.project.delete', $project->code);
-            $viewRoute = route(get_current_user_role() . '.project.details', $project->code);
-            
-            return '
+            })
+            ->addColumn('status', function ($project) {
+                $status      = $project->status;
+                $statusLabel = '';
+                if ($status == 'in_progress') {
+                    $statusLabel = '<span class="in_progress">' . get_phrase('In Progress') . '</span>';
+                } elseif ($status == 'not_started') {
+                    $statusLabel = '<span class="not_started">' . get_phrase('Not Started') . '</span>';
+                } elseif ($status == 'completed') {
+                    $statusLabel = '<span class="completed">' . get_phrase('Completed') . '</span>';
+                }
+                // Return the wrapped HTML
+                return $statusLabel;
+            })
+            ->addColumn('options', function ($project) {
+                // Generate routes dynamically
+                $editRoute   = route(get_current_user_role() . '.project.edit', $project->code);
+                $deleteRoute = route(get_current_user_role() . '.project.delete', $project->code);
+                $viewRoute   = route(get_current_user_role() . '.project.details', $project->code);
+
+                return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
@@ -141,16 +143,17 @@ class ServerSideDataController extends Controller
                     </ul>
                 </div>
             ';
-        })        
-        ->rawColumns(['id','title','code','client','staff','budget','progress','status','options'])
-        ->setRowClass(function () {
-            return 'context-menu';
-        })
-        ->with('filter_count', count($filter_count))
-        ->make(true); 
+            })
+            ->rawColumns(['id', 'title', 'code', 'client', 'staff', 'budget', 'progress', 'status', 'options'])
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
+            ->with('filter_count', count($filter_count))
+            ->make(true);
     }
 
-    function category_server_side($string, $category, $status, $client, $staff, $minPrice, $maxPrice) {
+    public function category_server_side($string, $category, $status, $client, $staff, $minPrice, $maxPrice)
+    {
         $query = Category::query();
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
@@ -160,44 +163,44 @@ class ServerSideDataController extends Controller
         $filter_count = [];
 
         return datatables()
-        ->eloquent($query)
-        ->addColumn('id', function ($category) {
-            static $key = 1;
-            return '
+            ->eloquent($query)
+            ->addColumn('id', function ($category) {
+                static $key = 1;
+                return '
                 <div class="d-flex align-items-center">
                     <input type="checkbox" class="checkbox-item me-2 table-checkbox">
                     <p class="row-number fs-12px">' . $key++ . '</p>
-                    <input type="hidden" class="datatable-row-id" value="'.$category->id.'">
+                    <input type="hidden" class="datatable-row-id" value="' . $category->id . '">
                 </div>
             ';
-        })
-        ->addColumn('name', function ($category) {
-            return $category?->name;
-        })
-        ->addColumn('parent', function ($category) {
-            if($category->parent != 0) {
-                $category_parent = Category::find($category->parent);
-                return $category_parent?->name;
-            }else {
-                return '';
-            }
-        })
-        ->addColumn('status', function ($category) {
-            $statusLabel = '';
-            if ($category->status == 1) {
-                $statusLabel = '<span class="completed">' . get_phrase('Active') . '</span>';
-            } elseif ($category->status == 0) {
-                $statusLabel = '<span class="in_progress">' . get_phrase('De-Active') . '</span>';
-            }
-            return $statusLabel;
-        })
-        ->addColumn('options', function ($category) {
-            // Generate routes dynamically
-            $editRoute = route(get_current_user_role() . '.project.category.edit', $category->id);
-            $deleteRoute = route(get_current_user_role() . '.project.category.delete', $category->id);
-            $viewRoute = route(get_current_user_role() . '.project.details', $category->id);
-            
-            return '
+            })
+            ->addColumn('name', function ($category) {
+                return $category?->name;
+            })
+            ->addColumn('parent', function ($category) {
+                if ($category->parent != 0) {
+                    $category_parent = Category::find($category->parent);
+                    return $category_parent?->name;
+                } else {
+                    return '';
+                }
+            })
+            ->addColumn('status', function ($category) {
+                $statusLabel = '';
+                if ($category->status == 1) {
+                    $statusLabel = '<span class="completed">' . get_phrase('Active') . '</span>';
+                } elseif ($category->status == 0) {
+                    $statusLabel = '<span class="in_progress">' . get_phrase('De-Active') . '</span>';
+                }
+                return $statusLabel;
+            })
+            ->addColumn('options', function ($category) {
+                // Generate routes dynamically
+                $editRoute   = route(get_current_user_role() . '.project.category.edit', $category->id);
+                $deleteRoute = route(get_current_user_role() . '.project.category.delete', $category->id);
+                $viewRoute   = route(get_current_user_role() . '.project.details', $category->id);
+
+                return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
@@ -215,14 +218,87 @@ class ServerSideDataController extends Controller
                     </ul>
                 </div>
             ';
-        })        
-        ->rawColumns(["id","name","parent","status","options"])
-        ->setRowClass(function () {
-            return 'context-menu';
-        })
-        ->with('filter_count', count($filter_count))
-        ->make(true); 
+            })
+            ->rawColumns(["id", "name", "parent", "status", "options"])
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
+            ->with('filter_count', count($filter_count))
+            ->make(true);
     }
+    public function report_server_side($string, $status, $paymentMethod, $minPayment, $maxPayment)
+    {
+        $query = Payment::query(); // Eager load the project relationship
 
+        // Search filter
+        if (!empty($string)) {
+            $query->whereHas('project', function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%"); // Search within the project title
+            });
+        }
+
+        $filter_count = [];
+
+        // Status filter
+        if ($status != 'all') {
+            $filter_count[] = $status;
+            $query->where('status', $status);
+        }
+
+        // Payment method filter
+        if ($paymentMethod != 'all') {
+            $filter_count[] = $paymentMethod;
+            $query->where('payment_method', $paymentMethod);
+        }
+
+        // Payment range filter
+        $maxPayment = (int) $maxPayment;
+        $minPayment = (int) $minPayment;
+        if ($minPayment > 0 || $maxPayment > 0) {
+            $filter_count[] = "{$minPayment}-{$maxPayment}";
+            $query->whereBetween('payment', [$minPayment, $maxPayment]);
+        }
+
+        // Return Datatables response
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('id', function ($report) {
+                static $key = 1;
+                return '
+                <div class="d-flex align-items-center">
+                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                    <p class="row-number fs-12px">' . $key++ . '</p>
+                    <input type="hidden" class="datatable-row-id" value="' . $report->id . '">
+                </div>
+            ';
+            })
+            ->addColumn('timestamp_start', function ($report) {
+                return $report->timestamp_start;
+            })
+            ->addColumn('project', function ($report) {
+                return $report->project->title ?? '-';
+            })
+            ->addColumn('payment', function ($report) {
+                return currency($report->payment);
+            })
+            ->addColumn('payment_method', function ($report) {
+                return ucfirst($report->payment_method);
+            })
+            ->addColumn('status', function ($report) {
+                $status = $report->status;
+                if ($status === 'paid') {
+                    return '<span class="paid">' . get_phrase('Paid') . '</span>';
+                } elseif ($status === 'unpaid') {
+                    return '<span class="unpaid">' . get_phrase('Unpaid') . '</span>';
+                }
+                return '-';
+            })
+            ->rawColumns(['id', 'timestamp_start', 'project_title', 'payment', 'payment_method', 'status'])
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
+            ->with('filter_count', count($filter_count))
+            ->make(true);
+    }
 
 }

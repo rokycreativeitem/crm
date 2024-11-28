@@ -2481,7 +2481,7 @@ textarea.ol-form-textarea {
     align-items: center;
     justify-content: center;
     transition: 0.3s;
-    border: 1px solid #E4E7F1;
+    border: 1px solid #e4e7f1;
 }
 
 .ol-icon-dropdown .dropdown-toggle:active,
@@ -4867,7 +4867,7 @@ input.daterangepicker {
     width: min-content;
     border-radius: 6px !important;
     background: #f7f7f9;
-    border: 1px solid #E4E7F1;
+    border: 1px solid #e4e7f1;
 }
 
 .dropdown-list {
@@ -5582,10 +5582,10 @@ td .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
     padding: 16px;
     border-radius: 6px;
     background: white;
-    border: 1px solid #E4E7F1;
+    border: 1px solid #e4e7f1;
 }
 .grid-list .context-menu {
-    border-bottom: 1px solid #E4E7F1 !important;
+    border-bottom: 1px solid #e4e7f1 !important;
 }
 
 .grid-header {
@@ -5684,7 +5684,7 @@ td .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
     background: #f7f7f9;
     border-radius: 6px;
     padding: 8px;
-    border: 1px solid #E4E7F1;
+    border: 1px solid #e4e7f1;
 }
 
 .top-bar {
@@ -5873,7 +5873,7 @@ div.dt-container .dt-paging .dt-paging-button {
     border-radius: 2px;
     color: #6b708a;
     border-radius: 6px;
-    border: 1px solid #E4E7F1;
+    border: 1px solid #e4e7f1;
     background: #f7f7f9;
 }
 
@@ -5905,13 +5905,18 @@ button.dt-paging-button.previous {
 .w-260 {
     width: 260px;
 }
-.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
-    border-color: #E4E7F1 !important;
+.btn-check:checked + .btn,
+.btn.active,
+.btn.show,
+.btn:first-child:active,
+:not(.btn-check) + .btn:active {
+    border-color: #e4e7f1 !important;
 }
-.ol-btn-light:active, .ol-btn-light:hover {
+.ol-btn-light:active,
+.ol-btn-light:hover {
     background: #ededf3 !important;
     color: #6b708a !important;
-    border: 1px solid #E4E7F1;
+    border: 1px solid #e4e7f1;
 }
 
 /* datatable design */
@@ -5999,8 +6004,8 @@ table.dataTable thead > tr > td.dt-orderable-desc:hover {
 .dt-custom-search {
     width: 196px;
     height: 37px;
-    background: #F7F7F9;
-    border: 1px solid #E4E7F1;
+    background: #f7f7f9;
+    border: 1px solid #e4e7f1;
     border-radius: 6px;
 }
 .dt-custom-search input {
@@ -6083,8 +6088,8 @@ ul.pagination li .page-link {
     padding: 5px 40px 5px 20px !important;
     border-radius: 6px !important;
     font-size: 12px;
-    background-color: #F7F7F9 !important;
-    border: 1px solid #E4E7F1
+    background-color: #f7f7f9 !important;
+    border: 1px solid #e4e7f1;
 }
 .page-length-select .select2-search__field {
     display: none !important;
@@ -6144,6 +6149,7 @@ table.dataTable > tbody > tr > td {
     border-right: 1px solid #e5e5e5 !important;
     z-index: 9;
 }
+
 .filter-dropdown .filter-count-display {
     background: #212534;
     color: #fff;
@@ -6153,14 +6159,16 @@ table.dataTable > tbody > tr > td {
     margin: 0 5px;
 }
 .filer-left-border {
-    border-left: 2px solid #E4E7F1 !important;
+    border-left: 2px solid #e4e7f1 !important;
     padding: 0 5px;
     background: transparent;
 }
-.filter-dropdown .dropdown-menu, .filter-dropdown .dropdown-menu button, .filter-dropdown .dropdown-menu select {
+.filter-dropdown .dropdown-menu,
+.filter-dropdown .dropdown-menu button,
+.filter-dropdown .dropdown-menu select {
     font-size: 14px !important;
 }
-.dataTable td{
+.dataTable td {
     font-weight: 500 !important;
     color: #212534;
     font-size: 12px;
@@ -6168,12 +6176,13 @@ table.dataTable > tbody > tr > td {
 .dt-type-numeric {
     text-align: left !important;
 }
-.lpaginate .flex.justify-between.flex-1.sm\:hidden, .lpaginate p.text-sm.text-gray-700.leading-5.dark\:text-gray-400 {
+.lpaginate .flex.justify-between.flex-1.sm\:hidden,
+.lpaginate p.text-sm.text-gray-700.leading-5.dark\:text-gray-400 {
     display: none;
 }
 .lpaginate a {
-    background: #F7F7F9 !important;
-    border: 1px solid #E4E7F1 !important;
+    background: #f7f7f9 !important;
+    border: 1px solid #e4e7f1 !important;
     border-radius: 6px;
     padding: 0.5rem 1rem !important;
     margin: 0 2px;
@@ -6182,10 +6191,11 @@ span.relative.inline-flex.items-center.px-4.py-2.-ml-px.text-sm.font-medium.text
     padding: 0.65rem 1rem !important;
     border-radius: 6px;
     background: #1b84ff !important;
-    border: 1px solid #E4E7F1 !important;
+    border: 1px solid #e4e7f1 !important;
     color: #fff !important;
 }
-.lpaginate a:first-child, .lpaginate a:last-child {
+.lpaginate a:first-child,
+.lpaginate a:last-child {
     background: transparent !important;
     border: 0 !important;
     padding: 0.5rem 0.4rem !important;
@@ -6193,13 +6203,14 @@ span.relative.inline-flex.items-center.px-4.py-2.-ml-px.text-sm.font-medium.text
 .shadow-sm {
     box-shadow: 0 0 0 0 !important;
 }
-span.relative.inline-flex.items-center.px-2.py-2.-ml-px.text-sm.font-medium.text-gray-500.bg-white.border.border-gray-300.cursor-default.rounded-r-md.leading-5.dark\:bg-gray-800.dark\:border-gray-600, span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-500.bg-white.border.border-gray-300.cursor-default.rounded-l-md.leading-5.dark\:bg-gray-800.dark\:border-gray-600 {
+span.relative.inline-flex.items-center.px-2.py-2.-ml-px.text-sm.font-medium.text-gray-500.bg-white.border.border-gray-300.cursor-default.rounded-r-md.leading-5.dark\:bg-gray-800.dark\:border-gray-600,
+span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-500.bg-white.border.border-gray-300.cursor-default.rounded-l-md.leading-5.dark\:bg-gray-800.dark\:border-gray-600 {
     background: transparent;
     border: 0 !important;
 }
 .lpaginate svg {
     width: 15px;
-    fill: #6D718C !important;
+    fill: #6d718c !important;
 }
 .overflew-hidden {
     overflow: hidden;
@@ -6239,7 +6250,9 @@ span.relative.inline-flex.items-center.px-2.py-2.-ml-px.text-sm.font-medium.text
     top: -6px;
     border-radius: 50px;
 }
-.noUi-handle:after, .noUi-handle:before, .noUi-horizontal .noUi-tooltip {
+.noUi-handle:after,
+.noUi-handle:before,
+.noUi-horizontal .noUi-tooltip {
     display: none !important;
 }
 .accordion-item-range input {
@@ -6247,4 +6260,3 @@ span.relative.inline-flex.items-center.px-2.py-2.-ml-px.text-sm.font-medium.text
     border: 0;
     padding-left: 5px;
 }
-
