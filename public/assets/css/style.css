@@ -6128,12 +6128,18 @@ table.dataTable > tbody > tr > td {
 .filter-dropdown .btn-apply {
     border-radius: 8px;
     background-color: #007bff;
-    color: #fff;
+    color: #fff !important;
     padding: 10px 20px;
     border: none;
 }
+.filter-dropdown .btn-apply:hover {
+    background-color: #007bff !important;
+    color: #fff !important;
+    border-radius: 8px;
+}
 .filter-dropdown button {
     border-radius: 6px;
+    color: #6D718C !important;
 }
 .filter-dropdown button:hover {
     background: #f7f7f9 !important;
@@ -6141,16 +6147,27 @@ table.dataTable > tbody > tr > td {
     border-radius: 6px;
 }
 .dropdown-header {
-    border-right: 1px solid #e5e5e5 !important;
     z-index: 9;
 }
+.filter-reset {
+    position: relative;
+    color: #6D718C;
+}
+.filter-reset span {
+    position: absolute;
+    top: 8px;
+    left: -4px;
+    color: #E4E7F1;
+    z-index: 999;
+}
 .filter-dropdown .filter-count-display {
-    background: #212534;
+    background: #6D718C;
     color: #fff;
     border-radius: 50px;
     font-size: 11px;
     padding: 2px 5px;
     margin: 0 5px;
+    margin-right: 0;
 }
 .filer-left-border {
     border-left: 2px solid #E4E7F1 !important;

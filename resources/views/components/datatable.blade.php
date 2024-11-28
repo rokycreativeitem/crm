@@ -28,14 +28,17 @@
                 url: url,
                 type: 'GET',
                 data: function (d) {
-                    d.customSearch = $('#custom-search-box').val() || null;
-                    d.status = $('#status').val() || 'all';
-                    d.client = $('#client').val() || 'all';
-                    d.staff = $('#staff').val() || 'all';
-                    d.minPrice = $('#min-price').val() || 0;
-                    d.maxPrice = $('#max-price').val() || 'all';
-                    d.category = $('#category').val() || 'all';
+                    $('#filters-container :input').each(function () {
+                        var name = $(this).attr('name');
+                        var value = $(this).val();
+                        if (name) {
+                            d[name] = value || null;
+                        }
+                    });
                 },
+                // success: function(e){
+                //     console.log(e);
+                // },
                 error: function (xhr, error, thrown) {
                     console.log(xhr.responseText);
                 }
@@ -52,6 +55,7 @@
                 console.log('Filter count:', json.filter_count);
                 if (json.filter_count > 0) {
                     $('#filter-count-display').text(json.filter_count).removeClass('d-none');
+                    $('#filter-reset').removeClass('d-none');
                     $('#filterDropdownButton').addClass('p3-0');
                 }
             }
@@ -88,6 +92,12 @@
         });
 
         $('#filter').on('click', function(){
+            $('.server-side-datatable').DataTable().ajax.reload(null, false);
+        });
+        $('#filter-reset').on('click', function(){
+            $('#status, #client, #staff, #category').val('all')
+            $('.minPrice').val(0)
+            $('.filter-count-display, #filter-reset').addClass('d-none');
             $('.server-side-datatable').DataTable().ajax.reload(null, false);
         });
     });
