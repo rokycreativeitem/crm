@@ -172,10 +172,15 @@
         }
     }
 
-    function downloadPDF(elem = ".print-table", fileName = 'data') {
+    function downloadPDF(elem = ".server-side-datatable", fileName = 'data') {
+    try {
         $('.print-d-none:not(.row, .ol-header, .ol-card)').addClass('d-none');
-        // Get the table element as HTML
+        $('.d-lpaginate').addClass('d-none');
+
         const table = document.querySelector(elem);
+        if (!table) {
+            throw new Error(`Element with selector "${elem}" not found`);
+        }
 
         const options = {
             margin: 0.5,
@@ -194,14 +199,17 @@
             }
         };
 
-        // Generate PDF from the table
-        if (html2pdf().from(table).set(options).save()) {
-            setInterval(() => {
+        html2pdf().from(table).set(options).save().then(() => {
+            setTimeout(() => {
                 $('.print-d-none').removeClass('d-none');
             }, 2000);
-        }
+        });
 
+    } catch (error) {
+        console.error("Error in downloadPDF function:", error.message);
     }
+}
+
 
     function downloadTableAsCSV(elem, filename = 'data.csv') {
         var table = document.querySelector(elem);

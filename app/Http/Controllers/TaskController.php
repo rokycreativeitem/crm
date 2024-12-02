@@ -13,8 +13,11 @@ use Illuminate\Support\Facades\Validator;
 class TaskController extends Controller
 {
 
-    public function index(Request $request, $id)
+    public function index(Request $request, $id ="")
     {
+        if($request->ajax()){
+            return app(ServerSideDataController::class)->task_server_side($request->customSearch);                
+        }
 
         $page_data['project_tasks'] = Task::paginate(10);
         return view('projects.task.index', $page_data);
@@ -78,17 +81,13 @@ class TaskController extends Controller
 
     public function edit(Request $request, $id)
     {
-
         $data['task'] = Task::where('id', $id)->first();
-
         $staffs         = Role::where('title', 'staff')->first();
         $data['staffs'] = User::where('role_id', $staffs->id)->get();
-
         return view('projects.task.edit', $data);
     }
     public function update(Request $request, $id)
     {
-
         $project['title']      = $request->title;
         $project['status']     = $request->status;
         $project['progress']   = $request->progress;
@@ -96,7 +95,6 @@ class TaskController extends Controller
         $project['start_date'] = strtotime($request->start_date);
         $project['end_date']   = strtotime($request->end_date);
         Task::where('id', $request->id)->update($project);
-
         return response()->json([
             'success' => 'Task has been updated.',
         ]);
