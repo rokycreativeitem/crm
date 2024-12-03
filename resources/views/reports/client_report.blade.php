@@ -262,9 +262,7 @@
                         chart: {
                             height: 288,
                         },
-                        // legend: {
-                        //     position: 'left'
-                        // }
+
                     }
                 }]
             };

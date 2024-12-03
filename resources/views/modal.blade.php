@@ -207,6 +207,7 @@
                         processServerResponse(response);
                         $("#multiDelete").modal('hide');
                         $('.server-side-datatable').DataTable().ajax.reload(null, false);
+                        grid_view();
                     }
                 },
             });

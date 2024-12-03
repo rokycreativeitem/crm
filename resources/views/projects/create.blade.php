@@ -25,7 +25,12 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="category_id">{{ get_phrase('Category ID') }}</label>
-                        <input class="form-control ol-form-control" type="number" id="category_id" name="category_id" required>
+                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" name="category_id" required>
+                            <option value=""> {{get_phrase('select category')}} </option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="staffs">{{ get_phrase('Staffs') }}</label>

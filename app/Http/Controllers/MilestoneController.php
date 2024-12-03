@@ -12,6 +12,10 @@ class MilestoneController extends Controller
 {
     public function index(Request $request)
     {
+        if($request->ajax()){
+            return app(ServerSideDataController::class)->milestone_server_side($request->customSearch, $request->category, $request->status, $request->client, $request->staff, str_replace('$','',$request->minPrice), str_replace('$','',$request->maxPrice));                
+        }
+
         $page_data = Milestone::get();
 
         return view('projects.milestone.index', $page_data);

@@ -22,7 +22,12 @@ $(document).ready(function () {
 
     // Nice Select
     if ($niceSelect1.length > 0) {
-        $($niceSelect1).niceSelect();
+        $($niceSelect1).select2({
+            closeOnSelect: false, // Keeps the dropdown open
+            allowClear: true,     // Allows clearing selection (optional)
+            placeholder: "Select an option", // Placeholder text
+            width: 'resolve' // Adjust width to container
+        });
     }
 
 

@@ -450,9 +450,9 @@ span[class="fi-rr-"]:before {
 }
 .not_started {
     display: inline-block;
-    background: #ffe1e8;
+    background-color: #FFE1E4;
     color: #f8285a;
-    border: 1px solid #fff1f4;
+    border: 1px solid #FFE1E8;
     border-radius: 6px;
     padding: 6px;
     font-size: 12px;
@@ -6143,12 +6143,18 @@ table.dataTable > tbody > tr > td {
 .filter-dropdown .btn-apply {
     border-radius: 8px;
     background-color: #007bff;
-    color: #fff;
+    color: #fff !important;
     padding: 10px 20px;
     border: none;
 }
+.filter-dropdown .btn-apply:hover {
+    background-color: #007bff !important;
+    color: #fff !important;
+    border-radius: 8px;
+}
 .filter-dropdown button {
     border-radius: 6px;
+    color: #6D718C !important;
 }
 .filter-dropdown button:hover {
     background: #f7f7f9 !important;
@@ -6156,17 +6162,30 @@ table.dataTable > tbody > tr > td {
     border-radius: 6px;
 }
 .dropdown-header {
-    border-right: 1px solid #e5e5e5 !important;
     z-index: 9;
 }
 
+.filter-reset {
+    position: relative;
+    color: #6D718C;
+}
+.filter-reset span {
+    position: absolute;
+    top: 8px;
+    left: -4px;
+    color: #E4E7F1;
+    z-index: 999;
+}
 .filter-dropdown .filter-count-display {
-    background: #212534;
+    background: #6D718C;
     color: #fff;
-    border-radius: 50px;
+    border-radius: 79px;
     font-size: 11px;
-    padding: 2px 5px;
+    height: 16px !important;
     margin: 0 5px;
+    margin-right: 0;
+    display: inline-block;
+    width: 16px;
 }
 .filer-left-border {
     border-left: 2px solid #e4e7f1 !important;
@@ -6259,6 +6278,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     right: -17px;
     top: -6px;
     border-radius: 50px;
+    border: 1px solid #1B84FF !important;
 }
 .noUi-handle:after,
 .noUi-handle:before,
@@ -6266,10 +6286,31 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     display: none !important;
 }
 .accordion-item-range input {
+    padding: 5px 0;
+    border: 1px solid #E4E7F1;
+    background: #F7F7F9;
+    border-radius: 4px;
+    text-align: center;
+    max-width: 70px;
+}
+.noUi-target {
+    background: #E9E9F0 !important;
+    border-radius: 5px !important;
+    border: 0 !important;
+    box-shadow: 0 0 0 0 !important;
+}
+.noUi-handle {
+    border: 1px solid #1B84FF !important;
+}
+.ol-btn-light:active, .ol-btn-light:hover {
+    background: transparent !important;
+    border: 0;
+}
+.dropdown-export li a {
     background: transparent;
     border: 0;
-    padding-left: 5px;
 }
+<<<<<<< HEAD
 .apexcharts-canvas {
     height: 338px !important;
 }
@@ -6340,3 +6381,24 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     .apexcharts-pie-area {
     clip-path: inset(0% 0% -11% 0% round 4px);
 }
+=======
+.dropdown-export li a:hover {
+    background: #F7F7F9 !important;
+}
+.custom-dropdown .dropdown-menu {
+    border: 0;
+}
+.milestone-table .context-menu .circle-style li {
+    list-style: circle;
+}
+.download-btn {
+    background: #F7F7F9;
+    height: 32px;
+    width: 32px;
+    border-radius: 6px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+>>>>>>> f6265f02028411ba246f05e866e7d884fe64c828

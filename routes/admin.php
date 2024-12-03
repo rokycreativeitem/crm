@@ -64,6 +64,9 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::post('task/update/{id}', 'update')->name('task.update');
         Route::post('task/multi-delete', 'multiDelete')->name('task.multi-delete');
 
+        Route::get('tasks-datatable', 'index')->name('tasks.datatable');
+
+
     });
 
     Route::controller(GanttChartController::class)->group(function () {
