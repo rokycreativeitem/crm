@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Milestone;
+use App\Models\Project;
 use App\Models\Role;
 use App\Models\Task;
 use App\Models\User;
@@ -77,6 +78,14 @@ if (!function_exists('get_user_info')) {
     {
         $user_info = User::where('id', $user_id)->firstOrNew();
         return $user_info;
+    }
+}
+
+if (!function_exists('project_id_by_code')) {
+    function project_id_by_code($code = "")
+    {
+        $project = Project::where('code', $code)->first();
+        return $project->id;
     }
 }
 

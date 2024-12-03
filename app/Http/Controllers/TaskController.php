@@ -16,9 +16,10 @@ class TaskController extends Controller
     public function index(Request $request, $id ="")
     {
         if($request->ajax()){
-            return app(ServerSideDataController::class)->task_server_side($request->customSearch);                
+            return app(ServerSideDataController::class)->task_server_side($request->project_id, $request->customSearch, $request->team, $request->start_date, $request->end_date, $request->status, $request->progress);                
         }
 
+        $page_data['teams'] = User::where('role_id', 3)->get();
         $page_data['project_tasks'] = Task::paginate(10);
         return view('projects.task.index', $page_data);
     }

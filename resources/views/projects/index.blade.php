@@ -89,6 +89,7 @@
         </div>
     </div>
     <!-- End Admin area -->
+    
 @endsection
 
 @include('ajax')

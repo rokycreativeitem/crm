@@ -41,12 +41,12 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="start_date">{{ get_phrase('Start Date') }}</label>
-                        <input class="form-control ol-form-control" type="date" id="start_date" name="start_date"
+                        <input class="form-control ol-form-control" type="datetime-local" id="start_date" name="start_date"
                             required>
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="end_date">{{ get_phrase('End Date') }}</label>
-                        <input class="form-control ol-form-control" type="date" id="end_date" name="end_date"
+                        <input class="form-control ol-form-control" type="datetime-local" id="end_date" name="end_date"
                             required>
                     </div>
                     <div class="fpb7 mb-2">

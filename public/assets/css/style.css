@@ -6318,4 +6318,18 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     align-items: center;
     display: flex;
     justify-content: center;
+    margin-left: 13px;
+}
+.download-btn:hover {
+    border: 1px solid #1B84FF;
+    color: #1B84FF;
+}
+.download-btn:hover svg path {
+    fill: #1B84FF;
+}
+.join-btn {
+    background: #17C653;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #fff;
 }

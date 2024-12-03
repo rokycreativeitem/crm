@@ -78,5 +78,48 @@
     setTimeout(function(){
         server_side_datatable('["id","name","parent","status","options"]','{{ route(get_current_user_role().".project.categories") }}');
     }, 500);
+
+
+
+// function init_context_menu(jsonContent = {}, selector){
+    // // Dynamic menu items passed as parameters
+    // const dynamicItems = {
+    //     Edit: {
+    //         name: "Edit",
+    //         action_link: "{{ url(get_current_user_role() . '/project/edit/') }}",
+    //         title: 'Edit project'
+    //     },
+    //     Delete: {
+    //         name: "Delete",
+    //         action_link: "{{ url(get_current_user_role() . '/project/delete/') }}",
+    //         title: 'Delete project'
+    //     }
+    // };
+
+    // // Create the context menu items dynamically
+    // let contextMenuItems = {};
+
+    // Iterate through dynamicItems and build the menu structure
+    // $.each(jsonContent, function(key, value) {
+    //     contextMenuItems[key] = {
+    //         name: value.name,
+    //         callback: function(itemKey, opt, e) {
+    //             const code = opt.$trigger.attr("data-code");
+    //             // Dynamically construct the URL using the action_link and code
+    //             const url = value.action_link + '/' + code;
+    //             // Call the action (like redirecting, opening a modal, etc.)
+    //             window.location.href = url;  // Or you can use any other action
+    //         }
+    //     };
+    // });
+
+    // Initialize context menu with the dynamically generated items
+//     $.contextMenu({
+//         selector: selector,
+//         autoHide: false,
+//         items: contextMenuItems
+//     });
+// }
+
 </script>
 @endpush

@@ -1,5 +1,8 @@
 @push('title', get_phrase('Task'))
-
+@php
+    $teams = App\Models\User::where('role_id', 3)->get();
+    $tasks = App\Models\Task::where('project_id', project_id_by_code(request()->route()->parameter('code')))->get();
+@endphp
 <div class="row">
     <div class="col-12">
         <div class="ol-card">
@@ -13,6 +16,7 @@
                                 <i class="fi-rr-settings-sliders me-2"></i>
                                 {{ get_phrase('Manage') }}
                             </h4>
+                            <input type="hidden" value="{{request()->route()->parameter('code')}}" name="project_id">
                             <div class="top-bar d-flex align-items-center">
                                 <div class="input-group dt-custom-search">
                                     <span class="input-group-text">
@@ -79,15 +83,25 @@
                                         
                                     <!-- Dropdown Menu -->
                                     <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
-                                        <!-- Category -->
+                                        <!-- Team -->
                                         <div class="mb-3">
-                                            <label for="category" class="form-label">{{ get_phrase('Category') }}</label>
-                                            <select class="form-control px-14px ol-form-control ol-select2" name="category" id="category">
+                                            <label for="team" class="form-label">{{ get_phrase('Team Member') }}</label>
+                                            <select class="form-control px-14px ol-form-control ol-select2" name="team" id="team">
                                                 <option value="all">{{get_phrase('Select Category')}}</option>
-                                                {{-- @foreach ($categories as $item)
-                                                    <option value="{{$item->id}}"> {{$item->name}} </option>
-                                                @endforeach --}}
+                                                @foreach ($teams as $team)
+                                                    <option value="{{ $team->id }}"> {{ $team->name }} </option>
+                                                @endforeach
                                             </select>
+                                        </div>
+                                        <!-- start date -->
+                                        <div class="mb-3">
+                                            <label for="start_date" class="form-label">{{ get_phrase('Start Date') }}</label>
+                                            <input type="datetime-local" name="start_date" id="start_date" placeholder="{{get_phrase('Start date')}}" class="form-control fs-14px">
+                                        </div>
+                                        <!-- end date -->
+                                        <div class="mb-3">
+                                            <label for="end_date" class="form-label">{{ get_phrase('Start Date') }}</label>
+                                            <input type="datetime-local" name="end_date" id="end_date" placeholder="{{get_phrase('End date')}}" class="form-control fs-14px">
                                         </div>
                                         <div class="mb-3">
                                             <label for="status" class="form-label">{{ get_phrase('Status') }}</label>
@@ -100,44 +114,10 @@
                                         </div>
                                         <!-- Status -->
                                         <div class="mb-3">
-                                            <label for="status" class="form-label">{{ get_phrase('Client') }}</label>
-                                            <select class="form-control px-14px ol-form-control ol-select2" name="client" id="client">
-                                                <option value="all">{{ get_phrase('Select client') }}</option>
-                                                {{-- @foreach ($clients as $client)
-                                                    <option value="{{ $client->id }}">{{ $client->name }}</option>
-                                                @endforeach --}}
-                                            </select>
+                                            <label for="progress" class="form-label">{{ get_phrase('Progress') }}</label>
+                                            <input type="text" name="progress" id="progress" placeholder="{{get_phrase('Enter Progress')}}" class="form-control fs-14px">
                                         </div>
-                                        <!-- Instructor -->
-                                        <div class="mb-3">
-                                            <label for="staff" class="form-label">{{ get_phrase('Staff') }}</label>
-                                            <select class="form-control px-14px ol-form-control ol-select2" name="staff" id="staff">
-                                                <option value="all">{{ get_phrase('Select staff') }}</option>
-                                                {{-- @foreach ($staffs as $staff)
-                                                    <option value="{{ $staff->id }}"> {{ $staff->name }} </option>
-                                                @endforeach --}}
-                                            </select>
-                                        </div>
-                                        <!-- Price -->
-                                        <div class="mb-3">
-                                            <label for="budget" class="form-label">{{ get_phrase('Budget') }}</label>
 
-                                            <div class="accordion-item-range">
-                                                <div id="budget-slider"></div>
-                                                <div class="accordion-range-value d-flex align-items-center justify-content-between mt-4">
-                                                    <div class="d-flex align-items-center">
-                                                        <label for="min-price" class="me-2"> {{get_phrase('From')}} </label>
-                                                        <input type="text" class="value minPrice" disabled id="min-price" name="minPrice">
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <label for="max-price" class="mx-2"> {{get_phrase('To')}} </label>
-                                                        <input type="text" class="value" disabled id="max-price" name="maxPrice">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                        </div>
                                         <!-- Apply Button -->
                                         <div class="text-end">
                                             <button type="button" id="filter" class="btn btn-apply px-14px">{{ get_phrase('Apply') }}</button>
@@ -182,7 +162,7 @@
                         <option value="50">50</option>
                         <option value="100">100</option>
                     </select>
-                    {{-- <label for="page-length-select" class="ps-2 w-100"> of {{ count($projects) }}</label> --}}
+                    <label for="page-length-select" class="ps-2 w-100"> {{get_phrase('of').' '.count($tasks) }}</label>
                 </div>
 
                 <input type="hidden" value="task" id="datatable_type">
@@ -200,6 +180,12 @@
 @include('components.datatable')
 @push('js')
     <script>
+        const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search__field');
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.stopPropagation(); 
+            });
+        });
         setTimeout(function() {
             server_side_datatable('["id","title","team","start_date","end_date","status","progress","options"]', "{{ route(get_current_user_role() . '.tasks',) }}");
         }, 500);
