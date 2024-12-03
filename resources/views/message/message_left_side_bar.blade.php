@@ -24,11 +24,11 @@
     <li>
         <a href="{{ route(get_current_user_role() . '.message', ['message_thread' => $thread->code]) }}" class="message-sidebar-message @if ($thread_code == $thread->code) active @endif">
             <div class="user">
-                <img src="{{ get_image($thread->user->photo) }}" alt="">
+                <img src="{{ get_image($thread->user?->photo) }}" alt="">
             </div>
             <div class="details d-flex justify-content-between">
                 <div class="name-message">
-                    <h6 class="name">{{ $thread->user->name }}</h6>
+                    <h6 class="name">{{ $thread->user?->name }}</h6>
                     <p class="message ellipsis-line-2">{{ $last_message->message }}</p>
                 </div>
                 @if ($last_message->created_at)
