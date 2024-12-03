@@ -226,78 +226,152 @@ class ServerSideDataController extends Controller
             ->with('filter_count', count($filter_count))
             ->make(true);
     }
-    public function report_server_side($string, $status, $paymentMethod, $minPayment, $maxPayment)
+    public function project_report_server_side($string, $project, $paymentMethod, $status, $minAmount, $maxAmount)
     {
-        $query = Payment::query(); // Eager load the project relationship
+        $query = Payment::query();
 
-        // Search filter
-        if (!empty($string)) {
-            $query->whereHas('project', function ($q) use ($string) {
-                $q->where('title', 'like', "%{$string}%"); // Search within the project title
-            });
-        }
+        // Apply filters based on the provided parameters
+        // if (!empty($string)) {
+        //     $query->where(function ($q) use ($string) {
+        //         $q->where('id', 'like', "%{$string}%")
+        //             ->orWhereHas('project', function ($projectQuery) use ($string) {
+        //                 $projectQuery->where('title', 'like', "%{$string}%");
+        //             });
+        //     });
+        // }
 
-        $filter_count = [];
+        // if ($project != 'all') {
+        //     $query->where('project_id', $project);
+        // }
 
-        // Status filter
-        if ($status != 'all') {
-            $filter_count[] = $status;
-            $query->where('status', $status);
-        }
+        // if ($paymentMethod != 'all') {
+        //     $query->where('payment_method', $paymentMethod);
+        // }
 
-        // Payment method filter
-        if ($paymentMethod != 'all') {
-            $filter_count[] = $paymentMethod;
-            $query->where('payment_method', $paymentMethod);
-        }
+        // if ($status != 'all') {
+        //     $query->where('status', $status);
+        // }
 
-        // Payment range filter
-        $maxPayment = (int) $maxPayment;
-        $minPayment = (int) $minPayment;
-        if ($minPayment > 0 || $maxPayment > 0) {
-            $filter_count[] = "{$minPayment}-{$maxPayment}";
-            $query->whereBetween('payment', [$minPayment, $maxPayment]);
-        }
+        // $minAmount = (int) $minAmount;
+        // $maxAmount = (int) $maxAmount;
+        // if ($minAmount > 0 && $maxAmount > 0 && is_numeric($minAmount) && is_numeric($maxAmount)) {
+        //     $query->whereBetween('payment', [$minAmount, $maxAmount]);
+        // }
 
-        // Return Datatables response
         return datatables()
             ->eloquent($query)
-            ->addColumn('id', function ($report) {
-                static $key = 1;
+            ->addColumn('id', function ($payment) {
                 return '
-                <div class="d-flex align-items-center">
-                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
-                    <p class="row-number fs-12px">' . $key++ . '</p>
-                    <input type="hidden" class="datatable-row-id" value="' . $report->id . '">
-                </div>
-            ';
+            <div class="d-flex align-items-center">
+                <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                <p class="row-number fs-12px">' . $payment->id . '</p>
+                <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
+            </div>';
             })
-            ->addColumn('timestamp_start', function ($report) {
-                return $report->timestamp_start;
+            ->addColumn('date', function ($payment) {
+                return date('Y-m-d', strtotime($payment->timestamp_start));
             })
-            ->addColumn('project', function ($report) {
-                return $report->project->title ?? '-';
+            ->addColumn('project', function ($payment) {
+                return $payment->project->title ?? '-';
             })
-            ->addColumn('payment', function ($report) {
-                return currency($report->payment);
+            ->addColumn('amount', function ($payment) {
+                return currency($payment->payment);
             })
-            ->addColumn('payment_method', function ($report) {
-                return ucfirst($report->payment_method);
+            ->addColumn('payment_method', function ($payment) {
+                return $payment->payment_method;
             })
-            ->addColumn('status', function ($report) {
-                $status = $report->status;
-                if ($status === 'paid') {
-                    return '<span class="paid">' . get_phrase('Paid') . '</span>';
-                } elseif ($status === 'unpaid') {
-                    return '<span class="unpaid">' . get_phrase('Unpaid') . '</span>';
+            ->addColumn('status', function ($payment) {
+                $status      = $payment->status;
+                $statusLabel = '';
+                if ($status == 'completed') {
+                    $statusLabel = '<span class="badge bg-success">' . get_phrase('Completed') . '</span>';
+                } elseif ($status == 'pending') {
+                    $statusLabel = '<span class="badge bg-warning">' . get_phrase('Pending') . '</span>';
+                } elseif ($status == 'failed') {
+                    $statusLabel = '<span class="badge bg-danger">' . get_phrase('Failed') . '</span>';
                 }
-                return '-';
+                return $statusLabel;
             })
-            ->rawColumns(['id', 'timestamp_start', 'project_title', 'payment', 'payment_method', 'status'])
+            ->rawColumns(['id', 'timestamp_start', 'project', 'payment', 'payment_method', 'status'])
             ->setRowClass(function () {
                 return 'context-menu';
             })
-            ->with('filter_count', count($filter_count))
+            ->make(true);
+    }
+    public function client_report_server_side($string, $project, $paymentMethod, $status, $minAmount, $maxAmount)
+    {
+        $query = Payment::query();
+
+        // if (!empty($string)) {
+        //     $query->where(function ($q) use ($string) {
+        //         $q->where('id', 'like', "%{$string}%")
+        //             ->orWhereHas('project', function ($projectQuery) use ($string) {
+        //                 $projectQuery->where('title', 'like', "%{$string}%");
+        //             });
+        //     });
+        // }
+
+        // if ($project != 'all') {
+        //     $query->where('project_id', $project);
+        // }
+
+        // if ($paymentMethod != 'all') {
+        //     $query->where('payment_method', $paymentMethod);
+        // }
+
+        // if ($status != 'all') {
+        //     $query->where('status', $status);
+        // }
+
+        // $minAmount = (int) $minAmount;
+        // $maxAmount = (int) $maxAmount;
+        // if ($minAmount > 0 && $maxAmount > 0 && is_numeric($minAmount) && is_numeric($maxAmount)) {
+        //     $query->whereBetween('payment', [$minAmount, $maxAmount]);
+        // }
+
+        // Get distinct client ids for mapping
+        $clients = Project::distinct('client_id')->pluck('client_id')->mapWithKeys(function ($id) {
+            return [$id => get_user($id)->name ?? '-'];
+        });
+
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('id', function ($payment) {
+                return '        <div class="d-flex align-items-center">
+                                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                                    <p class="row-number fs-12px">' . $payment->id . '</p>
+                                    <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
+                                </div>';
+            })
+            ->addColumn('date', function ($payment) {
+                return date('Y-m-d', strtotime($payment->timestamp_start));
+            })
+            ->addColumn('client', function ($payment) use ($clients) {
+                // Fetch the client name based on the client_id from $clients mapping
+                return $clients[$payment->project->client_id] ?? '-';
+            })
+            ->addColumn('amount', function ($payment) {
+                return currency($payment->payment);
+            })
+            ->addColumn('payment_method', function ($payment) {
+                return $payment->payment_method;
+            })
+            ->addColumn('status', function ($payment) {
+                $status      = $payment->status;
+                $statusLabel = '';
+                if ($status == 'completed') {
+                    $statusLabel = '<span class="badge bg-success">' . get_phrase('Completed') . '</span>';
+                } elseif ($status == 'pending') {
+                    $statusLabel = '<span class="badge bg-warning">' . get_phrase('Pending') . '</span>';
+                } elseif ($status == 'failed') {
+                    $statusLabel = '<span class="badge bg-danger">' . get_phrase('Failed') . '</span>';
+                }
+                return $statusLabel;
+            })
+            ->rawColumns(['id', 'timestamp_start', 'client', 'payment', 'payment_method', 'status'])
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
             ->make(true);
     }
 

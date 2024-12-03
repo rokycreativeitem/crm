@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -12,13 +13,46 @@ class ReportController extends Controller
     {
 
         if ($request->ajax()) {
-            // return $request->payment_method;
-            return app(ServerSideDataController::class)->report_server_side(
+            return app(ServerSideDataController::class)->project_report_server_side(
                 $request->custom_search_box,
+                $request->project,
                 $request->payment_method,
                 $request->status,
                 $request->min_payment,
-                $request->max_payment,
+                $request->max_payment
+            );
+        }
+
+        $query = Payment::query();
+
+        if (request()->has('start_date') && request()->has('end_date')) {
+            $start_date = request()->query('start_date');
+            $end_date   = request()->query('end_date');
+
+            $query = $query->whereBetween('timestamp_start', [$start_date, $end_date]);
+        }
+        $payments = $query->get()->map(function ($payment) {
+            return [
+                'project' => $payment->project->title ?? '-',
+                'amount'  => $payment->payment,
+            ];
+        });
+
+        $page_data['payments'] = $payments;
+
+        return view('reports.project_report', $page_data);
+    }
+
+    public function client_report(Request $request)
+    {
+        if ($request->ajax()) {
+            return app(ServerSideDataController::class)->client_report_server_side(
+                $request->custom_search_box,
+                $request->client,
+                $request->payment_method,
+                $request->status,
+                $request->min_payment,
+                $request->max_payment
             );
         }
 
@@ -31,22 +65,19 @@ class ReportController extends Controller
             $query = $query->whereBetween('timestamp_start', [$start_date, $end_date]);
         }
 
-        $page_data['payments'] = $query->get();
+        $clients = Project::distinct('client_id')->pluck('client_id')->mapWithKeys(function ($id) {
+            return [$id => get_user($id)->name ?? '-'];
+        });
 
-        return view('reports.project_report', $page_data);
-    }
+        $payments = $query->get()->map(function ($payment) use ($clients) {
+            return [
+                'client' => $clients[$payment->project->client_id] ?? '-',
+                'amount' => $payment->payment,
+            ];
+        });
 
-    public function client_report()
-    {
-        $query = Payment::query();
-        if (request()->has('start_date') && request()->has('end_date')) {
-            $start_date = request()->query('start_date');
-            $end_date   = request()->query('end_date');
-
-            $query = $query->whereBetween('timestamp_start', [$start_date, $end_date]);
-        }
-
-        $page_data['payments'] = $query->get();
+        $page_data['clients']  = $clients;
+        $page_data['payments'] = $payments;
 
         return view('reports.client_report', $page_data);
     }

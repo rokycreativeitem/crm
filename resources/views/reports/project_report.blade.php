@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-12">
             <div class="ol-card">
-                <div class="ol-card-body p-3 position-relative">
+                <div class="ol-card-body p-3 mb-10 position-relative">
                     <div class="ol-card radius-8px print-d-none">
                         <div class="ol-card-body px-2">
                             <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
@@ -100,10 +100,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <form action="{{ route(get_current_user_role() . '.project_report') }}" method="get">
-                                        <input type="text" class="form-control ol-form-control daterangepicker" name="eDateRange"
-                                            value="{{ request()->query('start_date') && request()->query('end_date') ? date('m/d/Y', strtotime(request()->query('start_date'))) . ' - ' . date('m/d/Y', strtotime(request()->query('end_date'))) : '' }}">
-                                    </form>
+                                    <div class="d-flex">
+                                        <form action="{{ route(get_current_user_role() . '.project_report') }}" method="get">
+                                            <input type="text" class="form-control ol-form-control daterangepicker" name="eDateRange"
+                                                value="{{ request()->query('start_date') && request()->query('end_date') ? date('m/d/Y', strtotime(request()->query('start_date'))) . ' - ' . date('m/d/Y', strtotime(request()->query('end_date'))) : '' }}">
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -125,48 +127,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($payments as $key => $payment)
-                                <tr data-id="{{ $payment->id }}" class="context-menu">
-                                    <td>
-                                        <input type="checkbox" class="checkbox-item">
-                                    </td>
-                                    <th scope="row">
-                                        <p class="row-number">{{ ++$key }}</p>
-                                    </th>
-                                    <td>
-                                        <div class="dAdmin_profile d-flex align-items-center min-w-200px">
-                                            <div class="dAdmin_profile_name">
-                                                <h4 class="title fs-14px">{{ $payment->timestamp_start }}</h4>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="dAdmin_profile d-flex align-items-center min-w-200px">
-                                            <div class="dAdmin_profile_name">
-                                                <h4 class="title fs-14px" data-client-title="{{ $payment->project->title }}">{{ $payment->project->title }}</h4>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="dAdmin_profile d-flex align-items-center min-w-200px">
-                                            <div class="dAdmin_profile_name">
-                                                <h4 class="title fs-14px" data-client-payment="{{ $payment->payment }}">{{ $payment->payment }}</h4>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="dAdmin_profile d-flex align-items-center min-w-200px">
-                                            <div class="dAdmin_profile_name">
-                                                <h4 class="title fs-14px">{{ $payment->payment_method }}</h4>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach --}}
+                            {{-- data coming from ServerSideDataController  --}}
                         </tbody>
                     </table>
                     <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
-                        <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
+                        <label for="page-length-select" class="pe-2">Showing:</label>
                         <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
@@ -183,21 +148,25 @@
                     </button>
                 </div>
             </div>
-            <!-- Chart Container -->
-            {{-- <div class="row">
-                <div class="col-12">
-                    <div class="ol-card-body-p-3">
-                        <div id="bar-chart"></div>
-                    </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="ol-card">
+                <div class="ol-card-body  p-3">
+                    <div id="bar-chart"></div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="ol-card-body-p-3">
-                        <canvas id="pieChart"></canvas>
-                    </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="ol-card">
+                <div class="ol-card-body  p-3">
+                    <div id="donut"></div>
                 </div>
-            </div> --}}
+            </div>
         </div>
     </div>
 @endsection
@@ -208,105 +177,102 @@
 @push('js')
     <script>
         setTimeout(function() {
-            server_side_datatable('["id","project_id","user_id","title","payment","payment_method","status"]', "{{ route(get_current_user_role() . '.project_report') }}");
+            server_side_datatable('["id","timestamp_start","project", "payment","payment_method","status"]', "{{ route(get_current_user_role() . '.project_report') }}");
         }, 500);
     </script>
-    {{-- <script>
-        $(document).ready(function() {
-            $('#dateRangePicker').daterangepicker({
-                    opens: 'right',
-                    locale: {
-                        format: 'DD MMM, YYYY',
-                    },
-                },
-                function(start, end) {
-                    // Update hidden inputs for the form
-                    $('#startDate').val(start.format('YYYY-MM-DD'));
-                    $('#endDate').val(end.format('YYYY-MM-DD'));
-                }
-            );
-        });
-    </script> --}}
     <script>
         "use strict";
         document.addEventListener('DOMContentLoaded', function() {
 
-            let dataArr = [];
+            let dataArr = @json($payments).map(function(payment) {
 
-            document.querySelectorAll('.context-menu').forEach(row => {
-                let clientTitle = row.querySelector('[data-client-title]')?.getAttribute('data-client-title');
-                let payment = row.querySelector('[data-client-payment]')?.getAttribute('data-client-payment');
+                return {
+                    x: payment.project,
 
-                if (clientTitle && payment) {
-                    dataArr.push({
-                        x: clientTitle,
-                        y: parseFloat(payment)
-                    });
-                }
+                    y: parseFloat(payment.amount)
+                };
             });
 
             var barOptions = {
                 chart: {
-                    type: 'bar'
+                    type: 'bar',
+                    height: 300,
+                    borderRadius: 5,
+                    fontFamily: 'Inter',
                 },
+
                 series: [{
                     data: dataArr
-                }]
-            }
+                }],
+
+
+                title: {
+                    text: 'Project Income Bar',
+                    align: 'left'
+                }
+            };
 
             var barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
             barChart.render();
         });
     </script>
 
+
     <script>
         "use strict";
-
-
         document.addEventListener('DOMContentLoaded', function() {
-            const clientTitles = [];
-            const payments = [];
-
-            document.querySelectorAll('.context-menu').forEach(row => {
-                const clientTitle = row.querySelector('[data-client-title]')?.getAttribute('data-client-title');
-                const payment = row.querySelector('[data-client-payment]')?.getAttribute('data-client-payment');
-
-                if (clientTitle && payment) {
-                    clientTitles.push(clientTitle);
-                    payments.push(parseFloat(payment));
-                }
+            let dataArr = @json($payments).map(function(payment) {
+                return {
+                    label: payment.project,
+                    value: parseFloat(payment.amount)
+                };
             });
 
-            if (clientTitles.length && payments.length) {
-                const ctx = document.getElementById('pieChart').getContext('2d');
+            const labels = dataArr.map(item => item.label);
+            const values = dataArr.map(item => item.value);
 
-                const pieChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: clientTitles,
-                        datasets: [{
-                            label: clientTitles,
-                            data: payments,
-                            backgroundColor: ['#ff5733', '#33ff57', '#3357ff', '#ff33a6', '#33d1ff'],
-                            borderColor: '#ffffff',
-                            borderWidth: 1,
-                        }]
-                    },
+            var donutOptions = {
+                chart: {
+                    type: 'donut',
+                    height: 300,
+                    fontFamily: 'Inter',
+                },
+                series: values,
+                labels: labels,
+                title: {
+                    text: 'Project Income Donut',
+                    align: 'left'
+                },
+                colors: [
+                    '#212534',
+                    '#4e97ff',
+                    '#4de78e',
+                    '#98B9EC',
+                    '#98ecca',
+                    '#acec98',
+                    '#eeee84',
+                    '#efb082',
+                    '#e87777',
+                    '#8b8e9a'
+                ],
+                dataLabels: {
+                    enabled: false
+                },
+                responsive: [{
                     options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            tooltip: {
-                                enabled: true,
-                            }
-                        }
+                        chart: {
+                            height: 288,
+                        },
+                        // legend: {
+                        //     position: 'left'
+                        // }
                     }
-                });
-            } else {
-                console.error('No data available to populate the chart.');
-            }
+                }]
+            };
+
+            var donutChart = new ApexCharts(document.querySelector("#donut"), donutOptions);
+            donutChart.render();
         });
     </script>
+
 @endpush

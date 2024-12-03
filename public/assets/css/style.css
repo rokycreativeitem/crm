@@ -1740,7 +1740,7 @@ span[data-bs-original-title="AI Assistant"] path {
 
 /* Dashboard Chart */
 /* Chart Tab */
-.insights-nav-pills {
+/* .insights-nav-pills {
     gap: 24px;
 }
 
@@ -1823,7 +1823,7 @@ span[data-bs-original-title="AI Assistant"] path {
     display: flex;
     column-gap: 14px;
     flex-wrap: wrap;
-}
+} */
 
 /* Dashboard Css End ***
 **********************/
@@ -1840,14 +1840,14 @@ span[data-bs-original-title="AI Assistant"] path {
 
 /* Input */
 .ol-form-control {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-weight: 400;
+    border: 1px solid #e4e7f1;
+    border-radius: 6px;
+    padding: 8px;
+    font-weight: 500;
     font-size: 14px;
     line-height: 20px;
     background-color: var(--border-color);
-    color: var(--border-color);
+    color: #6d718c !important;
     transition: 0.3s;
 }
 
@@ -4651,7 +4651,8 @@ input.daterangepicker {
     margin-top: 0px;
     top: unset;
     left: unset;
-    z-index: 999;
+    z-index: 1;
+    position: inherit;
 }
 
 .ol-text-dropdown .dropdown-menu,
@@ -4820,6 +4821,15 @@ input.daterangepicker {
 
 .pagination {
     border-radius: 5px;
+}
+
+div.dt-container .dt-length,
+div.dt-container .dt-search,
+div.dt-container .dt-info,
+div.dt-container .dt-processing,
+div.dt-container .dt-paging {
+    color: inherit;
+    display: none;
 }
 
 /* pagination end */
@@ -6259,4 +6269,74 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     background: transparent;
     border: 0;
     padding-left: 5px;
+}
+.apexcharts-canvas {
+    height: 338px !important;
+}
+.apexcharts-title-text {
+    display: inherit;
+    color: #212534;
+    font-size: 14px;
+    font-family: "Inter" !important;
+    font-weight: 600;
+}
+
+.apexcharts-yaxis text {
+    font-size: 12px;
+    color: #6d718c;
+    display: inherit;
+}
+
+.apexcharts-xaxis text {
+    display: inherit;
+    color: #6d718c;
+    font-weight: 500;
+    font-size: 12px;
+}
+
+#bar-chart .apexcharts-series path {
+    display: inherit;
+    fill: black;
+    stroke-linecap: round;
+    border-radius: 5px;
+}
+.apexcharts-menu-icon svg {
+    display: none;
+}
+
+.apexcharts-menu-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative !important;
+    height: 32px !important;
+    width: 32px !important;
+    background: #f7f7f9;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.apexcharts-menu-icon:after {
+    position: absolute;
+    content: "";
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background-image: url("../icons/uicons-regular-rounded/svg/import.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 24px;
+}
+
+#bar-chart
+    .apexcharts-bar-series.apexcharts-plot-series
+    .apexcharts-series
+    path {
+    clip-path: inset(0% 0% -11% 0% round 6px);
+}
+.apexcharts-slices
+    .apexcharts-series.apexcharts-pie-series
+    .apexcharts-pie-area {
+    clip-path: inset(0% 0% -11% 0% round 4px);
 }
