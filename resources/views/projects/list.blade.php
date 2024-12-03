@@ -183,7 +183,7 @@
                 </div>
 
                 <!-- DataTable -->
-                <table class="table server-side-datatable" id="project_list">
+                <table class="table server-side-datatable" id="table_list">
                     <thead>
                         <tr class="context-menu-header">
                             <th scope="col" class="d-flex align-items-center">

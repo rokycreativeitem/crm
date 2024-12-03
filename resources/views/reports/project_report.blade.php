@@ -11,11 +11,7 @@
     <div class="row">
         <div class="col-12">
             <div class="ol-card">
-<<<<<<< HEAD
-                <div class="ol-card-body p-3 mb-10 position-relative">
-=======
-                <div class="ol-card-body p-3 position-relative" id="filters-container">
->>>>>>> f6265f02028411ba246f05e866e7d884fe64c828
+                <div class="ol-card-body p-3 mb-10 position-relative" id="filter_container">
                     <div class="ol-card radius-8px print-d-none">
                         <div class="ol-card-body px-2">
                             <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
@@ -104,14 +100,6 @@
                                             </div>
                                         </div>
                                     </div>
-<<<<<<< HEAD
-                                    <div class="d-flex">
-                                        <form action="{{ route(get_current_user_role() . '.project_report') }}" method="get">
-                                            <input type="text" class="form-control ol-form-control daterangepicker" name="eDateRange"
-                                                value="{{ request()->query('start_date') && request()->query('end_date') ? date('m/d/Y', strtotime(request()->query('start_date'))) . ' - ' . date('m/d/Y', strtotime(request()->query('end_date'))) : '' }}">
-                                        </form>
-                                    </div>
-=======
                                     <div class="custom-dropdown dropdown filter-dropdown" id="export-btn">
                                         <button class="dropdown-header btn ol-btn-light" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -174,7 +162,6 @@
                                             value="{{ request()->query('start_date') && request()->query('end_date') ? date('m/d/Y', strtotime(request()->query('start_date'))) . ' - ' . date('m/d/Y', strtotime(request()->query('end_date'))) : '' }}">
                                     </form>
 
->>>>>>> f6265f02028411ba246f05e866e7d884fe64c828
                                 </div>
                             </div>
                         </div>
@@ -246,11 +233,7 @@
 @push('js')
     <script>
         setTimeout(function() {
-<<<<<<< HEAD
-            server_side_datatable('["id","timestamp_start","project", "payment","payment_method","status"]', "{{ route(get_current_user_role() . '.project_report') }}");
-=======
             server_side_datatable('["id","timestamp_start","project","payment","payment_method","status"]', "{{ route(get_current_user_role() . '.project_report') }}");
->>>>>>> f6265f02028411ba246f05e866e7d884fe64c828
         }, 500);
     </script>
     <script>

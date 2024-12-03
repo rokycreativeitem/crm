@@ -16,9 +16,8 @@ class FileController extends Controller
     {
 
         if($request->ajax()){
-            return app(ServerSideDataController::class)->file_server_side($request->customSearch);                
+            return app(ServerSideDataController::class)->file_server_side($request->project_id, $request->customSearch, $request->start_date, $request->end_date, $request->type, $request->uploaded_by, $request->size);             
         }
-
         $page_data['files'] = File::get();
 
         return view('projects.file.index', $page_data);

@@ -4829,6 +4829,8 @@ div.dt-container .dt-info,
 div.dt-container .dt-processing,
 div.dt-container .dt-paging {
     color: inherit;
+}
+.dt-layout-row .dt-layout-cell .dt-info {
     display: none;
 }
 
@@ -6310,7 +6312,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     background: transparent;
     border: 0;
 }
-<<<<<<< HEAD
+
 .apexcharts-canvas {
     height: 338px !important;
 }
@@ -6381,7 +6383,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     .apexcharts-pie-area {
     clip-path: inset(0% 0% -11% 0% round 4px);
 }
-=======
+
 .dropdown-export li a:hover {
     background: #F7F7F9 !important;
 }
@@ -6401,4 +6403,17 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     display: flex;
     justify-content: center;
 }
->>>>>>> f6265f02028411ba246f05e866e7d884fe64c828
+
+.download-btn:hover {
+    border: 1px solid #1B84FF;
+    color: #1B84FF;
+}
+.download-btn:hover svg path {
+    fill: #1B84FF;
+}
+.join-btn {
+    background: #17C653;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #fff;
+}
