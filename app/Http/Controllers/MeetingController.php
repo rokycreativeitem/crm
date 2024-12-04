@@ -52,14 +52,14 @@ class MeetingController extends Controller
         $joiningData    = ZoomMeetingController::createMeeting($request->title, $data['timestamp_meeting']);
         $joiningInfoArr = json_decode($joiningData, true);
 
-        if (array_key_exists('code', $joiningInfoArr) && $joiningInfoArr) {
+        if (is_array($joiningInfoArr) && array_key_exists('code', $joiningInfoArr) && $joiningInfoArr) {
             return response()->json([
                 'success' => get_phrase($joiningInfoArr['message']),
             ]);
         }
 
         $data['provider']     = 'zoom';
-        $data['joining_data'] = $joiningData;
+        $data['joining_data'] = $joiningData??null;
 
         Meeting::insert($data);
         return response()->json([
@@ -72,7 +72,7 @@ class MeetingController extends Controller
         $meeting = Meeting::join('projects', 'project_meetings.project_id', 'projects.id')
             ->where('project_meetings.id', $id)
             ->where('projects.user_id', Auth::user()->id)->first();
-
+            
         if (!$meeting) {
             Session::flash('error', get_phrase('Data not found.'));
             return redirect()->back();

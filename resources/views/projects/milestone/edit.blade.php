@@ -22,13 +22,13 @@
                         <div class="d-flex flex-column">
                             @php
                                 $tasks = App\Models\Task::all();
-                                $assignedTasks = json_decode($milestone->tasks, true) ?? [];
+                                
                             @endphp
                             @foreach ($tasks as $task)
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="task_{{ $task->id }}"
                                         name="tasks[]" value="{{ $task->id }}"
-                                        {{ in_array($task->id, $assignedTasks) ? 'checked' : '' }}>
+                                        {{ in_array($task->id, $milestone->tasks) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="task_{{ $task->id }}">
                                         {{ $task->title }}
                                     </label>

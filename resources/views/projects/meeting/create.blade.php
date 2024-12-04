@@ -1,6 +1,6 @@
 <div class="ol-card">
     <div class="ol-card-body">
-        <form action="{{ route(get_current_user_role() . '.meeting.store') }}" method="post" id="ajaxForm">
+        <form action="{{ route(get_current_user_role() . '.meeting-store') }}" method="post" id="ajaxForm">
             @csrf
             <div class="row">
                 <div class="col-12">

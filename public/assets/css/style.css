@@ -6417,3 +6417,34 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     border-radius: 6px;
     color: #fff;
 }
+.custom-context-menu {
+    position: absolute;
+    z-index: 9999;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 5px 0;
+    list-style: none;
+    box-shadow: 0px 4px 40px 0px var(--shadow);
+    display: none;
+    padding: 5px;
+    border: 0;
+    border-radius: 6px;
+}
+
+.custom-context-menu li {
+    padding: 8px 20px;
+    cursor: pointer;
+}
+.custom-context-menu li {
+    font-size: 12px !important;
+    color: var(--text-color);
+}
+.custom-context-menu li a{
+    width: 100%;
+}
+
+.custom-context-menu li:hover {
+    background: var(--hover-background-color);
+    border-radius: 6px;
+    color: var(--active-color);
+}

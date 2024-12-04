@@ -21,23 +21,29 @@ class ZoomMeetingController extends Controller
             $ch = curl_init($oauthUrl);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: ' . $authHeader));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Authorization: ' . $authHeader,
+                'Content-Type: application/json'
+            ));
 
-            // Execute cURL session and get the response
+            // Execute cURL session and check for errors
             $response = curl_exec($ch);
+            if ($response === false) {
+                echo 'cURL Error: ' . curl_error($ch) . PHP_EOL;
+                curl_close($ch);
+                return null;
+            }
 
-            // Check if the request was successful (status code 200)
+            // Check HTTP status code
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+
             if ($httpCode == 200) {
                 $oauthResponse = json_decode($response, true);
-                $accessToken   = $oauthResponse['access_token'];
-                http_response_code(200);
-                header('Content-Type: application/json');
-                return $accessToken;
+                return $oauthResponse['access_token'] ?? null;
             } else {
                 echo 'OAuth Request Failed with Status Code: ' . $httpCode . PHP_EOL;
-                echo $response . PHP_EOL;
+                echo 'Response: ' . $response . PHP_EOL;
                 return null;
             }
         } catch (Exception $e) {
@@ -46,11 +52,12 @@ class ZoomMeetingController extends Controller
         }
     }
 
+
     public static function createMeeting($topic, $time)
     {
         $zoom_account_email = "ponkojr1998@gmail.com";
         $token              = self::createToken();
-
+   
         // API Endpoint for creating a meeting
         $zoomEndpoint = 'https://api.zoom.us/v2/users/me/meetings';
 

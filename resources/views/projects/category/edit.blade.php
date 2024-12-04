@@ -1,5 +1,5 @@
 
-<form action="{{route(get_current_user_role().'.project.category.store',['id'=>$category->id])}}" method="post" enctype="multipart/form-data" id="crud_form">
+<form action="{{route(get_current_user_role().'.project.category.store',['id'=>$category->id])}}" method="post" enctype="multipart/form-data" id="ajaxForm">
     @csrf
     <div class="fpb7 mb-2">
         <label class="form-label ol-form-label" for="name">{{ get_phrase('Name') }}</label>

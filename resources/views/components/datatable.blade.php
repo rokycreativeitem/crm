@@ -50,23 +50,64 @@
             paging: true,
         });
 
-        table.on('xhr', function (e, settings, json, xhr) {
-            if (json && json.filter_count !== undefined) {
-                if (json.filter_count > 0) {
-                    $('#filter-count-display').text(json.filter_count).removeClass('d-none');
-                    $('#filter-reset').removeClass('d-none');
-                    $('#filterDropdownButton').addClass('p3-0');
-                }
+        $('.server-side-datatable tbody').on('contextmenu', 'tr', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var rowData = table.row(this).data();
+            var contextMenuData;
+
+            try {
+                // Decode and parse context menu JSON
+                var rawContextMenu = decodeHtmlEntities(rowData.context_menu);
+                contextMenuData = JSON.parse(rawContextMenu);
+                // console.log(contextMenuData)
+            } catch (e) {
+                console.error("Error decoding or parsing context menu JSON:", e);
+                return;
             }
-            if (json && json.context_menu) {
-                try {
-                    const context_menu = JSON.parse(json.context_menu);
-                    console.log("Received context menu:", context_menu);
-                    init_context_menu(context_menu);
-                } catch (e) {
-                    console.error("Error parsing context menu JSON:", e);
+
+            // Build and display context menu
+            let menuHtml = '<ul class="custom-context-menu">';
+            for (const key in contextMenuData) {
+                const item = contextMenuData[key];
+                let linkHtml = '';
+
+                if (item.type === 'ajax' && item.name.toLowerCase() === 'edit') {
+                    linkHtml = `<a href="javascript:void(0)" onclick="rightCanvas('${item.action_link}')" title="${item.title}">${item.name}</a>`;
+                } else if (item.type === 'ajax' && item.name.toLowerCase() === 'delete') {
+                    linkHtml = `<a href="javascript:void(0)" onclick="confirmModal('${item.action_link}')" title="${item.title}">${item.name}</a>`;
+                } else {
+                    linkHtml = `<a href="${item.action_link}" title="${item.title}">${item.name}</a>`;
                 }
+
+                menuHtml += `<li>${linkHtml}</li>`;
             }
+            menuHtml += '</ul>';
+
+            // Append and position the context menu
+            $('body').append(menuHtml);
+            $('.custom-context-menu').css({
+                top: e.pageY + 'px',
+                left: e.pageX + 'px'
+            }).show();
+        });
+
+        // Utility to decode HTML entities
+        function decodeHtmlEntities(str) {
+            var textarea = document.createElement('textarea');
+            textarea.innerHTML = str;
+            return textarea.value;
+        }
+
+        // Hide context menu when clicking elsewhere
+        $(document).on('click', function () {
+            $('.custom-context-menu').remove();
+        });
+
+        // Optional: Adjust context menu styling
+        $(document).on('contextmenu', function (e) {
+            $('.custom-context-menu').remove();
         });
 
         $('#custom-search-box').on('keyup', function(e) {
