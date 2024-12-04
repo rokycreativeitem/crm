@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ServerSideDataController extends Controller
 {
@@ -165,7 +166,7 @@ class ServerSideDataController extends Controller
                 $q->where('name', 'like', "%{$string}%");
             });
         }
-    
+
         return datatables()
             ->eloquent($query)
             ->addColumn('id', function ($category) {
@@ -203,7 +204,6 @@ class ServerSideDataController extends Controller
                 $deleteRoute = route(get_current_user_role() . '.project.category.delete', $category->id);
                 $viewRoute   = route(get_current_user_role() . '.project.details', $category->id);
 
-    
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -227,23 +227,24 @@ class ServerSideDataController extends Controller
             ->setRowClass('category-context-menu')
             ->with('filter_count', 0)
             ->with('context_menu', json_encode([
-                'Edit' => [
-                    'name' => 'Edit',
+                'Edit'   => [
+                    'name'        => 'Edit',
                     'action_link' => url(get_current_user_role() . '/project-category/edit/'),
-                    'title' => 'Edit project'
+                    'title'       => 'Edit project',
                 ],
                 'Delete' => [
-                    'name' => 'Delete',
+                    'name'        => 'Delete',
                     'action_link' => url(get_current_user_role() . '/project-category/delete/'),
-                    'title' => 'Delete project'
-                ]
+                    'title'       => 'Delete project',
+                ],
             ]))
             ->make(true);
-    }    
+    }
 
-    public function milestone_server_side($project_code, $string, $task, $start_date, $end_date) {
+    public function milestone_server_side($project_code, $string, $task, $start_date, $end_date)
+    {
         $filter_count = [];
-        $query = Milestone::query();
+        $query        = Milestone::query();
         $query->where('project_id', project_id_by_code($project_code));
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
@@ -252,20 +253,20 @@ class ServerSideDataController extends Controller
         }
         if ($task != 'all') {
             $filter_count[] = $task;
-            $task = json_encode($task);
-            $task = str_replace('[','',$task);
-            $task = str_replace(']','',$task);
+            $task           = json_encode($task);
+            $task           = str_replace('[', '', $task);
+            $task           = str_replace(']', '', $task);
             $query->where(function ($q) use ($task) {
                 $q->where('tasks', 'like', "%{$task}%");
             });
         }
-        if($start_date && $end_date) {
+        if ($start_date && $end_date) {
             $filter_count[] = $start_date;
-            $start_date = date('Y-m-d H:i:s', strtotime($start_date));
-            $end_date = date('Y-m-d H:i:s', strtotime($end_date));
+            $start_date     = date('Y-m-d H:i:s', strtotime($start_date));
+            $end_date       = date('Y-m-d H:i:s', strtotime($end_date));
             $query->where(function ($q) use ($start_date, $end_date) {
-                $q->where('timestamp_start','>=',$start_date);
-                $q->where('timestamp_end','<=',$end_date);
+                $q->where('timestamp_start', '>=', $start_date);
+                $q->where('timestamp_end', '<=', $end_date);
             });
         }
 
@@ -288,7 +289,7 @@ class ServerSideDataController extends Controller
                 return $milestone?->description;
             })
             ->addColumn('tasks', function ($milestone) {
-                $tasks = $milestone?->tasks; // Get tasks directly
+                $tasks  = $milestone?->tasks; // Get tasks directly
                 $output = '';
                 if (is_array($tasks)) { // Check if tasks is already an array
                     foreach ($tasks as $task) {
@@ -296,7 +297,7 @@ class ServerSideDataController extends Controller
                         $output .= '<li>' . htmlspecialchars($task_title, ENT_QUOTES, 'UTF-8') . '</li>';
                     }
                 }
-            
+
                 return $output ? '<ul class="circle-style">' . $output . '</ul>' : 'No tasks available';
             })
             ->addColumn('options', function ($milestone) {
@@ -320,7 +321,7 @@ class ServerSideDataController extends Controller
                 </div>
             ';
             })
-            ->rawColumns(["id","title","description","tasks","options"])
+            ->rawColumns(["id", "title", "description", "tasks", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -328,32 +329,32 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-
-    public function task_server_side($project_code, $string, $team, $start_date, $end_date, $status, $progress) {
+    public function task_server_side($project_code, $string, $team, $start_date, $end_date, $status, $progress)
+    {
         $filter_count = [];
-        $query = Task::query();
+        $query        = Task::query();
         $query->where('project_id', project_id_by_code($project_code));
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
                 $q->where('title', 'like', "%{$string}%");
             });
         }
-        if($team != 'all') {
+        if ($team != 'all') {
             $filter_count[] = $status;
-            $team = json_encode($team);
-            $team = str_replace('[','',$team);
-            $team = str_replace(']','',$team);
+            $team           = json_encode($team);
+            $team           = str_replace('[', '', $team);
+            $team           = str_replace(']', '', $team);
             $query->where(function ($q) use ($team) {
                 $q->where('team', 'like', "%{$team}%");
             });
         }
-        if($start_date && $end_date) {
+        if ($start_date && $end_date) {
             $filter_count[] = $end_date;
-            $start_date = strtotime($start_date);
-            $end_date = strtotime($end_date);
+            $start_date     = strtotime($start_date);
+            $end_date       = strtotime($end_date);
             $query->where(function ($q) use ($start_date, $end_date) {
-                $q->where('start_date','>=',$start_date);
-                $q->where('end_date','<=',$end_date);
+                $q->where('start_date', '>=', $start_date);
+                $q->where('end_date', '<=', $end_date);
             });
         }
         if ($status != 'all') {
@@ -384,7 +385,7 @@ class ServerSideDataController extends Controller
                 return $milestone?->title;
             })
             ->addColumn('team', function ($task) {
-                $teams = json_decode($task->team);
+                $teams  = json_decode($task->team);
                 $output = '';
                 if (is_array($teams)) { // Check if tasks is already an array
                     foreach ($teams as $team) {
@@ -401,7 +402,7 @@ class ServerSideDataController extends Controller
                 return date('d-M-y h:i A', $task?->end_date);
             })
             ->addColumn('status', function ($task) {
-                $task      = $task->status;
+                $task        = $task->status;
                 $statusLabel = '';
                 if ($task == 'in_progress') {
                     $statusLabel = '<span class="in_progress">' . get_phrase('In Progress') . '</span>';
@@ -447,7 +448,7 @@ class ServerSideDataController extends Controller
                 </div>
             ';
             })
-            ->rawColumns(["id","title","team","start_date","end_date","status","progress","options"])
+            ->rawColumns(["id", "title", "team", "start_date", "end_date", "status", "progress", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -455,22 +456,23 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function file_server_side($project_code, $string, $start_date, $end_date, $type, $uploaded_by, $size) {
+    public function file_server_side($project_code, $string, $start_date, $end_date, $type, $uploaded_by, $size)
+    {
         $filter_count = [];
-        $query = File::query();
+        $query        = File::query();
         $query->where('project_id', project_id_by_code($project_code));
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
                 $q->where('title', 'like', "%{$string}%");
             });
         }
-        if($start_date && $end_date) {
+        if ($start_date && $end_date) {
             $filter_count[] = $start_date;
-            $start_date = date('Y-m-d H:i:s', strtotime($start_date));
-            $end_date = date('Y-m-d H:i:s', strtotime($end_date));
+            $start_date     = date('Y-m-d H:i:s', strtotime($start_date));
+            $end_date       = date('Y-m-d H:i:s', strtotime($end_date));
             $query->where(function ($q) use ($start_date, $end_date) {
-                $q->where('timestamp_start','>=',$start_date);
-                $q->where('timestamp_end','<=',$end_date);
+                $q->where('timestamp_start', '>=', $start_date);
+                $q->where('timestamp_end', '<=', $end_date);
             });
         }
         return datatables()
@@ -500,8 +502,8 @@ class ServerSideDataController extends Controller
             ->addColumn('updated_by', function ($file) {
                 return User::where('id', $file->user_id)->first()->name;
             })
-            ->addColumn('downloaded', function ($file) {                
-                return '<a href="'.asset($file->file).'" download="project-file.'.$file->extension.'" class="download-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            ->addColumn('downloaded', function ($file) {
+                return '<a href="' . asset($file->file) . '" download="project-file.' . $file->extension . '" class="download-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4.92958 5.39042L4.92958 5.39041L4.92862 5.3905C3.61385 5.5146 2.6542 5.93651 2.02459 6.70783C1.39588 7.47804 1.10332 8.58816 1.10332 10.0736V10.1603C1.10332 11.8027 1.45436 12.987 2.22713 13.7598C2.99991 14.5326 4.18424 14.8836 5.82665 14.8836H10.1733C11.8157 14.8836 13 14.5326 13.7728 13.7615C14.5456 12.9904 14.8967 11.8094 14.8967 10.1736V10.0869C14.8967 8.59144 14.5991 7.4745 13.9602 6.70257C13.3204 5.92962 12.3457 5.5112 11.0111 5.39715C10.7022 5.36786 10.4461 5.59636 10.4169 5.89543C10.3874 6.19756 10.6157 6.46083 10.9151 6.49005L10.9158 6.4901C11.9763 6.57958 12.6917 6.86862 13.1444 7.43161C13.5984 7.99634 13.7967 8.84694 13.7967 10.0803V10.1669C13.7967 11.5202 13.5567 12.4212 12.9921 12.9858C12.4275 13.5504 11.5265 13.7903 10.1733 13.7903H5.82665C4.47345 13.7903 3.57245 13.5504 3.00784 12.9858C2.44324 12.4212 2.20332 11.5202 2.20332 10.1669V10.0803C2.20332 8.85356 2.39823 8.00609 2.84423 7.44127C3.28876 6.8783 3.99097 6.58615 5.03125 6.49007L5.03139 6.49006C5.33896 6.46076 5.5591 6.18959 5.52975 5.88876C5.50032 5.58704 5.22199 5.36849 4.92958 5.39042Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
                     <path d="M7.45 9.92028C7.45 10.2212 7.69905 10.4703 8 10.4703C8.30051 10.4703 8.55 10.2283 8.55 9.92028V1.33362C8.55 1.03267 8.30095 0.783618 8 0.783618C7.69905 0.783618 7.45 1.03267 7.45 1.33362V9.92028Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
                     <path d="M7.61153 11.0556C7.7214 11.1655 7.86101 11.2169 8.00022 11.2169C8.13943 11.2169 8.27904 11.1655 8.38891 11.0556L10.6222 8.8223C10.8351 8.60944 10.8351 8.25778 10.6222 8.04492C10.4094 7.83206 10.0577 7.83206 9.84487 8.04492L8.00022 9.88957L6.15558 8.04492C5.94272 7.83206 5.59106 7.83206 5.3782 8.04492C5.16534 8.25778 5.16534 8.60944 5.3782 8.8223L7.61153 11.0556Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
@@ -529,7 +531,7 @@ class ServerSideDataController extends Controller
                 </div>
             ';
             })
-            ->rawColumns(["id","title","type","size","date","updated_by","downloaded","options"])
+            ->rawColumns(["id", "title", "type", "size", "date", "updated_by", "downloaded", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -537,7 +539,8 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function meeting_server_side($project_code, $string) {
+    public function meeting_server_side($project_code, $string)
+    {
         $query = Meeting::query();
         $query->where('project_id', project_id_by_code($project_code));
         if (!empty($string)) {
@@ -566,8 +569,8 @@ class ServerSideDataController extends Controller
             })
             ->addColumn('join', function ($meeting) {
                 $meeting = json_decode($meeting->joining_data);
-                
-                return '<a class="join-btn" href="'.$meeting->start_url.'">' . get_phrase('Start Meeting') . '</a>';
+
+                return '<a class="join-btn" href="' . $meeting->start_url . '">' . get_phrase('Start Meeting') . '</a>';
             })
             ->addColumn('options', function ($meeting) {
                 // Generate routes dynamically .milestone.edit', $milestone->id
@@ -590,7 +593,7 @@ class ServerSideDataController extends Controller
                 </div>
             ';
             })
-            ->rawColumns(["id","title","time","join","options"])
+            ->rawColumns(["id", "title", "time", "join", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -688,10 +691,13 @@ class ServerSideDataController extends Controller
     //         ->make(true);
     // }
 
-
     public function client_report_server_side($string, $project, $paymentMethod, $status, $minAmount, $maxAmount)
     {
+        // $query = Payment::query();
+        // $query = $query->select('*')->groupBy('user_id');
         $query = Payment::query();
+        $query = $query->select('user_id', DB::raw('SUM(amount) as total_amount'))
+            ->groupBy('user_id');
 
         // if (!empty($string)) {
         //     $query->where(function ($q) use ($string) {
@@ -721,9 +727,9 @@ class ServerSideDataController extends Controller
         // }
 
         // Get distinct client ids for mapping
-        $clients = Project::distinct('client_id')->pluck('client_id')->mapWithKeys(function ($id) {
-            return [$id => get_user($id)->name ?? '-'];
-        });
+        // $clients = Project::distinct('client_id')->pluck('client_id')->mapWithKeys(function ($id) {
+        //     return [$id => get_user($id)->name ?? '-'];
+        // });
 
         return datatables()
             ->eloquent($query)
@@ -737,9 +743,8 @@ class ServerSideDataController extends Controller
             ->addColumn('date', function ($payment) {
                 return date('Y-m-d', strtotime($payment->timestamp_start));
             })
-            ->addColumn('client', function ($payment) use ($clients) {
-                // Fetch the client name based on the client_id from $clients mapping
-                return $clients[$payment->project->client_id] ?? '-';
+            ->addColumn('user_id', function ($payment) {
+                return $payments->user_id ?? '-';
             })
             ->addColumn('amount', function ($payment) {
                 return currency($payment->payment);
@@ -759,7 +764,7 @@ class ServerSideDataController extends Controller
                 }
                 return $statusLabel;
             })
-            ->rawColumns(['id', 'timestamp_start', 'client', 'payment', 'payment_method', 'status'])
+            ->rawColumns(['id', 'timestamp_start', 'user_id', 'payment', 'payment_method', 'status'])
             ->setRowClass(function () {
                 return 'context-menu';
             })
