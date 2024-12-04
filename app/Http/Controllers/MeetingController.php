@@ -72,9 +72,7 @@ class MeetingController extends Controller
         $meeting = Meeting::join('projects', 'project_meetings.project_id', 'projects.id')
             ->where('project_meetings.id', $id)
             ->where('projects.user_id', Auth::user()->id)->first();
-
-            ddd
-
+            
         if (!$meeting) {
             Session::flash('error', get_phrase('Data not found.'));
             return redirect()->back();
