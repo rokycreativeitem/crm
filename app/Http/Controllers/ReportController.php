@@ -31,6 +31,17 @@ class ReportController extends Controller
 
             $query = $query->whereBetween('timestamp_start', [$start_date, $end_date]);
         }
+
+        $payments = Project::distinct('title')->pluck('title')->toArray();
+        dd($payments);
+        $data = [];
+        foreach ($payments as $payment) {
+            $data[] = [
+                'project' => $payment->project->title ?? '-',
+                // 'amount'  => Payment::where('user_id', $payment)->sum('payment'),
+            ];
+        }
+
         $payments = $query->get()->map(function ($payment) {
             return [
                 'project' => $payment->project->title ?? '-',
@@ -65,19 +76,16 @@ class ReportController extends Controller
             $query = $query->whereBetween('timestamp_start', [$start_date, $end_date]);
         }
 
-        $clients = Project::distinct('client_id')->pluck('client_id')->mapWithKeys(function ($id) {
-            return [$id => get_user($id)->name ?? '-'];
-        });
-
-        $payments = $query->get()->map(function ($payment) use ($clients) {
-            return [
-                'client' => $clients[$payment->project->client_id] ?? '-',
-                'amount' => $payment->payment,
+        $users = Project::distinct('user_id')->pluck('client_id')->toArray();
+        $data  = [];
+        foreach ($users as $user) {
+            $data[] = [
+                'client' => get_user($user)->name,
+                'amount' => Payment::where('user_id', $user)->sum('payment'),
             ];
-        });
+        }
 
-        $page_data['clients']  = $clients;
-        $page_data['payments'] = $payments;
+        $page_data['payments'] = $data;
 
         return view('reports.client_report', $page_data);
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Payment;
 use App\Models\Project;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ServerSideDataController extends Controller
 {
@@ -298,9 +298,14 @@ class ServerSideDataController extends Controller
             })
             ->make(true);
     }
+
     public function client_report_server_side($string, $project, $paymentMethod, $status, $minAmount, $maxAmount)
     {
+        // $query = Payment::query();
+        // $query = $query->select('*')->groupBy('user_id');
         $query = Payment::query();
+        $query = $query->select('user_id', DB::raw('SUM(amount) as total_amount'))
+            ->groupBy('user_id');
 
         // if (!empty($string)) {
         //     $query->where(function ($q) use ($string) {
@@ -330,9 +335,9 @@ class ServerSideDataController extends Controller
         // }
 
         // Get distinct client ids for mapping
-        $clients = Project::distinct('client_id')->pluck('client_id')->mapWithKeys(function ($id) {
-            return [$id => get_user($id)->name ?? '-'];
-        });
+        // $clients = Project::distinct('client_id')->pluck('client_id')->mapWithKeys(function ($id) {
+        //     return [$id => get_user($id)->name ?? '-'];
+        // });
 
         return datatables()
             ->eloquent($query)
@@ -346,9 +351,8 @@ class ServerSideDataController extends Controller
             ->addColumn('date', function ($payment) {
                 return date('Y-m-d', strtotime($payment->timestamp_start));
             })
-            ->addColumn('client', function ($payment) use ($clients) {
-                // Fetch the client name based on the client_id from $clients mapping
-                return $clients[$payment->project->client_id] ?? '-';
+            ->addColumn('user_id', function ($payment) {
+                return $payments->user_id ?? '-';
             })
             ->addColumn('amount', function ($payment) {
                 return currency($payment->payment);
@@ -368,7 +372,7 @@ class ServerSideDataController extends Controller
                 }
                 return $statusLabel;
             })
-            ->rawColumns(['id', 'timestamp_start', 'client', 'payment', 'payment_method', 'status'])
+            ->rawColumns(['id', 'timestamp_start', 'user_id', 'payment', 'payment_method', 'status'])
             ->setRowClass(function () {
                 return 'context-menu';
             })

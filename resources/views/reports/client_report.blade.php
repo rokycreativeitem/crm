@@ -177,7 +177,7 @@
 @push('js')
     <script>
         setTimeout(function() {
-            server_side_datatable('["id","timestamp_start", "client", "payment","payment_method","status"]', "{{ route(get_current_user_role() . '.client_report') }}");
+            server_side_datatable('["id","timestamp_start", "user_id", "payment","payment_method","status"]', "{{ route(get_current_user_role() . '.client_report') }}");
         }, 500);
     </script>
     <script>
