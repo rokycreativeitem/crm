@@ -38,33 +38,33 @@
         }, "Please enter the custom value");
 
         // Handle form submission via AJAX
-        $('#ajaxForm').submit(function(e) {
-            e.preventDefault();
+        // $('#ajaxForm').submit(function(e) {
+        //     e.preventDefault();
 
-            if ($("#ajaxForm").valid()) {
-                const url = $(this).attr('action');
-                const formData = new FormData(this);
+        //     if ($("#ajaxForm").valid()) {
+        //         const url = $(this).attr('action');
+        //         const formData = new FormData(this);
 
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        if (response) {
-                            processServerResponse(response);
-                            $('.global.offcanvas').offcanvas('hide');
-                            $('.server-side-datatable').DataTable().ajax.reload(null, false);
-                            $('.global.modal').modal('hide');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX Error:', status, error);
-                    }
-                });
-            }
-        });
+        //         $.ajax({
+        //             type: 'POST',
+        //             url: url,
+        //             data: formData,
+        //             contentType: false,
+        //             processData: false,
+        //             success: function(response) {
+        //                 if (response) {
+        //                     processServerResponse(response);
+        //                     $('.global.offcanvas').offcanvas('hide');
+        //                     $('.server-side-datatable').DataTable().ajax.reload(null, false);
+        //                     $('.global.modal').modal('hide');
+        //                 }
+        //             },
+        //             error: function(xhr, status, error) {
+        //                 console.error('AJAX Error:', status, error);
+        //             }
+        //         });
+        //     }
+        // });
     });
 
 
@@ -89,7 +89,7 @@
 
 
 $(document).ready(function () {
-    $('#crud_form').on('submit', function (e) {
+    $('#ajaxForm').on('submit', function (e) {
         e.preventDefault();
 
         let formData = new FormData(this);
@@ -111,9 +111,6 @@ $(document).ready(function () {
                 $('.global.offcanvas').offcanvas('hide');
                 $('.server-side-datatable').DataTable().ajax.reload(null, false);
                 $('.global.modal').modal('hide');
-            },
-            error: function (xhr) {
-                console.log('Error:', xhr.responseText);
             }
         });
     });

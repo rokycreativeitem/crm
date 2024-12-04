@@ -99,7 +99,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::controller(MeetingController::class)->group(function () {
         Route::get('meetings', 'index')->name('meetings');
         Route::get('meeting/create', 'create')->name('meeting.create');
-        Route::post('meeting/store', 'store')->name('meeting.store');
+        Route::post('meeting-store', 'store')->name('meeting-store');
         Route::get('meeting/delete/{id}', 'delete')->name('meeting.delete');
         Route::get('meeting/edit/{id}', 'edit')->name('meeting.edit');
         Route::post('meeting/update/{id}', 'update')->name('meeting.update');

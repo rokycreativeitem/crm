@@ -30,13 +30,13 @@
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="team">{{ get_phrase('Team') }}</label>
-                        <div class="d-flex flex-column">
+                        <div class="d-flex flex-wrap">
                             @php
                                 $assigned_staffs = json_decode($task->team, true) ?? [];
                             @endphp
                             @foreach ($staffs as $staff)
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="team_{{ $staff->id }}"
+                                <div class="form-check pe-2">
+                                    <input type="checkbox" class="form-check-input" id="staffs_{{ $staff->id }}"
                                         name="team[]" value="{{ $staff->id }}"
                                         {{ in_array($staff->id, $assigned_staffs) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="staffs_{{ $staff->id }}">
@@ -48,13 +48,13 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="start_date">{{ get_phrase('Start Date') }}</label>
-                        <input class="form-control ol-form-control" type="text" id="start_date" name="start_date"
-                            value="{{ date('d-m-Y', $task->start_date) }}" required>
+                        <input class="form-control ol-form-control" type="datetime-local" id="start_date" name="start_date"
+                            value="{{ $task->start_date }}" required>
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="end_date">{{ get_phrase('End Date') }}</label>
-                        <input class="form-control ol-form-control" type="text" id="end_date" name="end_date"
-                            value="{{ date('d-m-Y', $task->end_date) }}" required>
+                        <input class="form-control ol-form-control" type="datetime-local" id="end_date" name="end_date"
+                            value="{{ $task->end_date }}" required>
                     </div>
                     <div class="fpb7 mb-2">
                         <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Update') }}</button>
