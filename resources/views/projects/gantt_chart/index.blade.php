@@ -1,20 +1,21 @@
 @push('title', get_phrase('Gantt Chart'))
 @php
-    $tasks = DB::table('project_tasks')->get();
+    $tasks = App\Models\Task::get();
 @endphp
+{{request()->route()->parameter('code')}}
 
 <div id="chart_div"></div>
 
 @push('js')
+
     <script type="text/javascript">
         "use strict";
         google.charts.load('current', {
             'packages': ['gantt']
         });
         google.charts.setOnLoadCallback(drawChart);
-
+    
         function drawChart() {
-
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Task ID');
             data.addColumn('string', 'Task Name');
@@ -24,21 +25,26 @@
             data.addColumn('number', 'Duration');
             data.addColumn('number', 'Percent Complete');
             data.addColumn('string', 'Dependencies');
-
+    
+            // Adding rows dynamically
             data.addRows([
                 @foreach ($tasks as $task)
                     [
                         'Task{{ $task->id }}',
-                        '{{ $task->title }}',
+                        '{{ addslashes($task->title) }}', // Escape special characters
                         null,
-                        new Date({{ date('Y', $task->start_date) }},
-                            {{ date('m', $task->start_date) - 1 }},
-                            {{ date('d', $task->start_date) }}),
-                        new Date({{ date('Y', $task->end_date) }},
-                            {{ date('m', $task->end_date) - 1 }},
-                            {{ date('d', $task->end_date) }}),
-                        null,
-                        0,
+                        new Date(
+                            {{ (int) date('Y', $task->start_date) }},
+                            {{ (int) date('m', $task->start_date) - 1 }}, // Month is 0-indexed
+                            {{ (int) date('d', $task->start_date) }}
+                        ),
+                        new Date(
+                            {{ (int) date('Y', $task->end_date) }},
+                            {{ (int) date('m', $task->end_date) - 1 }},
+                            {{ (int) date('d', $task->end_date) }}
+                        ),
+                        null, // Duration is null (calculated automatically by Gantt)
+                        {{ $task->percent_complete ?? 0 }}, // Default to 0% if not set
                         null
                     ]
                     @if (!$loop->last)
@@ -46,11 +52,12 @@
                     @endif
                 @endforeach
             ]);
-
+    
             var options = {
                 height: 500,
                 gantt: {
-                    palette: [{
+                    palette: [
+                        {
                             "color": "#42a5f5", // Light blue for task bars
                             "dark": "#1e88e5", // Dark blue for critical paths
                             "light": "#bbdefb" // Lighter blue for non-critical tasks
@@ -66,7 +73,7 @@
                     criticalPathEnabled: true,
                     criticalPathStyle: {
                         stroke: '#ff7043',
-                        strokeWidth: 6 //
+                        strokeWidth: 6
                     },
                     arrow: {
                         angle: 45,
@@ -96,10 +103,10 @@
                     }
                 }
             };
-
+    
             var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
-
             chart.draw(data, options);
         }
     </script>
+    
 @endpush

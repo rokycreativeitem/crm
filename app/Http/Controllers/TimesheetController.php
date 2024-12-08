@@ -10,9 +10,12 @@ use Illuminate\Support\Facades\Validator;
 
 class TimesheetController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $page_data['timesheets'] = Timesheet::paginate(10);
+        if($request->ajax()){
+            return app(ServerSideDataController::class)->timesheet_server_side($request->project_id, $request->customSearch, $request->start_date, $request->end_date);                
+        }
+        $page_data['timesheets'] = Timesheet::get();
         return view('projects.timesheet.index', $page_data);
     }
     public function create()
@@ -67,7 +70,7 @@ class TimesheetController extends Controller
         $data['timestamp_start'] = $request->timestamp_start;
         $data['timestamp_end']   = $request->timestamp_end;
 
-        Timesheet::where('id', $request->id)->update($data);
+        Timesheet::where('id', $id)->update($data);
 
         return response()->json([
             'success' => 'Timesheet has been updated.',

@@ -33,7 +33,7 @@ class ReportController extends Controller
         }
 
         $payments = Project::distinct('title')->pluck('title')->toArray();
-        dd($payments);
+        
         $data = [];
         foreach ($payments as $payment) {
             $data[] = [

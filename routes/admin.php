@@ -119,7 +119,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     });
 
     Route::controller(TimesheetController::class)->group(function () {
-        Route::get('timesheet', 'index')->name('timesheet');
+        Route::get('timesheets', 'index')->name('timesheets');
         Route::get('timesheet/create', 'create')->name('timesheet.create');
         Route::post('timesheet/store', 'store')->name('timesheet.store');
         Route::get('timesheet/delete/{id}', 'delete')->name('timesheet.delete');

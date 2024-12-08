@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax()){
+            return app(ServerSideDataController::class)->invoice_server_side($request->project_id, $request->customSearch);                
+        }
         $page_data['payments'] = Payment::get();
         return view('projects.invoice.index', $page_data);
     }
@@ -64,7 +67,7 @@ class PaymentController extends Controller
         $data['title']   = $request->title;
         $data['payment'] = $request->payment;
 
-        Payment::where('id', $request->id)->update($data);
+        Payment::where('id', $id)->update($data);
 
         return response()->json([
             'success' => 'Invoice has been updated.',
