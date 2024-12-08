@@ -35,9 +35,9 @@
                         }
                     });
                 },
-                // success: function(e){
-                //     console.log(e);
-                //     alert()
+                // success: function (response) {
+                //     console.log(response.filter_count);
+                //     $('#filter-count-display').text(response.filter_count);
                 // },
                 error: function (xhr, error, thrown) {
                     console.log(xhr.responseText);
@@ -50,6 +50,14 @@
             paging: true,
         });
 
+        table.on('xhr', function (e, settings, json) {
+            console.log(json.filter_count);
+            if(json.filter_count > 0) {
+                $('#filter-count-display').text(json.filter_count).removeClass('d-none');
+                $('#filter-reset').removeClass('d-none');
+            }
+        });
+
         $('.server-side-datatable tbody').on('contextmenu', 'tr', function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -58,7 +66,6 @@
             var contextMenuData;
 
             try {
-                // Decode and parse context menu JSON
                 var rawContextMenu = decodeHtmlEntities(rowData.context_menu);
                 contextMenuData = JSON.parse(rawContextMenu);
                 // console.log(contextMenuData)

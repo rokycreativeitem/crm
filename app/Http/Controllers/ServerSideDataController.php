@@ -9,6 +9,7 @@ use App\Models\Milestone;
 use App\Models\Payment;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -722,6 +723,196 @@ class ServerSideDataController extends Controller
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
             ->rawColumns(["id", "title", "time", "join", "options"])
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
+            ->with('filter_count', count($filter_count))
+            ->make(true);
+    }
+
+    public function timesheet_server_side($project_code, $string, $start_date, $end_date) {
+        $query = Timesheet::query();
+        $query->where('project_id', project_id_by_code($project_code));
+        if (!empty($string)) {
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%");
+            });
+        }
+        $filter_count = [];
+        if ($start_date && $end_date) {
+            $filter_count[] = $start_date;
+            $start_date     = date('Y-m-d H:i:s', strtotime($start_date));
+            $end_date       = date('Y-m-d H:i:s', strtotime($end_date));
+            $query->where(function ($q) use ($start_date, $end_date) {
+                $q->where('timestamp_start', '>=', $start_date);
+                $q->where('timestamp_end', '<=', $end_date);
+            });
+        }
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('id', function ($time) {
+                static $key = 1;
+                return '
+                <div class="d-flex align-items-center">
+                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                    <p class="row-number fs-12px">' . $key++ . '</p>
+                    <input type="hidden" class="datatable-row-id" value="' . $time->id . '">
+                </div>
+            ';
+            })
+            ->addColumn('title', function ($time) {
+                return $time?->title;
+            })
+            ->addColumn('from', function ($time) {
+                return date('d-M-y h:i A', strtotime($time->timestamp_start));
+            })
+            ->addColumn('to', function ($time) {
+                return date('d-M-y h:i A', strtotime($time->timestamp_end));
+            })
+            ->addColumn('options', function ($time) {
+                // Generate routes dynamically .milestone.edit', $milestone->id
+                $editRoute   = route(get_current_user_role() . '.timesheet.edit', $time->id);
+                $deleteRoute = route(get_current_user_role() . '.timesheet.delete', $time->id);
+
+                return '
+                <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
+                    <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="fi-rr-menu-dots-vertical"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                    </ul>
+                </div>
+            ';
+            })
+            ->addColumn('context_menu', function ($time) {
+                $editRoute   = route(get_current_user_role() . '.timesheet.edit', $time->id);
+                $deleteRoute = route(get_current_user_role() . '.timesheet.delete', $time->id);
+                // Generate the context menu
+                $contextMenu = [
+                    'Edit' => [
+                        'type' => 'ajax',
+                        'name' => 'Edit',
+                        'action_link' => $editRoute,
+                        'title' => 'Edit meeting'
+                    ],
+                    'Delete' => [
+                        'type' => 'ajax',
+                        'name' => 'Delete',
+                        'action_link' => $deleteRoute,
+                        'title' => 'Delete meeting'
+                    ]
+                ];
+
+                // JSON encode with unescaped slashes for cleaner URLs
+                return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            })
+            ->rawColumns(["id","title","from","to","options"])
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
+            ->with('filter_count', count($filter_count))
+            ->make(true);
+    }
+
+    public function invoice_server_side($project_code, $string) {
+        $query = Payment::query();
+        $query->where('project_id', project_id_by_code($project_code));
+        if (!empty($string)) {
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%");
+            });
+        }
+        $filter_count = [];
+        // if ($start_date && $end_date) {
+        //     $filter_count[] = $start_date;
+        //     $start_date     = date('Y-m-d H:i:s', strtotime($start_date));
+        //     $end_date       = date('Y-m-d H:i:s', strtotime($end_date));
+        //     $query->where(function ($q) use ($start_date, $end_date) {
+        //         $q->where('timestamp_start', '>=', $start_date);
+        //         $q->where('timestamp_end', '<=', $end_date);
+        //     });
+        // }
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('id', function ($invoice) {
+                static $key = 1;
+                return '
+                <div class="d-flex align-items-center">
+                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                    <p class="row-number fs-12px">' . $key++ . '</p>
+                    <input type="hidden" class="datatable-row-id" value="' . $invoice->id . '">
+                </div>
+            ';
+            })
+            ->addColumn('title', function ($invoice) {
+                return $invoice?->title;
+            })
+            ->addColumn('payment', function ($invoice) {
+                return currency($invoice->payment);
+            })
+            ->addColumn('time', function ($invoice) {
+                return date('d-M-y h:i A', strtotime($invoice->timestamp_start));
+            })
+            ->addColumn('options', function ($invoice) {
+                // Generate routes dynamically .milestone.edit', $milestone->id
+                $editRoute   = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $deleteRoute = route(get_current_user_role() . '.invoice.delete', $invoice->id);
+                $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                return '
+                <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
+                    <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="fi-rr-menu-dots-vertical"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="'.$invoiceRoute.'">' . get_phrase('Invoice') . '</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                    </ul>
+                </div>
+            ';
+            })
+            ->addColumn('context_menu', function ($invoice) {
+                $editRoute   = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $deleteRoute = route(get_current_user_role() . '.invoice.delete', $invoice->id);
+                $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                // Generate the context menu
+                $contextMenu = [
+                    'Invoice' => [
+                        'type' => 'url',
+                        'name' => 'Invoice',
+                        'action_link' => $invoiceRoute,
+                        'title' => 'View Invoice'
+                    ],
+                    'Edit' => [
+                        'type' => 'ajax',
+                        'name' => 'Edit',
+                        'action_link' => $editRoute,
+                        'title' => 'Edit meeting'
+                    ],
+                    'Delete' => [
+                        'type' => 'ajax',
+                        'name' => 'Delete',
+                        'action_link' => $deleteRoute,
+                        'title' => 'Delete meeting'
+                    ]
+                ];
+
+                // JSON encode with unescaped slashes for cleaner URLs
+                return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            })
+            ->rawColumns(["id","title","payment","time","options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })

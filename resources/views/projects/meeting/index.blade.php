@@ -43,7 +43,7 @@
                                     </button>
                                     <ul class="dropdown-list dropdown-export">
                                         <li class="mb-1">
-                                            <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'Milestone-list')"><i class="fi-rr-file-pdf"></i>
+                                            <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'Meeting-list')"><i class="fi-rr-file-pdf"></i>
                                                 {{ get_phrase('PDF') }}</a>
                                         </li>
                                         <li>

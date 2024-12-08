@@ -59,7 +59,7 @@
 
         <a href="#" class="list text-18px d-inline-flex" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
             <span class="d-block h-100 w-100" data-bs-toggle="tooltip" data-bs-placement="bottom" title="AI Assistant">
-                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0" viewBox="0 0 64 64" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
+                <svg width="22" height="22" x="0" y="0" viewBox="0 0 64 64" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
                     <g>
                         <g fill="#424242">
                             <path

@@ -97,6 +97,7 @@
                     </a>
                 </li>
 
+<<<<<<< HEAD
 
                 {{-- <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.projects' || $current_route == get_current_user_role() . '.project.create' || $current_route == get_current_user_role() . '.project.edit' || $current_route == get_current_user_role() . '.project.details') active showMenu @endif ">
                     <a href="{{ route(get_current_user_role() . '.projects') }}">
@@ -118,6 +119,12 @@
                 </li> --}}
 
                 <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.projects' || $current_route == get_current_user_role() . '.project.categories') active showMenu @endif">
+=======
+                <li class="sidebar-first-li first-li-have-sub @if (
+                    $current_route == get_current_user_role() . '.projects' ||
+                    $current_route == get_current_user_role() . '.project.categories' ||
+                    request()->is('admin/project*')) active showMenu @endif">
+>>>>>>> db11fddbcddb94da77305894daa6f49ee500efc9
                     <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -137,6 +144,7 @@
                         <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.project.categories') active showMenu @endif">
                             <a href="{{ route(get_current_user_role() . '.project.categories') }}">{{ get_phrase('Categories') }}</a>
                         </li>
+<<<<<<< HEAD
                         <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.projects') active showMenu @endif">
                             <a href="{{ route(get_current_user_role() . '.projects', ['layout' => get_settings('list_view_type') ?? 'list']) }}">{{ get_phrase('Projects') }}</a>
                         </li>
@@ -144,6 +152,49 @@
                 </li>
                 <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.users') active showMenu @endif">
                     <a href="javascript:void(0);">
+=======
+                        <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.projects' || request()->is('admin/project*')) active showMenu @endif">
+                            <a href="{{ route(get_current_user_role() . '.projects',['layout'=>get_settings('list_view_type')??'list']) }}">{{ get_phrase('Projects') }}</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-first-li first-li-have-sub">
+                    <a href="javascript:void(0);">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M7.63411 9.68335C7.60911 9.68335 7.59245 9.68335 7.56745 9.68335C7.52578 9.67502 7.46745 9.67502 7.41745 9.68335C5.00078 9.60835 3.17578 7.70835 3.17578 5.36669C3.17578 2.98335 5.11745 1.04169 7.50078 1.04169C9.88411 1.04169 11.8258 2.98335 11.8258 5.36669C11.8174 7.70835 9.98411 9.60835 7.65911 9.68335C7.65078 9.68335 7.64245 9.68335 7.63411 9.68335ZM7.50078 2.29169C5.80911 2.29169 4.42578 3.67502 4.42578 5.36669C4.42578 7.03335 5.72578 8.37502 7.38411 8.43335C7.43411 8.42502 7.54245 8.42502 7.65078 8.43335C9.28412 8.35835 10.5674 7.01669 10.5758 5.36669C10.5758 3.67502 9.19245 2.29169 7.50078 2.29169Z"
+                                fill="currentColor" />
+                            <path
+                                d="M13.784 9.79165C13.759 9.79165 13.734 9.79165 13.709 9.78331C13.3673 9.81665 13.0173 9.57498 12.984 9.23331C12.9506 8.89165 13.159 8.58331 13.5006 8.54165C13.6006 8.53331 13.709 8.53331 13.8006 8.53331C15.0173 8.46665 15.9673 7.46665 15.9673 6.24165C15.9673 4.97498 14.9423 3.94998 13.6756 3.94998C13.334 3.95831 13.0506 3.67498 13.0506 3.33331C13.0506 2.99165 13.334 2.70831 13.6756 2.70831C15.6256 2.70831 17.2173 4.29998 17.2173 6.24998C17.2173 8.16665 15.7173 9.71665 13.809 9.79165C13.8006 9.79165 13.7923 9.79165 13.784 9.79165Z"
+                                fill="currentColor" />
+                            <path
+                                d="M7.64037 18.7916C6.00703 18.7916 4.36536 18.375 3.1237 17.5416C1.96536 16.775 1.33203 15.725 1.33203 14.5833C1.33203 13.4416 1.96536 12.3833 3.1237 11.6083C5.6237 9.94998 9.6737 9.94998 12.157 11.6083C13.307 12.375 13.9487 13.425 13.9487 14.5666C13.9487 15.7083 13.3154 16.7666 12.157 17.5416C10.907 18.375 9.2737 18.7916 7.64037 18.7916ZM3.81536 12.6583C3.01536 13.1916 2.58203 13.875 2.58203 14.5916C2.58203 15.3 3.0237 15.9833 3.81536 16.5083C5.89036 17.9 9.39036 17.9 11.4654 16.5083C12.2654 15.975 12.6987 15.2916 12.6987 14.575C12.6987 13.8666 12.257 13.1833 11.4654 12.6583C9.39036 11.275 5.89036 11.275 3.81536 12.6583Z"
+                                fill="currentColor" />
+                            <path
+                                d="M15.2844 17.2917C14.9928 17.2917 14.7344 17.0917 14.6761 16.7917C14.6094 16.45 14.8261 16.125 15.1594 16.05C15.6844 15.9417 16.1678 15.7333 16.5428 15.4417C17.0178 15.0833 17.2761 14.6333 17.2761 14.1583C17.2761 13.6833 17.0178 13.2333 16.5511 12.8833C16.1844 12.6 15.7261 12.4 15.1844 12.275C14.8511 12.2 14.6344 11.8667 14.7094 11.525C14.7844 11.1917 15.1178 10.975 15.4594 11.05C16.1761 11.2083 16.8011 11.4917 17.3094 11.8833C18.0844 12.4667 18.5261 13.2917 18.5261 14.1583C18.5261 15.025 18.0761 15.85 17.3011 16.4417C16.7844 16.8417 16.1344 17.1333 15.4178 17.275C15.3678 17.2917 15.3261 17.2917 15.2844 17.2917Z"
+                                fill="currentColor" />
+                        </svg>
+                        <div class="text">
+                            <span>{{ get_phrase('Users') }}</span>
+                        </div>
+                    </a>
+                    <ul class="first-sub-menu">
+                        <li class="sidebar-second-li">
+                            <a href="">{{ get_phrase('Admins') }}</a>
+                        </li>
+                        <li class="sidebar-second-li">
+                            <a href="">{{ get_phrase('Clients') }}</a>
+                        </li>
+                        <li class="sidebar-second-li">
+                            <a href="">{{ get_phrase('Staffs') }}</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.users' || $current_route == get_current_user_role() . '.user.create' || $current_route == get_current_user_role() . '.user.edit') active showMenu @endif ">
+                    <a href="{{ route(get_current_user_role() . '.users') }}">
+>>>>>>> db11fddbcddb94da77305894daa6f49ee500efc9
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M7.63411 9.68335C7.60911 9.68335 7.59245 9.68335 7.56745 9.68335C7.52578 9.67502 7.46745 9.67502 7.41745 9.68335C5.00078 9.60835 3.17578 7.70835 3.17578 5.36669C3.17578 2.98335 5.11745 1.04169 7.50078 1.04169C9.88411 1.04169 11.8258 2.98335 11.8258 5.36669C11.8174 7.70835 9.98411 9.60835 7.65911 9.68335C7.65078 9.68335 7.64245 9.68335 7.63411 9.68335ZM7.50078 2.29169C5.80911 2.29169 4.42578 3.67502 4.42578 5.36669C4.42578 7.03335 5.72578 8.37502 7.38411 8.43335C7.43411 8.42502 7.54245 8.42502 7.65078 8.43335C9.28412 8.35835 10.5674 7.01669 10.5758 5.36669C10.5758 3.67502 9.19245 2.29169 7.50078 2.29169Z"
@@ -228,7 +279,23 @@
                                 fill="currentColor" />
                         </svg>
                         <div class="text">
-                            <span>{{ get_phrase('Calender') }}</span>
+                            <span>{{ get_phrase('Events') }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="sidebar-first-li">
+                    <a href="">
+                       
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.6201 9.62H12.3701C11.9601 9.62 11.6201 9.28 11.6201 8.87C11.6201 8.46 11.9601 8.12 12.3701 8.12H17.6201C18.0301 8.12 18.3701 8.46 18.3701 8.87C18.3701 9.28 18.0401 9.62 17.6201 9.62Z" fill="currentColor"/>
+                            <path d="M7.12006 10.38C6.93006 10.38 6.74006 10.31 6.59006 10.16L5.84006 9.41001C5.55006 9.12001 5.55006 8.64001 5.84006 8.35001C6.13006 8.06001 6.61006 8.06001 6.90006 8.35001L7.12006 8.57001L8.84006 6.85001C9.13006 6.56001 9.61006 6.56001 9.90006 6.85001C10.1901 7.14001 10.1901 7.62001 9.90006 7.91001L7.65006 10.16C7.51006 10.3 7.32006 10.38 7.12006 10.38Z" fill="currentColor"/>
+                            <path d="M17.6201 16.62H12.3701C11.9601 16.62 11.6201 16.28 11.6201 15.87C11.6201 15.46 11.9601 15.12 12.3701 15.12H17.6201C18.0301 15.12 18.3701 15.46 18.3701 15.87C18.3701 16.28 18.0401 16.62 17.6201 16.62Z" fill="currentColor"/>
+                            <path d="M7.12006 17.38C6.93006 17.38 6.74006 17.31 6.59006 17.16L5.84006 16.41C5.55006 16.12 5.55006 15.64 5.84006 15.35C6.13006 15.06 6.61006 15.06 6.90006 15.35L7.12006 15.57L8.84006 13.85C9.13006 13.56 9.61006 13.56 9.90006 13.85C10.1901 14.14 10.1901 14.62 9.90006 14.91L7.65006 17.16C7.51006 17.3 7.32006 17.38 7.12006 17.38Z" fill="currentColor"/>
+                            <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H15C20.43 1.25 22.75 3.57 22.75 9V15C22.75 20.43 20.43 22.75 15 22.75ZM9 2.75C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V9C21.25 4.39 19.61 2.75 15 2.75H9Z" fill="currentColor"/>
+                        </svg>
+    
+                        <div class="text">
+                            <span>{{ get_phrase('Tasks') }}</span>
                         </div>
                     </a>
                 </li>
