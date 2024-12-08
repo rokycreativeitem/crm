@@ -97,34 +97,10 @@
                     </a>
                 </li>
 
-<<<<<<< HEAD
-
-                {{-- <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.projects' || $current_route == get_current_user_role() . '.project.create' || $current_route == get_current_user_role() . '.project.edit' || $current_route == get_current_user_role() . '.project.details') active showMenu @endif ">
-                    <a href="{{ route(get_current_user_role() . '.projects') }}">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M13.3333 18.9584H6.66667C3.625 18.9584 1.875 17.2084 1.875 14.1667V5.83335C1.875 2.79169 3.625 1.04169 6.66667 1.04169H13.3333C16.375 1.04169 18.125 2.79169 18.125 5.83335V14.1667C18.125 17.2084 16.375 18.9584 13.3333 18.9584ZM6.66667 2.29169C4.28333 2.29169 3.125 3.45002 3.125 5.83335V14.1667C3.125 16.55 4.28333 17.7084 6.66667 17.7084H13.3333C15.7167 17.7084 16.875 16.55 16.875 14.1667V5.83335C16.875 3.45002 15.7167 2.29169 13.3333 2.29169H6.66667Z"
-                                fill="currentColor" />
-                            <path
-                                d="M15.4163 7.70833H13.7497C12.483 7.70833 11.458 6.68333 11.458 5.41667V3.75C11.458 3.40833 11.7413 3.125 12.083 3.125C12.4247 3.125 12.708 3.40833 12.708 3.75V5.41667C12.708 5.99167 13.1747 6.45833 13.7497 6.45833H15.4163C15.758 6.45833 16.0413 6.74167 16.0413 7.08333C16.0413 7.425 15.758 7.70833 15.4163 7.70833Z"
-                                fill="currentColor" />
-                            <path d="M10.0003 11.4583H6.66699C6.32533 11.4583 6.04199 11.175 6.04199 10.8333C6.04199 10.4916 6.32533 10.2083 6.66699 10.2083H10.0003C10.342 10.2083 10.6253 10.4916 10.6253 10.8333C10.6253 11.175 10.342 11.4583 10.0003 11.4583Z" fill="currentColor" />
-                            <path d="M13.3337 14.7917H6.66699C6.32533 14.7917 6.04199 14.5084 6.04199 14.1667C6.04199 13.825 6.32533 13.5417 6.66699 13.5417H13.3337C13.6753 13.5417 13.9587 13.825 13.9587 14.1667C13.9587 14.5084 13.6753 14.7917 13.3337 14.7917Z" fill="currentColor" />
-                        </svg>
-
-                        <div class="text">
-                            <span>{{ get_phrase('Projects') }}</span>
-                        </div>
-                    </a>
-                </li> --}}
-
-                <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.projects' || $current_route == get_current_user_role() . '.project.categories') active showMenu @endif">
-=======
                 <li class="sidebar-first-li first-li-have-sub @if (
                     $current_route == get_current_user_role() . '.projects' ||
                     $current_route == get_current_user_role() . '.project.categories' ||
                     request()->is('admin/project*')) active showMenu @endif">
->>>>>>> db11fddbcddb94da77305894daa6f49ee500efc9
                     <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -144,15 +120,6 @@
                         <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.project.categories') active showMenu @endif">
                             <a href="{{ route(get_current_user_role() . '.project.categories') }}">{{ get_phrase('Categories') }}</a>
                         </li>
-<<<<<<< HEAD
-                        <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.projects') active showMenu @endif">
-                            <a href="{{ route(get_current_user_role() . '.projects', ['layout' => get_settings('list_view_type') ?? 'list']) }}">{{ get_phrase('Projects') }}</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.users') active showMenu @endif">
-                    <a href="javascript:void(0);">
-=======
                         <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.projects' || request()->is('admin/project*')) active showMenu @endif">
                             <a href="{{ route(get_current_user_role() . '.projects',['layout'=>get_settings('list_view_type')??'list']) }}">{{ get_phrase('Projects') }}</a>
                         </li>
@@ -194,7 +161,6 @@
 
                 <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.users' || $current_route == get_current_user_role() . '.user.create' || $current_route == get_current_user_role() . '.user.edit') active showMenu @endif ">
                     <a href="{{ route(get_current_user_role() . '.users') }}">
->>>>>>> db11fddbcddb94da77305894daa6f49ee500efc9
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M7.63411 9.68335C7.60911 9.68335 7.59245 9.68335 7.56745 9.68335C7.52578 9.67502 7.46745 9.67502 7.41745 9.68335C5.00078 9.60835 3.17578 7.70835 3.17578 5.36669C3.17578 2.98335 5.11745 1.04169 7.50078 1.04169C9.88411 1.04169 11.8258 2.98335 11.8258 5.36669C11.8174 7.70835 9.98411 9.60835 7.65911 9.68335C7.65078 9.68335 7.64245 9.68335 7.63411 9.68335ZM7.50078 2.29169C5.80911 2.29169 4.42578 3.67502 4.42578 5.36669C4.42578 7.03335 5.72578 8.37502 7.38411 8.43335C7.43411 8.42502 7.54245 8.42502 7.65078 8.43335C9.28412 8.35835 10.5674 7.01669 10.5758 5.36669C10.5758 3.67502 9.19245 2.29169 7.50078 2.29169Z"
