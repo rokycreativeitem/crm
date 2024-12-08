@@ -65,7 +65,7 @@
         let offcanvasBody = $('.global .offcanvas-body').empty().append(spinner);
         let canvasPosition = position == 'right' ? 'offcanvas-end' : 'offcanvas-start';
 
-        $('.global.offcanvas-title').text(title);
+        $('.global .offcanvas-title').text(title);
         $('.global.offcanvas').addClass(position == '' ? 'offcanvas-end' : canvasPosition);
         $('.global.offcanvas').offcanvas('show');
 
@@ -144,7 +144,7 @@
                     success: function(response) {
                         $("#confirmModal").modal('hide');
                         var table = new DataTable('.table');
-                        setTimeout(function () {
+                        setTimeout(function() {
                             table.ajax.reload();
                         }, 1000);
                         processServerResponse(response);
@@ -202,7 +202,7 @@
                     type: database_type,
                     _token: '{{ csrf_token() }}',
                 },
-                success: function (response) {
+                success: function(response) {
                     if (response.success) {
                         processServerResponse(response);
                         $("#multiDelete").modal('hide');

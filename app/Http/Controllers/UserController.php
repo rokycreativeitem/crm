@@ -6,19 +6,25 @@ use App\Models\FileUploader;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $page_data = User::get();
+        $page_data['users'] = User::get();
+        if ($request->ajax()) {
+            return app(ServerSideDataController::class)->user_server_side($request->customSearch, $request->name, $request->email);
+        }
         return view('users.index', $page_data);
     }
 
     public function create()
     {
+        $page_data['roles'] = Role::all();
+
         $page_data['role_id'] = request()->query('id');
         return view('users.create', $page_data);
     }
@@ -115,5 +121,54 @@ class UserController extends Controller
         }
 
         return response()->json(['error' => 'No users selected for deletion.'], 400);
+    }
+
+    public function manage_profile()
+    {
+        return view('profile.index');
+    }
+    public function manage_profile_update(Request $request)
+    {
+        if ($request->type == 'general') {
+            $profile['name']      = $request->name;
+            $profile['email']     = $request->email;
+            $profile['facebook']  = $request->facebook;
+            $profile['linkedin']  = $request->linkedin;
+            $profile['about']     = $request->about;
+            $profile['skills']    = $request->skills;
+            $profile['biography'] = $request->biography;
+
+            $user = User::find(auth()->user()->id);
+
+            if ($request->hasFile('photo')) {
+                $file = $request->file('photo');
+
+                if ($user->photo) {
+                    $oldFilePath = public_path($user->photo);
+                    if (file_exists($oldFilePath)) {
+                        unlink($oldFilePath);
+                    }
+                }
+
+                $profile['photo'] = FileUploader::upload($file, 'user_photos');
+            }
+
+            $user->update($profile);
+        } else {
+            $old_pass_check = Auth::attempt(['email' => auth()->user()->email, 'password' => $request->current_password]);
+
+            if (!$old_pass_check) {
+                return redirect()->back()->with('error', get_phrase('Current password wrong.'));
+            }
+
+            if ($request->new_password != $request->confirm_password) {
+                return redirect()->back()->with('error', get_phrase('Confirm password not same.'));
+            }
+
+            $password = Hash::make($request->new_password);
+            User::where('id', auth()->user()->id)->update(['password' => $password]);
+        }
+        return redirect()->back()->with('success', get_phrase('Your changes has been saved.'));
+
     }
 }

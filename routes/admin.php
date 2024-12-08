@@ -8,7 +8,6 @@ use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
@@ -66,7 +65,6 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
         Route::get('tasks-datatable', 'index')->name('tasks.datatable');
 
-
     });
 
     Route::controller(GanttChartController::class)->group(function () {
@@ -93,6 +91,9 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::get('user/edit/{id}', 'edit')->name('user.edit');
         Route::post('user/update/{id}', 'update')->name('user.update');
         Route::post('user/multi-delete', 'multiDelete')->name('user.multi-delete');
+
+        Route::get('manage_profile', 'manage_profile')->name('manage_profile');
+        Route::post('manage_profile/update', 'manage_profile_update')->name('manage_profile.update');
 
     });
 
@@ -139,17 +140,6 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
             Route::get('roles/delete/{id}', 'delete')->name('roles.delete');
             Route::post('roles/update/{id}', 'update')->name('roles.update');
         });
-    });
-
-    Route::controller(PermissionController::class)->group(function () {
-        Route::get('permissions', 'index')->name('permissions');
-        Route::get('permission/create', 'create')->name('permission.create');
-        Route::post('permission/store', 'store')->name('permission.store');
-        Route::get('permission/delete/{id}', 'delete')->name('permission.delete');
-        Route::get('permission/edit/{id}', 'edit')->name('permission.edit');
-        Route::post('permission/update/{id}', 'update')->name('permission.update');
-        Route::post('permission/multi-delete', 'multiDelete')->name('permission.multi-delete');
-
     });
 
     // assign permission

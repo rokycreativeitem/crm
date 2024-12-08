@@ -80,9 +80,9 @@
                                                 {{ get_phrase('Print') }}</a>
                                         </li>
                                     </ul>
-                                    
+
                                 </div>
-                          
+
                                 <div class="custom-dropdown dropdown filter-dropdown btn-group" id="export-btn">
                                     <button class="dropdown-header btn ol-btn-light dropdown-toggle-split" type="button" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -97,24 +97,24 @@
                                         <span class="filter-count-display d-none" id="filter-count-display"></span>
                                     </button>
 
-                                    <a href="javascript:void(0)" class="border-0 filter-reset d-none d-flex align-items-center" id="filter-reset"> 
+                                    <a href="javascript:void(0)" class="border-0 filter-reset d-none d-flex align-items-center" id="filter-reset">
                                         <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7 6.99927L1.00141 1.00068" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round"/>
-                                            <path d="M1 6.99936L6.99859 1.00077" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round"/>
+                                            <path d="M7 6.99927L1.00141 1.00068" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
+                                            <path d="M1 6.99936L6.99859 1.00077" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
                                         </svg>
-                                            
+
                                         <span>|</span>
                                     </a>
-                                        
+
                                     <!-- Dropdown Menu -->
                                     <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
                                         <!-- Category -->
                                         <div class="mb-3">
                                             <label for="category" class="form-label">{{ get_phrase('Category') }}</label>
                                             <select class="form-control px-14px ol-form-control ol-select2" name="category" id="category">
-                                                <option value="all">{{get_phrase('Select Category')}}</option>
+                                                <option value="all">{{ get_phrase('Select Category') }}</option>
                                                 @foreach ($categories as $item)
-                                                    <option value="{{$item->id}}"> {{$item->name}} </option>
+                                                    <option value="{{ $item->id }}"> {{ $item->name }} </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -155,11 +155,11 @@
                                                 <div id="budget-slider"></div>
                                                 <div class="accordion-range-value d-flex align-items-center mt-4">
                                                     <div class="d-flex align-items-center">
-                                                        <label for="min-price" class="me-2"> {{get_phrase('From')}} </label>
+                                                        <label for="min-price" class="me-2"> {{ get_phrase('From') }} </label>
                                                         <input type="text" class="value minPrice" disabled id="min-price" name="minPrice">
                                                     </div>
                                                     <div class="d-flex align-items-center">
-                                                        <label for="max-price" class="mx-2"> {{get_phrase('To')}} </label>
+                                                        <label for="max-price" class="mx-2"> {{ get_phrase('To') }} </label>
                                                         <input type="text" class="value" disabled id="max-price" name="maxPrice">
                                                     </div>
                                                 </div>

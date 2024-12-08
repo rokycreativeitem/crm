@@ -4,14 +4,12 @@
 <div class="ol-header print-d-none d-flex align-items-center justify-content-between py-2 ps-3">
     <div class="header-title-menubar d-flex align-items-center">
         <button class="menu-toggler sidebar-plus">
-            <span>
-                <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 6.86621H13" stroke="#99A1B7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M20 12.8662H11" stroke="#99A1B7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M20 18.8662H13" stroke="#99A1B7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M8 8.86621L4 12.8662L8 16.8662" stroke="#99A1B7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-            </span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 5.25H3C2.59 5.25 2.25 4.91 2.25 4.5C2.25 4.09 2.59 3.75 3 3.75H21C21.41 3.75 21.75 4.09 21.75 4.5C21.75 4.91 21.41 5.25 21 5.25Z" fill="#99A1B7" />
+                <path d="M21 10.25H3C2.59 10.25 2.25 9.91 2.25 9.5C2.25 9.09 2.59 8.75 3 8.75H21C21.41 8.75 21.75 9.09 21.75 9.5C21.75 9.91 21.41 10.25 21 10.25Z" fill="#99A1B7" />
+                <path d="M21 15.25H3C2.59 15.25 2.25 14.91 2.25 14.5C2.25 14.09 2.59 13.75 3 13.75H21C21.41 13.75 21.75 14.09 21.75 14.5C21.75 14.91 21.41 15.25 21 15.25Z" fill="#99A1B7" />
+                <path d="M21 20.25H3C2.59 20.25 2.25 19.91 2.25 19.5C2.25 19.09 2.59 18.75 3 18.75H21C21.41 18.75 21.75 19.09 21.75 19.5C21.75 19.91 21.41 20.25 21 20.25Z" fill="#99A1B7" />
+            </svg>
         </button>
 
         <div class="main-header-title">

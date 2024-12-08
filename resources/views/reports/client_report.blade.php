@@ -62,36 +62,8 @@
                                         <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
                                             <!-- Payment Method -->
                                             <div class="mb-3">
-                                                <label for="payment_method" class="form-label">{{ get_phrase('Payment Method') }}</label>
-                                                <select class="form-control px-14px" name="payment_method" id="payment_method">
-                                                    <option value="all">{{ get_phrase('Select Payment Method') }}</option>
-                                                    <option value="cash">{{ get_phrase('Cash') }}</option>
-                                                    <option value="credit_card">{{ get_phrase('Credit Card') }}</option>
-                                                    <option value="bank_transfer">{{ get_phrase('Bank Transfer') }}</option>
-                                                </select>
-                                            </div>
+                                                <label for="name" class="form-label">{{ get_phrase('Name') }}</label>
 
-                                            <!-- Status -->
-                                            <div class="mb-3">
-                                                <label for="status" class="form-label">{{ get_phrase('Status') }}</label>
-                                                <select class="form-control px-14px" name="status" id="status">
-                                                    <option value="all">{{ get_phrase('Select Status') }}</option>
-                                                    <option value="paid">{{ get_phrase('Paid') }}</option>
-                                                    <option value="unpaid">{{ get_phrase('Unpaid') }}</option>
-                                                    <option value="pending">{{ get_phrase('Pending') }}</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- Min Payment -->
-                                            <div class="mb-3">
-                                                <label for="min_payment" class="form-label">{{ get_phrase('Minimum Payment') }}</label>
-                                                <input type="number" class="form-control px-14px" name="min_payment" id="min_payment" placeholder="{{ get_phrase('Enter minimum payment') }}">
-                                            </div>
-
-                                            <!-- Max Payment -->
-                                            <div class="mb-3">
-                                                <label for="max_payment" class="form-label">{{ get_phrase('Maximum Payment') }}</label>
-                                                <input type="number" class="form-control px-14px" name="max_payment" id="max_payment" placeholder="{{ get_phrase('Enter maximum payment') }}">
                                             </div>
 
                                             <!-- Apply Button -->
@@ -141,7 +113,7 @@
                         <label for="page-length-select" class="ps-2 w-100"> of {{ count($payments) }}</label>
                     </div>
 
-                    <input type="hidden" value="project" id="datatable_type">
+                    <input type="hidden" value="report" id="datatable_type">
                     <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
                         <i class="fi fi-rr-trash"></i>
                         {{ get_phrase('Delete') }}

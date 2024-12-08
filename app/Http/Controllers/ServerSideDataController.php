@@ -156,24 +156,24 @@ class ServerSideDataController extends Controller
                 $viewRoute   = route(get_current_user_role() . '.project.details', $project->code);
                 // Generate the context menu
                 $contextMenu = [
-                    'Edit' => [
-                        'type' => 'ajax',
-                        'name' => 'Edit',
+                    'Edit'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Edit',
                         'action_link' => $editRoute,
-                        'title' => 'Edit project'
+                        'title'       => 'Edit project',
                     ],
                     'Delete' => [
-                        'type' => 'ajax',
-                        'name' => 'Delete',
+                        'type'        => 'ajax',
+                        'name'        => 'Delete',
                         'action_link' => $deleteRoute,
-                        'title' => 'Delete project'
+                        'title'       => 'Delete project',
                     ],
-                    'View' => [
-                        'type' => 'ajax',
-                        'name' => 'View Projects',
+                    'View'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'View Projects',
                         'action_link' => $viewRoute,
-                        'title' => 'View Project'
-                    ]
+                        'title'       => 'View Project',
+                    ],
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
@@ -231,7 +231,7 @@ class ServerSideDataController extends Controller
             ->addColumn('options', function ($category) {
                 $editRoute   = route(get_current_user_role() . '.project.category.edit', $category->id);
                 $deleteRoute = route(get_current_user_role() . '.project.category.delete', $category->id);
-    
+
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -249,28 +249,28 @@ class ServerSideDataController extends Controller
             ';
             })
             ->addColumn('context_menu', function ($category) {
-                $editUrl = route(get_current_user_role() . '.project.category.edit', $category->id);
+                $editUrl   = route(get_current_user_role() . '.project.category.edit', $category->id);
                 $deleteUrl = route(get_current_user_role() . '.project.category.delete', $category->id);
                 // Generate the context menu
                 $contextMenu = [
-                    'Edit' => [
-                        'type' => 'ajax',
-                        'name' => 'Edit',
+                    'Edit'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Edit',
                         'action_link' => $editUrl,
-                        'title' => 'Edit category'
+                        'title'       => 'Edit category',
                     ],
                     'Delete' => [
-                        'type' => 'ajax',
-                        'name' => 'Delete',
+                        'type'        => 'ajax',
+                        'name'        => 'Delete',
                         'action_link' => $deleteUrl,
-                        'title' => 'Delete category'
-                    ]
+                        'title'       => 'Delete category',
+                    ],
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-     
+
             ->rawColumns(["id", "name", "parent", "status", "options"])
             ->setRowClass('category-context-menu')
             ->with('filter_count', 0)
@@ -362,24 +362,24 @@ class ServerSideDataController extends Controller
                 $deleteRoute = route(get_current_user_role() . '.milestone.delete', $milestone->id);
                 // Generate the context menu
                 $contextMenu = [
-                    'Edit' => [
-                        'type' => 'ajax',
-                        'name' => 'Edit',
+                    'Edit'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Edit',
                         'action_link' => $editRoute,
-                        'title' => 'Edit milestone'
+                        'title'       => 'Edit milestone',
                     ],
                     'Delete' => [
-                        'type' => 'ajax',
-                        'name' => 'Delete',
+                        'type'        => 'ajax',
+                        'name'        => 'Delete',
                         'action_link' => $deleteRoute,
-                        'title' => 'Delete milestone'
-                    ]
+                        'title'       => 'Delete milestone',
+                    ],
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id","title","description","tasks","options"])
+            ->rawColumns(["id", "title", "description", "tasks", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -511,24 +511,24 @@ class ServerSideDataController extends Controller
                 $deleteRoute = route(get_current_user_role() . '.task.delete', $task->id);
                 // Generate the context menu
                 $contextMenu = [
-                    'Edit' => [
-                        'type' => 'ajax',
-                        'name' => 'Edit',
+                    'Edit'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Edit',
                         'action_link' => $editRoute,
-                        'title' => 'Edit task'
+                        'title'       => 'Edit task',
                     ],
                     'Delete' => [
-                        'type' => 'ajax',
-                        'name' => 'Delete',
+                        'type'        => 'ajax',
+                        'name'        => 'Delete',
                         'action_link' => $deleteRoute,
-                        'title' => 'Delete task'
-                    ]
+                        'title'       => 'Delete task',
+                    ],
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id","title","team","start_date","end_date","status","progress","options"])
+            ->rawColumns(["id", "title", "team", "start_date", "end_date", "status", "progress", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -616,24 +616,24 @@ class ServerSideDataController extends Controller
                 $deleteRoute = route(get_current_user_role() . '.file.delete', $file->id);
                 // Generate the context menu
                 $contextMenu = [
-                    'Edit' => [
-                        'type' => 'ajax',
-                        'name' => 'Edit',
+                    'Edit'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Edit',
                         'action_link' => $editRoute,
-                        'title' => 'Edit file'
+                        'title'       => 'Edit file',
                     ],
                     'Delete' => [
-                        'type' => 'ajax',
-                        'name' => 'Delete',
+                        'type'        => 'ajax',
+                        'name'        => 'Delete',
                         'action_link' => $deleteRoute,
-                        'title' => 'Delete file'
-                    ]
+                        'title'       => 'Delete file',
+                    ],
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id","title","type","size","date","updated_by","downloaded","options"])
+            ->rawColumns(["id", "title", "type", "size", "date", "updated_by", "downloaded", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -671,10 +671,10 @@ class ServerSideDataController extends Controller
             })
             ->addColumn('join', function ($meeting) {
                 $meeting = json_decode($meeting->joining_data);
-                if($meeting){
+                if ($meeting) {
                     $url = $meeting?->start_url;
-                    return '<a class="join-btn" href="'.$url.'">' . get_phrase('Start Meeting') . '</a>';
-                }else{
+                    return '<a class="join-btn" href="' . $url . '">' . get_phrase('Start Meeting') . '</a>';
+                } else {
                     return '';
                 }
             })
@@ -704,24 +704,24 @@ class ServerSideDataController extends Controller
                 $deleteRoute = route(get_current_user_role() . '.meeting.delete', $meeting->id);
                 // Generate the context menu
                 $contextMenu = [
-                    'Edit' => [
-                        'type' => 'ajax',
-                        'name' => 'Edit',
+                    'Edit'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Edit',
                         'action_link' => $editRoute,
-                        'title' => 'Edit meeting'
+                        'title'       => 'Edit meeting',
                     ],
                     'Delete' => [
-                        'type' => 'ajax',
-                        'name' => 'Delete',
+                        'type'        => 'ajax',
+                        'name'        => 'Delete',
                         'action_link' => $deleteRoute,
-                        'title' => 'Delete meeting'
-                    ]
+                        'title'       => 'Delete meeting',
+                    ],
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id","title","time","join","options"])
+            ->rawColumns(["id", "title", "time", "join", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -893,6 +893,94 @@ class ServerSideDataController extends Controller
                 return $statusLabel;
             })
             ->rawColumns(['id', 'timestamp_start', 'user_id', 'payment', 'payment_method', 'status'])
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
+            ->make(true);
+    }
+
+    public function user_server_side($string, $name, $email)
+    {
+        $query = User::query();
+
+        // General string search
+        // if (!empty($string)) {
+        //     $query->where(function ($q) use ($string) {
+        //         $q->where('name', 'like', "%{$string}%")
+        //             ->orWhere('email', 'like', "%{$string}%")
+        //             ->orWhere('id', 'like', "%{$string}%");
+        //     });
+        // }
+
+        // // Filter by name if provided
+        // if (!empty($name)) {
+        //     $query->where('name', 'like', "%{$name}%");
+        // }
+
+        // // Filter by email if provided
+        // if (!empty($email)) {
+        //     $query->where('email', 'like', "%{$email}%");
+        // }
+
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('id', function ($user) {
+                static $key = 1;
+                return '
+            <div class="d-flex align-items-center">
+                <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                <p class="row-number fs-12px">' . $key++ . '</p>
+                <input type="hidden" class="datatable-row-id" value="' . $user->id . '">
+            </div>';
+            })
+            ->addColumn('name', function ($user) {
+                return $user?->name;
+            })
+            ->addColumn('email', function ($user) {
+                return $user?->email;
+            })
+            ->addColumn('options', function ($user) {
+                $editRoute   = route(get_current_user_role() . '.user.edit', $user->id);
+                $deleteRoute = route(get_current_user_role() . '.user.delete', $user->id);
+
+                return '
+            <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
+                <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="fi-rr-menu-dots-vertical"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit user\')" href="#">' . get_phrase('Edit') . '</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                    </li>
+                </ul>
+            </div>';
+            })
+            ->addColumn('context_menu', function ($user) {
+                $editRoute   = route(get_current_user_role() . '.user.edit', $user->id);
+                $deleteRoute = route(get_current_user_role() . '.user.delete', $user->id);
+                // Generate the context menu
+                $contextMenu = [
+                    'Edit'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Edit',
+                        'action_link' => $editRoute,
+                        'title'       => 'Edit user',
+                    ],
+                    'Delete' => [
+                        'type'        => 'ajax',
+                        'name'        => 'Delete',
+                        'action_link' => $deleteRoute,
+                        'title'       => 'Delete user',
+                    ],
+                ];
+
+                // JSON encode with unescaped slashes for cleaner URLs
+                return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            })
+            ->rawColumns(['id', 'name', 'email', 'options'])
             ->setRowClass(function () {
                 return 'context-menu';
             })
