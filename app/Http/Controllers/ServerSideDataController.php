@@ -863,13 +863,16 @@ class ServerSideDataController extends Controller
                 // Generate routes dynamically .milestone.edit', $milestone->id
                 $editRoute   = route(get_current_user_role() . '.invoice.edit', $invoice->id);
                 $deleteRoute = route(get_current_user_role() . '.invoice.delete', $invoice->id);
-
+                $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
                     </button>
                     <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="'.$invoiceRoute.'">' . get_phrase('Invoice') . '</a>
+                        </li>
                         <li>
                             <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
                         </li>
@@ -886,6 +889,12 @@ class ServerSideDataController extends Controller
                 $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
                 // Generate the context menu
                 $contextMenu = [
+                    'Invoice' => [
+                        'type' => 'url',
+                        'name' => 'Invoice',
+                        'action_link' => $invoiceRoute,
+                        'title' => 'View Invoice'
+                    ],
                     'Edit' => [
                         'type' => 'ajax',
                         'name' => 'Edit',
@@ -897,12 +906,6 @@ class ServerSideDataController extends Controller
                         'name' => 'Delete',
                         'action_link' => $deleteRoute,
                         'title' => 'Delete meeting'
-                    ],
-                    'Invoice' => [
-                        'type' => 'url',
-                        'name' => 'Invoice',
-                        'action_link' => $invoiceRoute,
-                        'title' => 'View Invoice'
                     ]
                 ];
 
