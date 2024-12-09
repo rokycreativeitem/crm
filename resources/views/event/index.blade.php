@@ -27,7 +27,6 @@
     </div>
 @endsection
 
-
 @push('js')
     <script>
         "use strict";
@@ -86,6 +85,8 @@
             });
 
             calendar.render();
+
+            
         });
     </script>
 @endpush

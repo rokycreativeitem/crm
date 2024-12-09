@@ -5496,6 +5496,7 @@ div.dt-container .dt-paging {
 .fc .fc-col-header-cell-cushion {
     display: inline-block;
     padding: 10px 11px !important;
+    font-size: 14px !important;
 }
 
 th .fc-scrollgrid-sync-inner {
@@ -5541,9 +5542,10 @@ td .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
 
 .fc-button-group {
     border-radius: 6px !important;
-    border: 1px solid #dfdfeb !important;
-    background-color: #ffffff !important;
+    /* border: 1px solid #dfdfeb !important; */
+    /* background-color: #ffffff !important; */
     margin: 0 20px;
+    padding: 5px;
     color: #0a1017;
     transition: background-color 0.5s ease !important;
 }
@@ -5552,20 +5554,20 @@ td .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
     font-size: 20px !important;
     font-weight: 600;
 }
-.fc-toolbar-chunk .fc-button-group {
-    background: transparent;
-    border: 0;
-}
+
 
 .fc-button:focus {
     box-shadow: none !important;
 }
-.fc-button:hover {
+.fc-dayGridMonth-button:hover, .fc-timeGridWeek-button:hover, .fc-timeGridDay-button:hover, .fc-list-button:hover {
     color: white !important;
     background-color: #1b84ff !important;
-    padding: 4px 10px;
+    padding: 0px 10px;
     border-radius: 6px !important;
     border: 1px solid !important;
+}
+.fc-toolbar-chunk .fc-button-group button {
+    font-size: 14px !important;
 }
 
 #chart_div {
@@ -6451,4 +6453,68 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     background: var(--hover-background-color);
     border-radius: 6px;
     color: var(--active-color);
+}
+.project-dashboard-table th {
+    font-size: 14px !important;
+}
+
+.project-dashboard .apexcharts-toolbar {
+    display: none;
+}
+
+.dashboard-card {
+    box-shadow: 0 4px 40px 0 var(--shadow);
+    border-radius: 6px;
+    padding: 20px;
+}
+
+.dashboard-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    padding-bottom: 10px;
+}
+
+.dashboard-card svg {
+    margin-bottom: 20px;
+}
+
+.dashboard-card p {
+    font-size: 14px;
+}
+.project-dashboard .grid-card {
+    box-shadow: 0 4px 40px 0 var(--shadow);
+    border: 0;
+}
+.project-dashboard .dashboard-table  {
+    box-shadow: 0 4px 40px 0 var(--shadow);
+    border: 0;
+    background: #fff;
+    padding: 15px;
+    border-radius: 6px;
+}
+.dashboard-table .view-btn {
+    color: #6D718C;
+    background-color: #F7F7F9;
+    border: 1px solid #E4E7F1;
+    font-size: 12px;
+}
+.dashboard-table .view-btn:hover {
+    background-color: #F7F7F9 !important;
+    border: 1px solid #E4E7F1;
+}
+.dashboard-table th {
+    text-transform: uppercase;
+}
+.project-dashboard tbody tr {
+    border-bottom: 1.6px dashed #DBDFEB;
+}
+.project-dashboard tbody tr:last-child {
+    border-bottom: 0 !important;
+}
+.dashboard-table h4 {
+    font-size: 18px;
+    font-weight: 600;
+}
+.min-w-100px {
+    min-width: 100px;
 }

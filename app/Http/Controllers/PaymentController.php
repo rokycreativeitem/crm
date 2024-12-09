@@ -13,7 +13,7 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            return app(ServerSideDataController::class)->invoice_server_side($request->project_id, $request->customSearch);                
+            return app(ServerSideDataController::class)->invoice_server_side($request->project_id, $request->customSearch, $request->start_date);                
         }
         $page_data['payments'] = Payment::get();
         return view('projects.invoice.index', $page_data);

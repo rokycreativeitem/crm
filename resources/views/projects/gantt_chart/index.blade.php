@@ -1,6 +1,6 @@
 @push('title', get_phrase('Gantt Chart'))
 @php
-    $tasks = App\Models\Task::get();
+    $tasks = App\Models\Task::where('project_id', project_id_by_code(request()->route()->parameter('code')))->get();
 @endphp
 
 <div id="chart_div"></div>

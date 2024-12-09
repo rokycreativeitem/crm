@@ -148,6 +148,11 @@
                             table.ajax.reload();
                         }, 1000);
                         processServerResponse(response);
+                        setTimeout(function(){
+                            if (window.location.pathname.includes('/admin/events')) {
+                                location.reload();
+                            }
+                        }, 500)
                     }
                 });
             });

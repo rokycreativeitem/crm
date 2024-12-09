@@ -177,7 +177,7 @@ $(document).ready(function () {
     // Handle filter-reset button click
     $('#filter-reset').on('click', function () {
         // Reset select elements to 'all'
-        $('#status, #client, #staff, #category, #task, #team').val('all');
+        $('#status, #client, #staff, #category, #task, #team, #size, #uploaded_by, #type, #user').val('all');
 
         // Clear specific input fields
         $('#start_date, #end_date, #progress, .minPrice').val('');

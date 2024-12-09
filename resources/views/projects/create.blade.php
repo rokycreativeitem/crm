@@ -24,7 +24,7 @@
                         <textarea class="form-control ol-form-control" id="description" name="description" required></textarea>
                     </div>
                     <div class="fpb7 mb-2">
-                        <label class="form-label ol-form-label" for="category_id">{{ get_phrase('Category ID') }}</label>
+                        <label class="form-label ol-form-label" for="category_id">{{ get_phrase('Category') }}</label>
                         <select class="form-control ol-form-control ol-select2" data-toggle="select2" name="category_id" required>
                             <option value=""> {{get_phrase('select category')}} </option>
                             @foreach ($categories as $category)
@@ -34,9 +34,9 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="staffs">{{ get_phrase('Staffs') }}</label>
-                        <div class="d-flex flex-row">
+                        <div class="d-flex flex-wrap">
                             @foreach ($staffs as $staff)
-                                <div class="form-check">
+                                <div class="form-check me-2">
                                     <input type="checkbox" class="form-check-input" id="staffs_{{ $staff->id }}" name="staffs[]" value="{{ $staff->id }}">
                                     <label class="form-check-label" for="staffs_{{ $staff->id }}">
                                         {{ $staff->name }}
@@ -52,7 +52,7 @@
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="status">{{ get_phrase('Status') }}</label>
-                        <select class="form-control ol-form-control select2" data-toggle="select2" id="status" name="status" required>
+                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="status" name="status" required>
                             <option value="">{{ get_phrase('Select') }}</option>
                             <option value="in_progress">{{ get_phrase('In Progress') }}</option>
                             <option value="not_started">{{ get_phrase('Not Started') }}</option>
@@ -63,6 +63,9 @@
                         <label class="form-label ol-form-label" for="progress">{{ get_phrase('Progress') }}</label>
                         <input type="number" class="form-control" id="progress" name="progress" placeholder="Enter progress in %" required>
                     </div>
+                    <div class="slidecontainer">
+                        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+                    </div>
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="note">{{ get_phrase('Note') }}</label>
@@ -71,7 +74,11 @@
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="privacy">{{ get_phrase('Privacy') }}</label>
-                        <input class="form-control ol-form-control" type="text" id="privacy" name="privacy" required>
+                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="privacy" name="privacy" required>
+                            <option value="">{{ get_phrase('Select Privacy') }}</option>
+                            <option value="public">{{ get_phrase('Public') }}</option>
+                            <option value="private">{{ get_phrase('Private') }}</option>
+                        </select>
                     </div>
                     <div class="fpb7 mb-2">
                         <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Submit') }}</button>

@@ -110,18 +110,17 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <!-- file Size -->
                                         <div class="mb-3">
-                                            <label for="staff" class="form-label">{{ get_phrase('File Size') }}</label>
+                                            <label for="size" class="form-label">{{ get_phrase('File Size') }}</label>
                                             <select class="form-control px-14px ol-form-control ol-select2" name="size" id="size">
                                                 <option value="all">{{ get_phrase('Select file Size') }}</option>
-                                                <option value="1|1024">{{get_phrase('1KB - 1MB')}}</option>
-                                                <option value="1025|5120">{{get_phrase('1MB - 5MB')}}</option>
-                                                <option value="5121|10240">{{get_phrase('5MB - 10MB')}}</option>
-                                                <option value="10241|9999">{{get_phrase('10MB < ')}}</option>
+                                                <option value="0.001|1">{{ get_phrase('1KB - 1MB') }}</option>
+                                                <option value="1.001|5">{{ get_phrase('1MB - 5MB') }}</option>
+                                                <option value="5.001|10">{{ get_phrase('5MB - 10MB') }}</option>
+                                                <option value="10.001|9999">{{ get_phrase('10MB < ') }}</option>
                                             </select>
                                         </div>
-
+                                        
                                         <!-- Apply Button -->
                                         <div class="text-end">
                                             <button type="button" id="filter" class="btn btn-apply px-14px">{{ get_phrase('Apply') }}</button>

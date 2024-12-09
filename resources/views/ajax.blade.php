@@ -111,6 +111,11 @@ $(document).ready(function () {
                 $('.global.offcanvas').offcanvas('hide');
                 $('.server-side-datatable').DataTable().ajax.reload(null, false);
                 $('.global.modal').modal('hide');
+
+                if (window.location.pathname.includes('/admin/events')) {
+                    location.reload();
+                }
+
             }
         });
     });

@@ -92,6 +92,7 @@ if (!function_exists('project_id_by_code')) {
 if (!function_exists('get_image')) {
     function get_image($url = null, $optimized = false)
     {
+        
         if ($url == null) {
             return asset('uploads/system/placeholder.png');
         }

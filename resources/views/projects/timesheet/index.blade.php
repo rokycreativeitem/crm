@@ -79,6 +79,16 @@
                                         
                                     <!-- Dropdown Menu -->
                                     <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
+                                        
+                                        <div class="mb-3">
+                                            <label for="user" class="form-label">{{ get_phrase('Assign User') }}</label>
+                                            <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="user" name="user" required>
+                                                <option value="all">{{ get_phrase('Select user') }}</option>
+                                                @foreach ($users as $user)
+                                                    <option value="{{$user->id}}"> {{$user->name}} </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <!-- start date -->
                                         <div class="mb-3">
                                             <label for="start_date" class="form-label">{{ get_phrase('Start Date') }}</label>
@@ -113,8 +123,10 @@
                                 <span> # </span>
                             </th>
                             <th scope="col">{{ get_phrase('Title') }}</th>
+                            <th scope="col">{{ get_phrase('Staff') }}</th>
                             <th scope="col">{{ get_phrase('From') }}</th>
                             <th scope="col">{{ get_phrase('To') }}</th>
+                            <th scope="col">{{ get_phrase('Hours') }}</th>
                             <th scope="col" class="d-flex justify-content-center print-d-none">{{ get_phrase('Options') }}</th>
                         </tr>
                     </thead>
@@ -155,7 +167,7 @@
             });
         });
         setTimeout(function() {
-            server_side_datatable('["id","title","from","to","options"]', "{{ route(get_current_user_role() . '.timesheets',) }}");
+            server_side_datatable('["id","title","user","from","to","hours","options"]', "{{ route(get_current_user_role() . '.timesheets',) }}");
         }, 500);
     </script>
 @endpush

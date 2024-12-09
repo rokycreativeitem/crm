@@ -154,7 +154,15 @@ class ServerSideDataController extends Controller
             ->addColumn('context_menu', function ($project) {
                 $editRoute   = route(get_current_user_role() . '.project.edit', $project->code);
                 $deleteRoute = route(get_current_user_role() . '.project.delete', $project->code);
-                $viewRoute   = route(get_current_user_role() . '.project.details', $project->code);
+                $dashboardRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'dashboard']);
+                $milestoneRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'milestone']);
+                $milestoneRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'milestone']);
+                $taskRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'task']);
+                $fileRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'file']);
+                $meetingRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'meeting']);
+                $invoiceRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'invoice']);
+                $ganttRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'gantt_chart']);
+                $timesheetRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'timesheet']);
                 // Generate the context menu
                 $contextMenu = [
                     'Edit'   => [
@@ -169,12 +177,54 @@ class ServerSideDataController extends Controller
                         'action_link' => $deleteRoute,
                         'title'       => 'Delete project',
                     ],
-                    'View'   => [
+                    'Dashboard'   => [
                         'type'        => 'ajax',
-                        'name'        => 'View Projects',
-                        'action_link' => $viewRoute,
-                        'title'       => 'View Project',
+                        'name'        => 'Dashboard',
+                        'action_link' => $dashboardRoute,
+                        'title'       => 'Dashboard',
                     ],
+                    'Milestone'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Milestone',
+                        'action_link' => $milestoneRoute,
+                        'title'       => 'Milestone',
+                    ],
+                    'Task'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Task',
+                        'action_link' => $taskRoute,
+                        'title'       => 'Task',
+                    ],
+                    'File'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'File',
+                        'action_link' => $fileRoute,
+                        'title'       => 'File',
+                    ],
+                    'Meeting'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Meeting',
+                        'action_link' => $meetingRoute,
+                        'title'       => 'Meeting',
+                    ],
+                    'Invoice'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Invoice',
+                        'action_link' => $invoiceRoute,
+                        'title'       => 'Invoice',
+                    ],
+                    'Timesheet'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Timesheet',
+                        'action_link' => $timesheetRoute,
+                        'title'       => 'Timesheet',
+                    ],
+                    'Gantt'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Gantt Chart',
+                        'action_link' => $ganttRoute,
+                        'title'       => 'Gantt Chart',
+                    ]
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
@@ -556,6 +606,23 @@ class ServerSideDataController extends Controller
                 $q->where('timestamp_end', '<=', $end_date);
             });
         }
+        if($type != 'all') {
+            $filter_count[] = $type;
+            $query->where('extension', $type);
+        }
+        if($uploaded_by != 'all') {
+            $filter_count[] = $uploaded_by;
+            $query->where('user_id', $uploaded_by);
+        }
+        if ($size !== 'all') {
+            $filter_count[] = $size;
+            list($minSize, $maxSize) = explode('|', $size);
+            $minSize = (float)$minSize;
+            $maxSize = (float)$maxSize;
+            $query->whereBetween('size', [$minSize, $maxSize]);
+        }
+        
+
         return datatables()
             ->eloquent($query)
             ->addColumn('id', function ($file) {
@@ -642,7 +709,7 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function meeting_server_side($project_code, $string)
+    public function meeting_server_side($project_code, $string, $start_date, $end_date)
     {
         $query = Meeting::query();
         $query->where('project_id', project_id_by_code($project_code));
@@ -652,6 +719,15 @@ class ServerSideDataController extends Controller
             });
         }
         $filter_count = [];
+        if ($start_date && $end_date) {
+            $filter_count[] = $start_date;
+            $start_date     = date('Y-m-d H:i:s', strtotime($start_date));
+            $end_date       = date('Y-m-d H:i:s', strtotime($end_date));
+            $query->where(function ($q) use ($start_date, $end_date) {
+                $q->where('timestamp_meeting', '>=', $start_date);
+                $q->where('timestamp_created', '<=', $end_date);
+            });
+        }
         return datatables()
             ->eloquent($query)
             ->addColumn('id', function ($meeting) {
@@ -730,7 +806,7 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function timesheet_server_side($project_code, $string, $start_date, $end_date) {
+    public function timesheet_server_side($project_code, $string, $start_date, $end_date, $user) {
         $query = Timesheet::query();
         $query->where('project_id', project_id_by_code($project_code));
         if (!empty($string)) {
@@ -747,6 +823,10 @@ class ServerSideDataController extends Controller
                 $q->where('timestamp_start', '>=', $start_date);
                 $q->where('timestamp_end', '<=', $end_date);
             });
+        }
+        if ($user != 'all') {
+            $filter_count[] = $user;
+            $query->where('user_id', $user);
         }
         return datatables()
             ->eloquent($query)
@@ -766,6 +846,21 @@ class ServerSideDataController extends Controller
             ->addColumn('from', function ($time) {
                 return date('d-M-y h:i A', strtotime($time->timestamp_start));
             })
+            ->addColumn('user', function ($time) {
+                $user = User::where('id', $time->staff)->first();
+                if($user) {
+                    return $user->name;
+                } else {
+                    return '';
+                }
+            })
+            ->addColumn('hours', function ($time) {
+                $start_time = strtotime($time->timestamp_start);
+                $end_time = strtotime($time->timestamp_end);
+                $hours = round(($end_time - $start_time) / 3600, 2);
+                return $hours.' '.get_phrase('Hours');
+            })
+            
             ->addColumn('to', function ($time) {
                 return date('d-M-y h:i A', strtotime($time->timestamp_end));
             })
@@ -812,7 +907,7 @@ class ServerSideDataController extends Controller
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id","title","from","to","options"])
+            ->rawColumns(["id","title","user","from","hours","to","options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -820,7 +915,7 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function invoice_server_side($project_code, $string) {
+    public function invoice_server_side($project_code, $string, $date) {
         $query = Payment::query();
         $query->where('project_id', project_id_by_code($project_code));
         if (!empty($string)) {
@@ -829,15 +924,11 @@ class ServerSideDataController extends Controller
             });
         }
         $filter_count = [];
-        // if ($start_date && $end_date) {
-        //     $filter_count[] = $start_date;
-        //     $start_date     = date('Y-m-d H:i:s', strtotime($start_date));
-        //     $end_date       = date('Y-m-d H:i:s', strtotime($end_date));
-        //     $query->where(function ($q) use ($start_date, $end_date) {
-        //         $q->where('timestamp_start', '>=', $start_date);
-        //         $q->where('timestamp_end', '<=', $end_date);
-        //     });
-        // }
+        if ($date) {
+            $filter_count[] = $date;
+            $start_date     = date('Y-m-d', strtotime($date));
+            $query->whereDate('timestamp_start', $start_date);
+        }
         return datatables()
             ->eloquent($query)
             ->addColumn('id', function ($invoice) {
