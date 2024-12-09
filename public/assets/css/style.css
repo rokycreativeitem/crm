@@ -6518,3 +6518,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 .min-w-100px {
     min-width: 100px;
 }
+
+.table > :not(caption) > * > * {
+    border: transparent;
+}
