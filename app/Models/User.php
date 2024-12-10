@@ -49,9 +49,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function roles()
+    public function role()
     {
-        return $this->hasMany(Role::class, 'id', 'role_id');
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     public static function upload_file($image, $path = null)

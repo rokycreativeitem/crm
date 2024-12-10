@@ -450,9 +450,9 @@ span[class="fi-rr-"]:before {
 }
 .not_started {
     display: inline-block;
-    background-color: #FFE1E4;
+    background-color: #ffe1e4;
     color: #f8285a;
-    border: 1px solid #FFE1E8;
+    border: 1px solid #ffe1e8;
     border-radius: 6px;
     padding: 6px;
     font-size: 12px;
@@ -5344,10 +5344,6 @@ div.dt-container .dt-paging {
     padding: 32px 0;
 }
 
-.login-form-wrap {
-    padding: 46px 0 162px 0;
-}
-
 .ol2-form-label {
     color: var(--text-highlight-color);
     font-size: 16px;
@@ -5454,6 +5450,15 @@ div.dt-container .dt-paging {
 .ol2-btn-primary:hover {
     background-color: var(--active-color) !important;
     color: var(--white-color) !important;
+}
+.login-form-banner {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+}
+.login-form-banner .banner {
+    width: 100%;
+    border-radius: 16px;
 }
 
 /* password */
@@ -6156,7 +6161,7 @@ table.dataTable > tbody > tr > td {
 }
 .filter-dropdown button {
     border-radius: 6px;
-    color: #6D718C !important;
+    color: #6d718c !important;
 }
 .filter-dropdown button:hover {
     background: #f7f7f9 !important;
@@ -6169,17 +6174,17 @@ table.dataTable > tbody > tr > td {
 
 .filter-reset {
     position: relative;
-    color: #6D718C;
+    color: #6d718c;
 }
 .filter-reset span {
     position: absolute;
     top: 8px;
     left: -4px;
-    color: #E4E7F1;
+    color: #e4e7f1;
     z-index: 999;
 }
 .filter-dropdown .filter-count-display {
-    background: #6D718C;
+    background: #6d718c;
     color: #fff;
     border-radius: 79px;
     font-size: 11px;
@@ -6280,7 +6285,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     right: -17px;
     top: -6px;
     border-radius: 50px;
-    border: 1px solid #1B84FF !important;
+    border: 1px solid #1b84ff !important;
 }
 .noUi-handle:after,
 .noUi-handle:before,
@@ -6289,22 +6294,23 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 }
 .accordion-item-range input {
     padding: 5px 0;
-    border: 1px solid #E4E7F1;
-    background: #F7F7F9;
+    border: 1px solid #e4e7f1;
+    background: #f7f7f9;
     border-radius: 4px;
     text-align: center;
     max-width: 70px;
 }
 .noUi-target {
-    background: #E9E9F0 !important;
+    background: #e9e9f0 !important;
     border-radius: 5px !important;
     border: 0 !important;
     box-shadow: 0 0 0 0 !important;
 }
 .noUi-handle {
-    border: 1px solid #1B84FF !important;
+    border: 1px solid #1b84ff !important;
 }
-.ol-btn-light:active, .ol-btn-light:hover {
+.ol-btn-light:active,
+.ol-btn-light:hover {
     background: transparent !important;
     border: 0;
 }
@@ -6385,7 +6391,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 }
 
 .dropdown-export li a:hover {
-    background: #F7F7F9 !important;
+    background: #f7f7f9 !important;
 }
 .custom-dropdown .dropdown-menu {
     border: 0;
@@ -6394,7 +6400,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     list-style: circle;
 }
 .download-btn {
-    background: #F7F7F9;
+    background: #f7f7f9;
     height: 32px;
     width: 32px;
     border-radius: 6px;
@@ -6405,14 +6411,14 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 }
 
 .download-btn:hover {
-    border: 1px solid #1B84FF;
-    color: #1B84FF;
+    border: 1px solid #1b84ff;
+    color: #1b84ff;
 }
 .download-btn:hover svg path {
-    fill: #1B84FF;
+    fill: #1b84ff;
 }
 .join-btn {
-    background: #17C653;
+    background: #17c653;
     padding: 8px 12px;
     border-radius: 6px;
     color: #fff;
@@ -6439,7 +6445,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     font-size: 12px !important;
     color: var(--text-color);
 }
-.custom-context-menu li a{
+.custom-context-menu li a {
     width: 100%;
 }
 
@@ -6448,3 +6454,44 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     border-radius: 6px;
     color: var(--active-color);
 }
+
+.role-card {
+    background: white;
+    padding: 20px;
+    border-radius: 6px;
+}
+.role-card h4 {
+    color: #212534;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.role-card .form-check {
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #dbdfeb;
+}
+.role-card .form-check-input {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #6d718c !important;
+}
+.role-card .form-check-input {
+    background-color: #f7f7f9;
+}
+.role-card .form-check-input:focus {
+    box-shadow: none;
+}
+.role-card .form-check-input:checked {
+    background-image: url("../images/icons/checked.svg");
+    background-size: 16px;
+}
+
+/* .role-card .form-check-input:checked::after {
+    content: "✔";
+    color: white;
+    font-size: 10px;
+    position: absolute;
+    top: 0px;
+    left: 3px;
+    transform: rotate(15deg);
+} */

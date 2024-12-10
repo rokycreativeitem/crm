@@ -18,6 +18,7 @@ class UserController extends Controller
         if ($request->ajax()) {
             return app(ServerSideDataController::class)->user_server_side($request->customSearch, $request->name, $request->email);
         }
+
         return view('users.index', $page_data);
     }
 

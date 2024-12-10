@@ -84,7 +84,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     });
 
     Route::controller(UserController::class)->group(function () {
-        Route::get('users', 'index')->name('users');
+        Route::get('users/{type}', 'index')->name('users');
         Route::get('user/create', 'create')->name('user.create');
         Route::post('user/store', 'store')->name('user.store');
         Route::get('user/delete/{id}', 'delete')->name('user.delete');

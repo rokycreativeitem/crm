@@ -142,7 +142,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.users') active showMenu @endif">
+                <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.users' || $current_route == get_current_user_role() . '.user.create' || $current_route == get_current_user_role() . '.user.edit') active showMenu @endif">
                     <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -163,14 +163,14 @@
                         </div>
                     </a>
                     <ul class="first-sub-menu">
-                        <li class="sidebar-second-li">
-                            <a href="{{ route(get_current_user_role() . '.users', 'admin') }}" class="nav-link active">{{ get_phrase('Admin') }}</a>
+                        <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.users' && request()->route()->parameter('type') == 'admin') active showMenu @endif">
+                            <a href="{{ route(get_current_user_role() . '.users', ['type' => 'admin']) }}">{{ get_phrase('Admin') }}</a>
                         </li>
-                        <li class="sidebar-second-li">
-                            <a href="{{ route(get_current_user_role() . '.users', 'client') }}" class="nav-link active">{{ get_phrase('Client') }}</a>
+                        <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.users' && request()->route()->parameter('type') == 'client') active showMenu @endif">
+                            <a href="{{ route(get_current_user_role() . '.users', ['type' => 'client']) }}">{{ get_phrase('Client') }}</a>
                         </li>
-                        <li class="sidebar-second-li">
-                            <a href="{{ route(get_current_user_role() . '.users', 'staff') }}" class="nav-link active">{{ get_phrase('Staff') }}</a>
+                        <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.users' && request()->route()->parameter('type') == 'staff') active showMenu @endif">
+                            <a href="{{ route(get_current_user_role() . '.users', ['type' => 'staff']) }}">{{ get_phrase('Staff') }}</a>
                         </li>
                     </ul>
                 </li>

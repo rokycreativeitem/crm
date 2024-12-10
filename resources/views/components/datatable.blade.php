@@ -1,23 +1,24 @@
-<link rel="stylesheet" href="{{asset('assets/datatable/dataTables.bootstrap5.css')}}">
-<script src="{{asset('assets/js/jquery-3.7.1.min.js')}}"></script>
-<script src="{{asset('assets/datatable/dataTables.js')}}"></script>
-<script src="{{asset('assets/datatable/dataTables.bootstrap5.js')}}"></script>
+<link rel="stylesheet" href="{{ asset('assets/datatable/dataTables.bootstrap5.css') }}">
+<script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ asset('assets/datatable/dataTables.js') }}"></script>
+<script src="{{ asset('assets/datatable/dataTables.bootstrap5.js') }}"></script>
 <script>
-
     new DataTable('#basic-datatable', {
         orderCellsTop: true,
         ordering: false
     });
 
-   // server side data table rendering
-   function server_side_datatable(columnsParam, url) {
+    // server side data table rendering
+    function server_side_datatable(columnsParam, url) {
         let columnsArray = Array.isArray(columnsParam) ? columnsParam : JSON.parse(columnsParam);
         if (!Array.isArray(columnsArray)) {
-            console.error("{{get_phrase('The columns parameter should be an array or a JSON-encoded array')}}.");
+            console.error("{{ get_phrase('The columns parameter should be an array or a JSON-encoded array') }}.");
             return;
         }
         let columns = columnsArray.map(columnKey => {
-            return { data: columnKey };
+            return {
+                data: columnKey
+            };
         });
         var table = new DataTable('.server-side-datatable', {
             processing: true,
@@ -26,8 +27,8 @@
             ajax: {
                 url: url,
                 type: 'GET',
-                data: function (d) {
-                    $('#filters-container :input').each(function () {
+                data: function(d) {
+                    $('#filters-container :input').each(function() {
                         var name = $(this).attr('name');
                         var value = $(this).val();
                         if (name) {
@@ -39,7 +40,7 @@
                 //     console.log(e);
                 //     alert()
                 // },
-                error: function (xhr, error, thrown) {
+                error: function(xhr, error, thrown) {
                     console.log(xhr.responseText);
                 }
             },
@@ -50,7 +51,7 @@
             paging: true,
         });
 
-        $('.server-side-datatable tbody').on('contextmenu', 'tr', function (e) {
+        $('.server-side-datatable tbody').on('contextmenu', 'tr', function(e) {
             e.preventDefault();
             e.stopPropagation();
 
@@ -101,12 +102,12 @@
         }
 
         // Hide context menu when clicking elsewhere
-        $(document).on('click', function () {
+        $(document).on('click', function() {
             $('.custom-context-menu').remove();
         });
 
         // Optional: Adjust context menu styling
-        $(document).on('contextmenu', function (e) {
+        $(document).on('contextmenu', function(e) {
             $('.custom-context-menu').remove();
         });
 
@@ -114,7 +115,7 @@
             table.ajax.reload();
         });
 
-        $('#page-length-select').on('change', function () {
+        $('#page-length-select').on('change', function() {
             var newLength = $(this).val();
             table.page.len(newLength).draw();
         });
@@ -123,10 +124,10 @@
 
     function init_context_menu(context_menu) {
         const contextMenuItems = {};
-        $.each(context_menu, function (key, value) {
+        $.each(context_menu, function(key, value) {
             contextMenuItems[key] = {
                 name: value.name,
-                callback: function (itemKey, opt, e) {
+                callback: function(itemKey, opt, e) {
                     const url = value.action_link;
                     window.location.href = url;
                 }
@@ -142,46 +143,44 @@
     }
 
 
-$(document).ready(function () {
-    // Handle delete-selected button click
-    $('#delete-selected').on('click', function () {
-        var selectedIds = [];
-        $('.table-checkbox:checked').each(function () {
-            var rowId = $(this).closest('tr').find('.datatable-row-id').val();
-            if (rowId) {
-                selectedIds.push(rowId);
+    $(document).ready(function() {
+        // Handle delete-selected button click
+        $('#delete-selected').on('click', function() {
+            var selectedIds = [];
+            $('.table-checkbox:checked').each(function() {
+                var rowId = $(this).closest('tr').find('.datatable-row-id').val();
+                if (rowId) {
+                    selectedIds.push(rowId);
+                }
+            });
+
+            var database_type = $('#datatable_type').val();
+            if (selectedIds.length > 0) {
+                multiDelete(selectedIds, database_type); // Call the multiDelete function
+                $('#delete-selected').addClass('d-none');
+            } else {
+                alert('Please select at least one file to delete.');
             }
         });
 
-        var database_type = $('#datatable_type').val();
-        if (selectedIds.length > 0) {
-            multiDelete(selectedIds, database_type); // Call the multiDelete function
-            $('#delete-selected').addClass('d-none');
-        } else {
-            alert('Please select at least one file to delete.');
-        }
+        // Handle filter button click
+        $('#filter').on('click', function() {
+            $('.server-side-datatable').DataTable().ajax.reload(null, false); // Reload the DataTable
+        });
+
+        // Handle filter-reset button click
+        $('#filter-reset').on('click', function() {
+            // Reset select elements to 'all'
+            $('#status, #client, #staff, #category, #task, #team').val('all');
+
+            // Clear specific input fields
+            $('#start_date, #end_date, #progress, .minPrice').val('');
+
+            // Hide filter-related elements
+            $('.filter-count-display, #filter-reset').addClass('d-none');
+
+            // Reload the DataTable
+            $('.server-side-datatable').DataTable().ajax.reload(null, false);
+        });
     });
-
-    // Handle filter button click
-    $('#filter').on('click', function () {
-        $('.server-side-datatable').DataTable().ajax.reload(null, false); // Reload the DataTable
-    });
-
-    // Handle filter-reset button click
-    $('#filter-reset').on('click', function () {
-        // Reset select elements to 'all'
-        $('#status, #client, #staff, #category, #task, #team').val('all');
-
-        // Clear specific input fields
-        $('#start_date, #end_date, #progress, .minPrice').val('');
-
-        // Hide filter-related elements
-        $('.filter-count-display, #filter-reset').addClass('d-none');
-
-        // Reload the DataTable
-        $('.server-side-datatable').DataTable().ajax.reload(null, false);
-    });
-});
-
-
 </script>
