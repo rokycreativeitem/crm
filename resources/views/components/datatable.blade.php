@@ -178,7 +178,7 @@
         // Handle filter-reset button click
         $('#filter-reset').on('click', function() {
             // Reset select elements to 'all'
-            $('#status, #client, #staff, #category, #task, #team').val('all');
+            $('#status, #client, #staff, #category, #task, #team, #size, #uploaded_by, #type, #user').val('all');
 
             // Clear specific input fields
             $('#start_date, #end_date, #progress, .minPrice').val('');
@@ -189,25 +189,5 @@
             // Reload the DataTable
             $('.server-side-datatable').DataTable().ajax.reload(null, false);
         });
-    });
-
-    // Handle filter button click
-    $('#filter').on('click', function() {
-        $('.server-side-datatable').DataTable().ajax.reload(null, false); // Reload the DataTable
-    });
-
-    // Handle filter-reset button click
-    $('#filter-reset').on('click', function() {
-        // Reset select elements to 'all'
-        $('#status, #client, #staff, #category, #task, #team, #size, #uploaded_by, #type, #user').val('all');
-
-        // Clear specific input fields
-        $('#start_date, #end_date, #progress, .minPrice').val('');
-
-        // Hide filter-related elements
-        $('.filter-count-display, #filter-reset').addClass('d-none');
-
-        // Reload the DataTable
-        $('.server-side-datatable').DataTable().ajax.reload(null, false);
     });
 </script>

@@ -6530,3 +6530,34 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 .table > :not(caption) > * > * {
     border: transparent;
 }
+
+.role-card {
+    background: white;
+    padding: 20px;
+    border-radius: 6px;
+}
+.role-card h4 {
+    color: #212534;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.role-card .form-check {
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #dbdfeb;
+}
+.role-card .form-check-input {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #6d718c !important;
+}
+.role-card .form-check-input {
+    background-color: #f7f7f9;
+}
+.role-card .form-check-input:focus {
+    box-shadow: none;
+}
+.role-card .form-check-input:checked {
+    background-image: url("../images/icons/checked.svg");
+    background-size: 16px;
+}
