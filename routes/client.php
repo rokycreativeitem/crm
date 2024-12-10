@@ -19,7 +19,8 @@ use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'verified', 'client', 'check.permission'])->group(function () {
+// Route::middleware(['auth', 'verified', 'client', 'check.permission'])->group(function () {
+Route::middleware(['auth', 'verified', 'client'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::controller(ProjectController::class)->group(function () {
@@ -128,16 +129,16 @@ Route::middleware(['auth', 'verified', 'client', 'check.permission'])->group(fun
         });
     });
 
-    Route::controller(PermissionController::class)->group(function () {
-        Route::get('permissions', 'index')->name('permissions');
-        Route::get('permission/create', 'create')->name('permission.create');
-        Route::post('permission/store', 'store')->name('permission.store');
-        Route::get('permission/delete/{id}', 'delete')->name('permission.delete');
-        Route::get('permission/edit/{id}', 'edit')->name('permission.edit');
-        Route::post('permission/update/{id}', 'update')->name('permission.update');
-        Route::post('permission/multi-delete', 'multiDelete')->name('permission.multi-delete');
+    // Route::controller(PermissionController::class)->group(function () {
+    //     Route::get('permissions', 'index')->name('permissions');
+    //     Route::get('permission/create', 'create')->name('permission.create');
+    //     Route::post('permission/store', 'store')->name('permission.store');
+    //     Route::get('permission/delete/{id}', 'delete')->name('permission.delete');
+    //     Route::get('permission/edit/{id}', 'edit')->name('permission.edit');
+    //     Route::post('permission/update/{id}', 'update')->name('permission.update');
+    //     Route::post('permission/multi-delete', 'multiDelete')->name('permission.multi-delete');
 
-    });
+    // });
 
     // assign permission
     Route::controller(RolePermissionController::class)->group(function () {
