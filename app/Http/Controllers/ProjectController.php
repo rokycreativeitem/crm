@@ -109,6 +109,19 @@ class ProjectController extends Controller
         $page_data['meetings']   = Meeting::where('project_id', $this->project->id)->get();
         $page_data['payments']   = Payment::where('project_id', $this->project->id)->get();
 
+        $project_status = ['completed', 'in_progress', 'not_started'];
+        $status = collect($project_status)->map(function ($status) {
+            return [
+                'title' => $status,
+                'amount'  => Project::where('status', $status)->count()
+            ];
+        });
+        
+        $page_data['users'] = User::get();
+        $page_data['project_status'] = $status;
+        $page_data['staffs'] = User::where('role_id', 3)->get();
+        $page_data['team'] = Project::where('id', $this->project->id)->first();
+        
         return view('projects.details', $page_data);
     }
 

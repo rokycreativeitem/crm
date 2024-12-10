@@ -12,6 +12,15 @@
                             value="{{ $timesheet->title }}">
                     </div>
                     <div class="fpb7 mb-2">
+                        <label for="user" class="form-label">{{ get_phrase('Assign staff') }}</label>
+                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="staff" name="staff" required>
+                            <option value="all">{{ get_phrase('Select staff') }}</option>
+                            @foreach ($staffs as $staff)
+                                <option value="{{$staff->id}}" {{$staff->id == $timesheet->staff ? 'selected':''}}> {{$staff->name}} </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label"
                             for="timestamp_start">{{ get_phrase('Start Date') }}</label>
                         <input class="form-control ol-form-control" type="datetime-local" id="timestamp_start"

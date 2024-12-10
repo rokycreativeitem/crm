@@ -35,22 +35,22 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label"
-                            for="category_id">{{ get_phrase('Category ID') }}</label>
+                            for="category_id">{{ get_phrase('Category') }}</label>
                             <select class="form-control ol-form-control ol-select2" data-toggle="select2" name="category_id" required>
                                 <option value=""> {{get_phrase('select category')}} </option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}" {{$project->category_id == $category->id ? 'selected':''}}>{{ $category->name }}</option>
                                 @endforeach
                             </select>
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="staffs">{{ get_phrase('Staffs') }}</label>
-                        <div class="d-flex flex-column">
+                        <div class="d-flex flex-warp">
                             @php
                                 $assigned_staffs = json_decode($project->staffs, true) ?? [];
                             @endphp
                             @foreach ($staffs as $staff)
-                                <div class="form-check">
+                                <div class="form-check me-2">
                                     <input type="checkbox" class="form-check-input" id="staffs_{{ $staff->id }}"
                                         name="staffs[]" value="{{ $staff->id }}"
                                         {{ in_array($staff->id, $assigned_staffs) ? 'checked' : '' }}>
@@ -91,8 +91,11 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="privacy">{{ get_phrase('Privacy') }}</label>
-                        <input class="form-control ol-form-control" type="text" id="privacy" name="privacy"
-                            value="{{ $project->privacy }}" required>
+                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="privacy" name="privacy" required>
+                            <option value="">{{ get_phrase('Select Privacy') }}</option>
+                            <option value="public" {{$project->privacy == 'public'?'selected':''}}>{{ get_phrase('Public') }}</option>
+                            <option value="private" {{$project->privacy == 'private'?'selected':''}}>{{ get_phrase('Private') }}</option>
+                        </select>
                     </div>
                     <div class="fpb7 mb-2">
                         <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Update') }}</button>

@@ -246,7 +246,7 @@
                         </div>
                     </a>
                 </li>
-                <li class="sidebar-first-li">
+                {{-- <li class="sidebar-first-li">
                     <a href="">
 
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -267,7 +267,7 @@
                             <span>{{ get_phrase('Tasks') }}</span>
                         </div>
                     </a>
-                </li>
+                </li> --}}
                 <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.message') active showMenu @endif ">
                     <a href="{{ route(get_current_user_role() . '.message') }}">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

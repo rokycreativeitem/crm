@@ -19,7 +19,7 @@ class MeetingController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            return app(ServerSideDataController::class)->meeting_server_side($request->project_id, $request->customSearch);                
+            return app(ServerSideDataController::class)->meeting_server_side($request->project_id, $request->customSearch, $request->start_date, $request->end_date);                
         }
         $page_data['meetings'] = Meeting::paginate(10);
         return view('projects.meeting.index', $page_data);

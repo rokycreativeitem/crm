@@ -25,7 +25,7 @@
                     <div class="fpb7 mb-3">
                         <label class="form-label ol-form-label" for="progress">{{ get_phrase('Progress') }}</label>
                         <input type="number" class="form-control" id="progress" name="progress"
-                            placeholder="Enter progress in %" value="{{ old('progress', $task->progress) }}" required>
+                            placeholder="Enter progress in %" value="{{ $task->progress }}" required>
                     </div>
 
                     <div class="fpb7 mb-2">
@@ -48,13 +48,11 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="start_date">{{ get_phrase('Start Date') }}</label>
-                        <input class="form-control ol-form-control" type="datetime-local" id="start_date" name="start_date"
-                            value="{{ $task->start_date }}" required>
+                        <input class="form-control ol-form-control" type="datetime-local" id="start_date" name="start_date" value="{{ date('Y-m-d H:i:s', $task->start_date) }}" required>
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="end_date">{{ get_phrase('End Date') }}</label>
-                        <input class="form-control ol-form-control" type="datetime-local" id="end_date" name="end_date"
-                            value="{{ $task->end_date }}" required>
+                        <input class="form-control ol-form-control" type="datetime-local" id="end_date" name="end_date" value="{{ date('Y-m-d H:i:s', $task->end_date) }}" required>
                     </div>
                     <div class="fpb7 mb-2">
                         <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Update') }}</button>

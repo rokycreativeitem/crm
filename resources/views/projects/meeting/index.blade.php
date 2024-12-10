@@ -79,15 +79,18 @@
                                         
                                     <!-- Dropdown Menu -->
                                     <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
-                                        <!-- Category -->
-                                        <div class="mb-3">
-                                            <label for="category" class="form-label">{{ get_phrase('Category') }}</label>
-                                            <select class="form-control px-14px ol-form-control ol-select2" name="category" id="category">
-                                                <option value="all">{{get_phrase('Select Category')}}</option>
-                                            
-                                            </select>
-                                        </div>
                                        
+                                        <!-- start date -->
+                                        <div class="mb-3">
+                                            <label for="start_date" class="form-label">{{ get_phrase('Start Date') }}</label>
+                                            <input type="datetime-local" name="start_date" id="start_date" placeholder="{{get_phrase('Start date')}}" class="form-control fs-14px">
+                                        </div>
+                                        <!-- end date -->
+                                        <div class="mb-3">
+                                            <label for="end_date" class="form-label">{{ get_phrase('Start Date') }}</label>
+                                            <input type="datetime-local" name="end_date" id="end_date" placeholder="{{get_phrase('End date')}}" class="form-control fs-14px">
+                                        </div>
+
                                         <!-- Apply Button -->
                                         <div class="text-end">
                                             <button type="button" id="filter" class="btn btn-apply px-14px">{{ get_phrase('Apply') }}</button>
@@ -147,6 +150,12 @@
 @include('components.datatable')
 @push('js')
     <script>
+        const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search__field');
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.stopPropagation(); 
+            });
+        });
         setTimeout(function() {
             server_side_datatable('["id","title","time","join","options"]', "{{ route(get_current_user_role() . '.meetings') }}");
         }, 500);

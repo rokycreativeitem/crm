@@ -99,15 +99,6 @@
                 }
             }
         });
-
-
-        // $('.context-menu').on('contextmenu', function(event) {
-        //     event.preventDefault();
-        //     // Find the closest input element and get its value
-        //     var inputValue = $(this).closest('div').find('input').val();
-            
-        //     console.log(inputValue);
-        // })
     });
 </script>
 

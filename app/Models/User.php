@@ -49,8 +49,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function roles()
-    {
+    public function roles() {
         return $this->hasMany(Role::class, 'id', 'role_id');
     }
 
