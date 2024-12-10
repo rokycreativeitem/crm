@@ -97,7 +97,11 @@
                     </a>
                 </li>
 
-                <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.projects' || $current_route == get_current_user_role() . '.project.categories' || request()->is('admin/project*')) active showMenu @endif">
+                @if(get_current_user_role() == 'admin')
+                <li class="sidebar-first-li first-li-have-sub @if (
+                    $current_route == get_current_user_role() . '.projects' ||
+                    $current_route == get_current_user_role() . '.project.categories' ||
+                    request()->is('admin/project*')) active showMenu @endif">
                     <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -122,6 +126,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
                 <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.users' || $current_route == get_current_user_role() . '.user.create' || $current_route == get_current_user_role() . '.user.edit') active showMenu @endif">
                     <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -247,7 +252,7 @@
                         </div>
                     </a>
                 </li>
-
+                @if(get_current_user_role() == 'admin')
                 <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.project_report' || $current_route == get_current_user_role() . '.client_report') active showMenu @endif">
                     <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -278,6 +283,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
                 <li class="sidebar-first-li first-li-have-sub @if (
                     $current_route == get_current_user_role() . '.system_settings' ||
                         $current_route == get_current_user_role() . '.payment_settings' ||

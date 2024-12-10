@@ -23,10 +23,10 @@ class AdminMiddleware
         $user_role = Auth::user()->role_id;
 
         $role = Role::where('id', $user_role)->first();
-        if ($role->title != 'admin') {
-            dd('admin middleware');
+        if ($role->id == 1) {
+            return $next($request);
         }
+        dd('admin middleware');
 
-        return $next($request);
     }
 }
