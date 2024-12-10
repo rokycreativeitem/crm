@@ -72,10 +72,11 @@
                                             </div>
                                         </div> --}}
                                     </div>
-                                    <button onclick="rightCanvas('{{ route(get_current_user_role() . '.user.create') }}', 'Create user')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
+                                    <button onclick="rightCanvas('{{ route(get_current_user_role() . '.user.create', ['type' => request()->route()->parameter('type')]) }}', 'Create user')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
                                         <span class="fi-rr-plus"></span>
                                         <span>{{ get_phrase('Add new') }}</span>
                                     </button>
+
                                 </div>
 
                             </div>
@@ -95,45 +96,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($users as $key => $user)
-                                <tr data-id="{{ $user->id }}" class="context-menu">
-                                    <td>
-                                        <input type="checkbox" class="checkbox-item">
-                                    </td>
-                                    <th scope="row">
-                                        <p class="row-number">{{ ++$key }}</p>
-                                    </th>
-                                    <td>
-                                        <div class="dAdmin_profile d-flex align-items-center min-w-200px">
-                                            <div class="dAdmin_profile_name">
-                                                <h4 class="title fs-14px">{{ $user->name }}</h4>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="dAdmin_profile d-flex align-items-center min-w-200px">
-                                            <div class="dAdmin_profile_name">
-                                                <h4 class="title fs-14px">{{ $user->email }}</h4>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="print-d-none">
-                                        <div class="dropdown ol-icon-dropdown ol-icon-dropdown-transparent">
-                                            <button class="btn ol-btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <span class="fi-rr-menu-dots-vertical"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item" onclick="rightCanvas('{{ route(get_current_user_role() . '.user.edit', $user->id) }}', 'Edit user')" href="#">{{ get_phrase('Edit') }}</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" onclick="confirmModal('{{ route(get_current_user_role() . '.user.delete', $user->id) }}')" href="javascript:void(0)">{{ get_phrase('Delete') }}</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach --}}
+
                         </tbody>
                     </table>
                     <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
@@ -164,7 +127,7 @@
     <script>
         "use strict";
         setTimeout(function() {
-            server_side_datatable('["id","name","email","options"]', "{{ route(get_current_user_role() . '.users') }}");
+            server_side_datatable('["id","name","email","options"]', "{{ route(get_current_user_role() . '.users', request()->route()->parameter('type')) }}");
         }, 500);
     </script>
 @endpush

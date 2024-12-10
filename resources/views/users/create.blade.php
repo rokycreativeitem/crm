@@ -21,7 +21,7 @@
                         <div class="d-flex flex-row flex-wrap align-items-center">
                             @foreach ($roles as $role)
                                 <div class="form-check me-3">
-                                    <input type="checkbox" class="form-check-input" id="role_{{ $role->id }}" name="role[]" value="{{ $role->id }}">
+                                    <input type="checkbox" @checked(request()->query('type') == $role->title) class="form-check-input" id="role_{{ $role->id }}" name="role[]" value="{{ $role->id }}">
                                     <label class="form-check-label" for="role_{{ $role->id }}">
                                         {{ $role->title }}
                                     </label>

@@ -1183,7 +1183,11 @@ class ServerSideDataController extends Controller
 
     public function user_server_side($string, $name, $email)
     {
+        $role  = request()->route()->parameter('type');
         $query = User::query();
+        $query->whereHas('role', function ($q) use ($role) {
+            $q->where('title', $role);
+        });
 
         // General string search
         // if (!empty($string)) {
