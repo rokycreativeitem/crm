@@ -17,7 +17,7 @@
     <div class="ol-card p-4">
         <p class="title text-14px mb-3">{{ get_phrase('Manage Language') }}</p>
         <div class="ol-card-body">
-            <ul class="nav nav-tabs eNav-Tabs-custom" id="myTab" role="tablist">
+            <ul class="nav nav-tabs eNav-Tabs-custom eTab" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="cHome-tab" data-bs-toggle="tab" data-bs-target="#cHome" type="button" role="tab" aria-controls="cHome" aria-selected="true">
                         {{ get_phrase('Language list') }}
@@ -57,7 +57,7 @@
                                     @endphp
                                     @foreach ($languages as $language)
                                         <tr>
-                                            <td>{{ $language->name }}</td>
+                                            <td class="text-capitalize">{{ $language->name }}</td>
                                             <td>
                                                 <div class="form-group">
                                                     <form action="#">
@@ -134,6 +134,8 @@
 @endsection
 @push('js')
     <script type="text/javascript">
+        "use strict";
+
         function updatePhrase(key, key_main) {
             $('#btn-' + key).text('...');
             var updatedValue = $('#phrase-' + key).val();

@@ -15,7 +15,7 @@
                     <span class="fi-rr-cloud-upload"></span>
                     <span>{{ get_phrase('Import all phrases from english') }}</span>
                 </a>
-                <a href="{{ route('admin.manage.language') }}" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
+                <a href="{{ route('admin.manage_language') }}" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
                     <span class="fi-rr-arrow-alt-left"></span>
                     <span>{{ get_phrase('Back') }}</span>
                 </a>

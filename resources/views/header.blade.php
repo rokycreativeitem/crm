@@ -14,7 +14,7 @@
 
         <div class="main-header-title">
             <h1 class="page-title fs-18px d-flex align-items-center gap-3">
-                {{ get_phrase('Project Management System') }}
+                {{ config('app.name') }}
             </h1>
             <span class="text-12px d-none d-md-inline-block"></span>
         </div>
@@ -24,52 +24,27 @@
         <!-- language Select -->
         <div class="d-none d-sm-block">
             <div class="img-text-select ">
-                <div class="selected-show" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Language">
+                @php
+                    $activated_language = strtolower(session('language') ?? get_settings('language'));
+                @endphp
+                <div class="selected-show" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ get_phrase('Language') }}">
                     <i class="fi-rr-language text-20px py-2"></i>
                 </div>
                 <div class="drop-content">
                     <ul>
-                        <li>
-                            <a href="#select-language/English" class="select-text text-capitalize">
+                        @foreach (App\Models\Language::get() as $lng)
+                            <li>
+                                <a href="{{ route('admin.select.language', ['language' => $lng->name]) }}" class="select-text text-capitalize">
 
-                                <i class="fi fi-br-check text-10px me-1 "></i>
-                                English
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#select-language/Hindi" class="select-text text-capitalize">
-
-                                <i class="fi fi-br-check text-10px me-1  visibility-hidden "></i>
-                                Hindi
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#select-language/Spanish" class="select-text text-capitalize">
-
-                                <i class="fi fi-br-check text-10px me-1  visibility-hidden "></i>
-                                Spanish
-                            </a>
-                        </li>
+                                    <i class="fi fi-br-check text-10px me-1 @if ($activated_language != strtolower($lng->name)) visibility-hidden @endif"></i>
+                                    {{ $lng->name }}
+                                </a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
         </div>
-
-
-
-        <a href="#" class="list text-18px d-inline-flex" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-            <span class="d-block h-100 w-100" data-bs-toggle="tooltip" data-bs-placement="bottom" title="AI Assistant">
-                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0" viewBox="0 0 64 64" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
-                    <g>
-                        <g fill="#424242">
-                            <path
-                                d="M36.5 20C27.953 20 21 13.047 21 4.5a.5.5 0 0 0-1 0C20 13.047 13.047 20 4.5 20a.5.5 0 0 0 0 1C13.047 21 20 27.953 20 36.5a.5.5 0 0 0 1 0C21 27.953 27.953 21 36.5 21a.5.5 0 0 0 0-1zM60 34.5a.5.5 0 0 0-.5-.5C52.607 34 47 28.393 47 21.5a.5.5 0 0 0-1 0C46 28.393 40.393 34 33.5 34a.5.5 0 0 0 0 1C40.393 35 46 40.607 46 47.5a.5.5 0 0 0 1 0C47 40.607 52.607 35 59.5 35a.5.5 0 0 0 .5-.5zM38 49.5a.5.5 0 0 0-.5-.5c-5.238 0-9.5-4.262-9.5-9.5a.5.5 0 0 0-1 0c0 5.238-4.262 9.5-9.5 9.5a.5.5 0 0 0 0 1c5.238 0 9.5 4.262 9.5 9.5a.5.5 0 0 0 1 0c0-5.238 4.262-9.5 9.5-9.5a.5.5 0 0 0 .5-.5z"
-                                fill="#424242" opacity="1" data-original="#424242" class=""></path>
-                        </g>
-                    </g>
-                </svg>
-            </span>
-        </a>
 
 
         <div class="dropdown ol-icon-dropdown ol-icon-dropdown-transparent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Help center">

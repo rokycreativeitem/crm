@@ -472,7 +472,7 @@ span[class="fi-rr-"]:before {
 
 /* Title */
 .title {
-    font-weight: 500;
+    font-weight: 600;
     color: #212534;
 }
 
@@ -583,7 +583,7 @@ span[class="fi-rr-"]:before {
     border-radius: 6px;
     padding: 8px 12px;
     background: #f7f7f9;
-    color: #6b708a;
+    color: #212534;
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.01em;
@@ -2723,12 +2723,11 @@ textarea.ol-form-textarea {
 .message-sidebar-search .form-control {
     width: 100%;
     border-radius: 8px;
-    background: var(--gray-light-2);
     border: 1px solid transparent;
-    padding: 11px 10px 11px 42px;
+    padding: 14px 10px 14px 42px;
     font-weight: 400;
     font-size: 14px;
-    line-height: 20px;
+    line-height: 14px;
     color: var(--text-color);
 }
 
@@ -2762,28 +2761,28 @@ textarea.ol-form-textarea {
 
 .message-sidebar-messages::-webkit-scrollbar-track {
     border-radius: 20px;
-    background-color: var(--gray-light-1);
+    background-color: #dfdfeb;
 }
 
 .message-sidebar-messages::-webkit-scrollbar-track:hover {
-    background-color: var(--gray-light-1);
+    background-color: #dfdfeb;
 }
 
 .message-sidebar-messages::-webkit-scrollbar-track:active {
-    background-color: var(--gray-light-1);
+    background-color: #dfdfeb;
 }
 
 .message-sidebar-messages::-webkit-scrollbar-thumb {
     border-radius: 20px;
-    background-color: var(--gray-light);
+    background-color: #a4a8bc;
 }
 
 .message-sidebar-messages::-webkit-scrollbar-thumb:hover {
-    background-color: var(--gray-light);
+    background-color: #a4a8bc;
 }
 
 .message-sidebar-messages::-webkit-scrollbar-thumb:active {
-    background-color: var(--gray-light);
+    background-color: #a4a8bc;
 }
 
 /* Scrollbar */
@@ -2803,7 +2802,7 @@ textarea.ol-form-textarea {
 
 .message-sidebar-message.active,
 .message-sidebar-message:hover {
-    background: var(--gray-light-2);
+    background: #f7f7f9;
 }
 
 .message-sidebar-message .user {
@@ -2831,7 +2830,7 @@ textarea.ol-form-textarea {
     font-weight: 600;
     font-size: 16px;
     line-height: 24px;
-    color: var(--text-color);
+    color: #212534;
     margin-bottom: 4px;
 }
 
@@ -2840,7 +2839,7 @@ textarea.ol-form-textarea {
     font-size: 14px;
     line-height: 20px;
     line-height: 1.42857;
-    color: var(--text-color);
+    color: #6d718c;
     word-break: break-word;
 }
 
@@ -2848,14 +2847,14 @@ textarea.ol-form-textarea {
     font-weight: 500;
     font-size: 14px;
     line-height: 20px;
-    color: var(--text-color);
+    color: #4b5675;
     min-width: max-content;
 }
 
 /* Messenger */
 .messenger-area {
     border-radius: 12px;
-    background: var(--white-color);
+    background: #ffffff;
     max-width: 100%;
     width: 100%;
 }
@@ -2899,7 +2898,7 @@ textarea.ol-form-textarea {
     font-weight: 600;
     font-size: 16px;
     line-height: 24px;
-    color: var(--text-color);
+    color: #212534;
     margin-bottom: 2px;
 }
 
@@ -2920,7 +2919,6 @@ textarea.ol-form-textarea {
     height: 8px;
     width: 8px;
     border-radius: 50%;
-    background: var(--gray-light);
 }
 
 .messenger-header .user-wrap .name-status .status.active::after {
@@ -3031,28 +3029,28 @@ textarea.ol-form-textarea {
 
 .messenger-body::-webkit-scrollbar-track {
     border-radius: 20px;
-    background-color: var(--gray-light-1);
+    background-color: #dfdfeb;
 }
 
 .messenger-body::-webkit-scrollbar-track:hover {
-    background-color: var(--gray-light-1);
+    background-color: #dfdfeb;
 }
 
 .messenger-body::-webkit-scrollbar-track:active {
-    background-color: var(--gray-light-1);
+    background-color: #dfdfeb;
 }
 
 .messenger-body::-webkit-scrollbar-thumb {
     border-radius: 20px;
-    background-color: var(--gray-light);
+    background-color: #a4a8bc;
 }
 
 .messenger-body::-webkit-scrollbar-thumb:hover {
-    background-color: var(--gray-light);
+    background-color: #a4a8bc;
 }
 
 .messenger-body::-webkit-scrollbar-thumb:active {
-    background-color: var(--gray-light);
+    background-color: #a4a8bc;
 }
 
 /* Scrollbar */
@@ -3100,26 +3098,26 @@ textarea.ol-form-textarea {
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
-    color: var(--text-color);
+    color: #212534;
 }
 
 .single-message .user-wrap .name-time .time {
     font-weight: 500;
     font-size: 14px;
     line-height: 20px;
-    color: var(--text-color);
+    color: #6d718c;
 }
 
 .single-message .message {
     max-width: 392px;
-    background: var(--gray-light-2);
+    background: #f7f7f7;
     padding: 16px;
     border-radius: 8px;
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.02em;
-    color: var(--text-color);
+    color: #6d718c;
     position: relative;
 }
 
@@ -6486,12 +6484,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     background-size: 16px;
 }
 
-/* .role-card .form-check-input:checked::after {
-    content: "✔";
-    color: white;
-    font-size: 10px;
-    position: absolute;
-    top: 0px;
-    left: 3px;
-    transform: rotate(15deg);
-} */
+.no-message .card-middle-banner {
+    margin: 138px auto 0 auto;
+    max-width: max-content;
+}

@@ -9,7 +9,7 @@
                     </div>
                     <div class="fpb-7 mb-3">
                         <label class="form-label ol-form-label">{{ get_phrase('Select Client') }}</label>
-                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" name="client_id" required>
+                        <select class="form-control ol-form-control ol-select2" name="client_id" required>
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">{{ $client->name }}</option>
                             @endforeach
@@ -26,7 +26,7 @@
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="category_id">{{ get_phrase('Category ID') }}</label>
                         <select class="form-control ol-form-control ol-select2" data-toggle="select2" name="category_id" required>
-                            <option value=""> {{get_phrase('select category')}} </option>
+                            <option value=""> {{ get_phrase('select category') }} </option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
@@ -72,6 +72,21 @@
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="privacy">{{ get_phrase('Privacy') }}</label>
                         <input class="form-control ol-form-control" type="text" id="privacy" name="privacy" required>
+                    </div>
+                    <div class="mb-3">
+                        <select class="">
+                            <option value="English">English</option>
+                            <option value="Hindi">Hindi</option>
+                            <option value="Urdu">Urdu</option>
+                        </select>
+                    </div>
+                    <!-- Select with Search -->
+                    <div class="mb-3">
+                        <select class="">
+                            <option value="English">English</option>
+                            <option value="Hindi">Hindi</option>
+                            <option value="Urdu">Urdu</option>
+                        </select>
                     </div>
                     <div class="fpb7 mb-2">
                         <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Submit') }}</button>

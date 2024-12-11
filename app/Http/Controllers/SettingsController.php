@@ -369,7 +369,7 @@ class SettingsController extends Controller
                 Language_phrase::insert(['language_id' => $lan_id, 'phrase' => $en_lan_phrase->phrase, 'translated' => $en_lan_phrase->translated, 'created_at' => date('Y-m-d H:i:s')]);
             }
         }
-        return redirect(route('admin.language.phrase.edit', ['lan_id' => $lan_id]));
+        return redirect(route('language.phrase.edit', ['lan_id' => $lan_id]));
     }
 
     public function language_store(Request $request)
@@ -478,6 +478,58 @@ class SettingsController extends Controller
 
         $data['application_details'] = $returnable_array;
         return view('settings.about', $data);
+    }
+    public function curl_request($code = '')
+    {
+        $purchase_code = $code;
+
+        $personal_token = "FkA9UyDiQT0YiKwYLK3ghyFNRVV9SeUn";
+        $url            = "https://api.envato.com/v3/market/author/sale?code=" . $purchase_code;
+        $curl           = curl_init($url);
+
+        //setting the header for the rest of the api
+        $bearer   = 'bearer ' . $personal_token;
+        $header   = array();
+        $header[] = 'Content-length: 0';
+        $header[] = 'Content-type: application/json; charset=utf-8';
+        $header[] = 'Authorization: ' . $bearer;
+
+        $verify_url = 'https://api.envato.com/v1/market/private/user/verify-purchase:' . $purchase_code . '.json';
+        $ch_verify  = curl_init($verify_url . '?code=' . $purchase_code);
+
+        curl_setopt($ch_verify, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch_verify, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch_verify, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch_verify, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch_verify, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+
+        $cinit_verify_data = curl_exec($ch_verify);
+        curl_close($ch_verify);
+
+        $response = json_decode($cinit_verify_data, true);
+
+        if (is_array($response) && count($response['verify-purchase']) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function save_valid_purchase_code($action_type, Request $request)
+    {
+        if ($action_type == 'update') {
+            $data['description'] = $request->purchase_code;
+
+            $status = $this->curl_request($data['description']);
+            if ($status) {
+                Setting::where('type', 'purchase_code')->update($data);
+                session()->flash('success', get_phrase('Purchase code has been updated'));
+                echo 1;
+            } else {
+                echo 0;
+            }
+        } else {
+            return view('settings.save_purchase_code');
+        }
     }
 
 }

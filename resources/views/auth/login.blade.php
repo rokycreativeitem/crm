@@ -102,7 +102,7 @@
                     </div>
                 </div>
                 <div class="row align-items-center justify-content-end">
-                    <div class="col-md-6 col-lg-7">
+                    <div class="col-md-6 col-lg-7 d-none d-md-block">
                         <div class="pe-lg-4">
                             <div class="login-form-banner ">
                                 <img src="{{ asset('assets/images/login.webp') }}" alt="">
