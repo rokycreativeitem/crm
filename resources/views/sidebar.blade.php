@@ -97,7 +97,11 @@
                     </a>
                 </li>
 
-                <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.projects' || $current_route == get_current_user_role() . '.project.categories' || request()->is('admin/project*')) active showMenu @endif">
+                @if(has_permission('projects'))
+                <li class="sidebar-first-li first-li-have-sub @if (
+                    $current_route == get_current_user_role() . '.projects' ||
+                    $current_route == get_current_user_role() . '.project.categories' ||
+                    request()->is('admin/project*')) active showMenu @endif">
                     <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -122,6 +126,9 @@
                         </li>
                     </ul>
                 </li>
+                @endif
+
+                @if(has_permission('dd'))
                 <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.users' || $current_route == get_current_user_role() . '.user.create' || $current_route == get_current_user_role() . '.user.edit') active showMenu @endif">
                     <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -154,7 +161,9 @@
                         </li>
                     </ul>
                 </li>
+                @endif
 
+                @if(has_permission('dd'))
                 <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.roles' || $current_route == get_current_user_role() . '.role.create' || $current_route == get_current_user_role() . '.role.edit') active showMenu @endif ">
                     <a href="{{ route(get_current_user_role() . '.roles') }}">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -188,6 +197,9 @@
                         </div>
                     </a>
                 </li>
+                @endif
+
+                @if(has_permission('dd'))
                 <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.events') active showMenu @endif ">
                     <a href="{{ route(get_current_user_role() . '.events') }}">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -212,6 +224,8 @@
                         </div>
                     </a>
                 </li>
+                @endif
+
                 {{-- <li class="sidebar-first-li">
                     <a href="">
 
@@ -234,6 +248,8 @@
                         </div>
                     </a>
                 </li> --}}
+
+                @if(has_permission('dd'))
                 <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.message') active showMenu @endif ">
                     <a href="{{ route(get_current_user_role() . '.message') }}">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -247,7 +263,9 @@
                         </div>
                     </a>
                 </li>
+                @endif
 
+                @if(has_permission('dd'))
                 <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.project_report' || $current_route == get_current_user_role() . '.client_report') active showMenu @endif">
                     <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -278,11 +296,15 @@
                         </li>
                     </ul>
                 </li>
+                @endif
+
+                @if(has_permission('dd'))
                 <li class="sidebar-first-li first-li-have-sub @if (
                     $current_route == get_current_user_role() . '.system_settings' ||
                         $current_route == get_current_user_role() . '.payment_settings' ||
                         $current_route == get_current_user_role() . '.notification_settings' ||
                         $current_route == get_current_user_role() . '.manage_language' ||
+                        $current_route == get_current_user_role() . '.update.center' ||
                         $current_route == get_current_user_role() . '.about') active showMenu @endif">
                     <a href="javascript:void(0);">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -310,9 +332,15 @@
                         <li class="sidebar-second-li {{ $current_route == get_current_user_role() . '.manage_language' || $current_route == get_current_user_role() . '.language.phrase.edit' ? 'active' : '' }}">
                             <a href="{{ route(get_current_user_role() . '.manage_language') }}">{{ get_phrase('Manage Language') }}</a>
                         </li>
+                        <li class="sidebar-second-li {{ $current_route == get_current_user_role() . '.update.center' ? 'active' : '' }}">
+                            <a href="{{ route(get_current_user_role() . '.update.center') }}">{{ get_phrase('Update Center') }}</a>
+                        </li>
                         <li class="sidebar-second-li {{ $current_route == get_current_user_role() . '.about' ? 'active' : '' }}"><a href="{{ route(get_current_user_role() . '.about') }}">{{ get_phrase('About') }}</a></li>
                     </ul>
                 </li>
+                @endif
+
+                @if(has_permission('dd'))
                 <li class="sidebar-first-li {{ $current_route == 'admin.manage_profile' ? 'active' : '' }}">
                     <a href="{{ route('admin.manage_profile') }}">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -331,6 +359,8 @@
                         </div>
                     </a>
                 </li>
+                @endif
+
             </ul>
         </nav>
     </div>

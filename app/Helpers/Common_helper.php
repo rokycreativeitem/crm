@@ -1,8 +1,10 @@
 <?php
 
 use App\Models\Milestone;
+use App\Models\Permission;
 use App\Models\Project;
 use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -83,6 +85,25 @@ if (!function_exists('get_current_user_role')) {
     {
         $role = Role::where('id', Auth::user()->role_id)->value('title');
         return $role;
+    }
+}
+
+if (!function_exists('has_permission')) {
+    function has_permission($route) {
+        if(get_current_user_role() == 'admin'){
+            return true;
+        }elseif ($route) {
+            $permission_id = Permission::where('route', $route)->value('id');
+            $role_id = Role::where('id', Auth::user()->role_id)->value('id');
+            $permission = RolePermission::where('role_id', $role_id)->where('permission_id', $permission_id)->first();
+            if($permission) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
 

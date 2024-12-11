@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Addon;
 use App\Models\Category;
 use App\Models\File;
 use App\Models\Meeting;
@@ -290,7 +291,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit Category\')" href="#">' . get_phrase('Edit') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -1008,6 +1009,88 @@ class ServerSideDataController extends Controller
                 return 'context-menu';
             })
             ->with('filter_count', count($filter_count))
+            ->make(true);
+    }
+
+    public function addon_server_side($string) {
+        $query = Addon::query();
+        if (!empty($string)) {
+            $query->where(function ($q) use ($string) {
+                $q->where('name', 'like', "%{$string}%");
+            });
+        }
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('id', function ($invoice) {
+                static $key = 1;
+                return '
+                <div class="d-flex align-items-center">
+                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                    <p class="row-number fs-12px">' . $key++ . '</p>
+                    <input type="hidden" class="datatable-row-id" value="' . $invoice->id . '">
+                </div>
+            ';
+            })
+            ->addColumn('name', function ($addon) {
+                return $addon?->name;
+            })
+            ->addColumn('version', function ($addon) {
+                return $addon->version;
+            })
+            ->addColumn('status', function ($addon) {
+                return $addon->status;
+            })
+            ->addColumn('options', function ($invoice) {
+                // Generate routes dynamically .milestone.edit', $milestone->id
+                $editRoute   = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $deleteRoute = route(get_current_user_role() . '.invoice.delete', $invoice->id);
+                $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                return '
+                <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
+                    <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="fi-rr-menu-dots-vertical"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="'.$invoiceRoute.'">' . get_phrase('Invoice') . '</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                    </ul>
+                </div>
+            ';
+            })
+            ->addColumn('context_menu', function ($invoice) {
+                $editRoute   = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $deleteRoute = route(get_current_user_role() . '.invoice.delete', $invoice->id);
+                $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                // Generate the context menu
+                $contextMenu = [
+                    'Edit' => [
+                        'type' => 'ajax',
+                        'name' => 'Edit',
+                        'action_link' => $editRoute,
+                        'title' => 'Edit meeting'
+                    ],
+                    'Delete' => [
+                        'type' => 'ajax',
+                        'name' => 'Delete',
+                        'action_link' => $deleteRoute,
+                        'title' => 'Delete meeting'
+                    ]
+                ];
+
+                // JSON encode with unescaped slashes for cleaner URLs
+                return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            })
+            ->rawColumns(["id","name","version","status","options"])
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
             ->make(true);
     }
 
