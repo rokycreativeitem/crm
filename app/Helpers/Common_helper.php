@@ -9,9 +9,30 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 if (!function_exists('get_phrase')) {
-    function get_phrase($phrase)
+    function get_phrase($phrase = '', $value_replace = array())
     {
-        return $phrase;
+        $active_lan    = session('language') ?? get_settings('language');
+        $active_lan_id = DB::table('languages')->where('name', 'like', $active_lan)->value('id');
+        $lan_phrase    = DB::table('language_phrases')->where('language_id', $active_lan_id)->where('phrase', $phrase)->first();
+
+        if ($lan_phrase) {
+            $translated = $lan_phrase->translated;
+        } else {
+            $translated  = $phrase;
+            $english_lan = DB::table('languages')->where('name', 'like', 'english')->first();
+            if (DB::table('language_phrases')->where('language_id', $english_lan->id)->where('phrase', $phrase)->count() == 0) {
+                DB::table('language_phrases')->insert(['language_id' => $english_lan->id, 'phrase' => $phrase, 'translated' => $translated]);
+            }
+        }
+
+        if (!is_array($value_replace)) {
+            $value_replace = array($value_replace);
+        }
+        foreach ($value_replace as $replace) {
+            $translated = preg_replace('/____/', $replace, $translated, 1); // Replace one placeholder at a time
+        }
+
+        return $translated;
     }
 }
 
@@ -20,12 +41,12 @@ if (!function_exists('currency')) {
     {
         // $currency_position = DB::table('system_settings')->where('key', 'currency_position')->value('value');
         // $code = DB::table('system_settings')->where('key', 'system_currency')->value('value');
-        $symbol = DB::table('currencies')->where('id', 2)->value('symbol');
+        $symbol            = DB::table('currencies')->where('id', 2)->value('symbol');
         $currency_position = 'left';
-        if($currency_position == 'left'){
-            return $symbol.''.$price;
+        if ($currency_position == 'left') {
+            return $symbol . '' . $price;
         } else {
-            return $price.''.$symbol;
+            return $price . '' . $symbol;
         }
     }
 }

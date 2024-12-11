@@ -252,7 +252,7 @@
 @media all and (max-width: 1199px) {
     /* Login Page */
     .login-form-wrap {
-        padding: 46px 0 130px 0;
+        padding: 46px 0 46px 0;
     }
     /* Login Page */
 }
@@ -263,7 +263,7 @@
         font-size: 34px;
     }
     .login-form-wrap {
-        padding: 46px 0 110px 0;
+        padding: 46px 0 46px 0;
     }
     /* Login Page */
 }
@@ -274,7 +274,7 @@
         font-size: 32px;
     }
     .login-form-wrap {
-        padding: 46px 0 100px 0;
+        padding: 46px 0 46px 0;
     }
     /* Login Page */
 }

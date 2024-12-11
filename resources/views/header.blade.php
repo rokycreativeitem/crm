@@ -14,7 +14,7 @@
 
         <div class="main-header-title">
             <h1 class="page-title fs-18px d-flex align-items-center gap-3">
-                {{ get_phrase('Project Management System') }}
+                {{ config('app.name') }}
             </h1>
             <span class="text-12px d-none d-md-inline-block"></span>
         </div>
@@ -24,32 +24,23 @@
         <!-- language Select -->
         <div class="d-none d-sm-block">
             <div class="img-text-select ">
-                <div class="selected-show" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Language">
+                @php
+                    $activated_language = strtolower(session('language') ?? get_settings('language'));
+                @endphp
+                <div class="selected-show" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ get_phrase('Language') }}">
                     <i class="fi-rr-language text-20px py-2"></i>
                 </div>
                 <div class="drop-content">
                     <ul>
-                        <li>
-                            <a href="#select-language/English" class="select-text text-capitalize">
+                        @foreach (App\Models\Language::get() as $lng)
+                            <li>
+                                <a href="{{ route('admin.select.language', ['language' => $lng->name]) }}" class="select-text text-capitalize">
 
-                                <i class="fi fi-br-check text-10px me-1 "></i>
-                                English
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#select-language/Hindi" class="select-text text-capitalize">
-
-                                <i class="fi fi-br-check text-10px me-1  visibility-hidden "></i>
-                                Hindi
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#select-language/Spanish" class="select-text text-capitalize">
-
-                                <i class="fi fi-br-check text-10px me-1  visibility-hidden "></i>
-                                Spanish
-                            </a>
-                        </li>
+                                    <i class="fi fi-br-check text-10px me-1 @if ($activated_language != strtolower($lng->name)) visibility-hidden @endif"></i>
+                                    {{ $lng->name }}
+                                </a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -59,7 +50,7 @@
 
         <a href="#" class="list text-18px d-inline-flex" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
             <span class="d-block h-100 w-100" data-bs-toggle="tooltip" data-bs-placement="bottom" title="AI Assistant">
-                <svg width="22" height="22" x="0" y="0" viewBox="0 0 64 64" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0" viewBox="0 0 64 64" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
                     <g>
                         <g fill="#424242">
                             <path

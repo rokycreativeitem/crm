@@ -9,10 +9,10 @@
                         <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
                             <h4 class="title fs-16px">
                                 <i class="fi-rr-settings-sliders me-2"></i>
-                                {{ get_phrase('Manage') }}
+                                {{ get_phrase('Manage Meeting') }}
                             </h4>
-                            
-                            <input type="hidden" value="{{request()->route()->parameter('code')}}" name="project_id">
+
+                            <input type="hidden" value="{{ request()->route()->parameter('code') }}" name="project_id">
                             <div class="top-bar d-flex align-items-center">
                                 <div class="input-group dt-custom-search">
                                     <span class="input-group-text">
@@ -51,9 +51,9 @@
                                                 {{ get_phrase('Print') }}</a>
                                         </li>
                                     </ul>
-                                    
+
                                 </div>
-                          
+
                                 <div class="custom-dropdown dropdown filter-dropdown btn-group" id="export-btn">
                                     <button class="dropdown-header btn ol-btn-light dropdown-toggle-split" type="button" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -68,28 +68,29 @@
                                         <span class="filter-count-display d-none" id="filter-count-display"></span>
                                     </button>
 
-                                    <a href="javascript:void(0)" class="border-0 filter-reset d-none d-flex align-items-center" id="filter-reset"> 
+                                    <a href="javascript:void(0)" class="border-0 filter-reset d-none d-flex align-items-center" id="filter-reset">
                                         <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7 6.99927L1.00141 1.00068" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round"/>
-                                            <path d="M1 6.99936L6.99859 1.00077" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round"/>
+                                            <path d="M7 6.99927L1.00141 1.00068" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
+                                            <path d="M1 6.99936L6.99859 1.00077" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
                                         </svg>
-                                            
+
                                         <span>|</span>
                                     </a>
-                                        
+
                                     <!-- Dropdown Menu -->
                                     <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
-                                       
+
                                         <!-- start date -->
                                         <div class="mb-3">
                                             <label for="start_date" class="form-label">{{ get_phrase('Start Date') }}</label>
-                                            <input type="datetime-local" name="start_date" id="start_date" placeholder="{{get_phrase('Start date')}}" class="form-control fs-14px">
+                                            <input type="datetime-local" name="start_date" id="start_date" placeholder="{{ get_phrase('Start date') }}" class="form-control fs-14px">
                                         </div>
                                         <!-- end date -->
                                         <div class="mb-3">
                                             <label for="end_date" class="form-label">{{ get_phrase('Start Date') }}</label>
-                                            <input type="datetime-local" name="end_date" id="end_date" placeholder="{{get_phrase('End date')}}" class="form-control fs-14px">
+                                            <input type="datetime-local" name="end_date" id="end_date" placeholder="{{ get_phrase('End date') }}" class="form-control fs-14px">
                                         </div>
+
 
                                         <!-- Apply Button -->
                                         <div class="text-end">
@@ -125,7 +126,7 @@
                     </tbody>
                 </table>
                 <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
-                    <label for="page-length-select" class="pe-2">{{get_phrase('Showing')}}:</label>
+                    <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
                     <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
                         <option value="10" selected>10</option>
                         <option value="20">20</option>
@@ -152,8 +153,8 @@
     <script>
         const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search__field');
         dropdownItems.forEach(item => {
-            item.addEventListener('click', function (e) {
-                e.stopPropagation(); 
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
             });
         });
         setTimeout(function() {

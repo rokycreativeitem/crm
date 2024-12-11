@@ -4,12 +4,12 @@
 @push('css')@endpush
 @section('content')
     <div class="row g-4">
-        <div class="col-xl-5 col-lg-6 col-md-5">
+        <div class="col-xl-4 col-lg-5 col-md-4">
             <div class="message-sidebar-area">
                 <div class="message-sidebar-header">
                     <div class="back-and-plus mb-3 d-flex align-items-center justify-content-between flex-wrap">
                         <div class="back-title d-flex align-items-center">
-                            <p class="title fs-16px">{{ get_phrase('Chat List') }}</p>
+                            <p class="title fs-16px">{{ get_phrase('Chat') }}</p>
                         </div>
                         <a href="#" onclick="modal('{{ get_phrase('Create a new thread') }}', '{{ route(get_current_user_role() . '.message.message_new') }}')" class="btn ol-btn-light ol-icon-btn ol-icon-btn-sm">
                             <span class="fi-rr-plus"></span>
@@ -29,7 +29,7 @@
                                 </svg>
                             </label>
                             <input type="search" class="form-control" onkeyup="loadView('{{ route(get_current_user_role() . '.message.message_left_side_bar') }}?thread_code={{ $thread_code ? $thread_code : '' }}&search='+$(this).val(), '#message-user-list')" id="message-sideSearch"
-                                placeholder="{{ get_phrase('Search Here') }}">
+                                placeholder="{{ get_phrase('Search by username') }}">
                             <button type="submit" hidden=""></button>
                         </div>
                     </form>
@@ -40,7 +40,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-xl-7 col-lg-6 col-md-7">
+        <div class="col-xl-8 col-lg-7 col-md-8">
             @if ($thread_details)
                 @include('message.message_body')
             @else

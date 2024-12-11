@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\GanttChartController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MilestoneController;
@@ -195,5 +196,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::get('about', 'about')->name('about');
         Route::any('save_valid_purchase_code/{action_type?}', 'save_valid_purchase_code')->name('save_valid_purchase_code');
     });
+
+    Route::get('select-language/{language}', [LanguageController::class, 'select_lng'])->name('select.language');
 
 });
