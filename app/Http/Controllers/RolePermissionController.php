@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\RolePermission;
+use Illuminate\Http\Request;
 
 class RolePermissionController extends Controller
 {
-    public function store($role_id, $permission_id)
+    public function store(Request $request)
     {
+        $role = $request->input('role');
+        $permission_id = $request->input('permission');
+
+        $role_id = ($role == 'client') ? 2 : 3;
         $role_permissions = RolePermission::where('role_id', $role_id)->pluck('permission_id')->toArray();
 
         if (($index = array_search($permission_id, $role_permissions)) !== false) {
@@ -21,8 +26,9 @@ class RolePermissionController extends Controller
                 'permission_id' => $permission_id,
             ]);
         }
+
         return response()->json([
-            'success' => get_phrase('Permission has been updated.'),
+            'success' => 'Permission has been updated.',
         ]);
     }
 }

@@ -149,9 +149,7 @@
                     <li class="dropdown-list-1"><a class="dropdown-item-1" href="#system_settings">{{ get_phrase('Settings') }}</a>
                     </li>
                 </ul>
-                <form action="{{ route('logout') }}" method="post">@csrf
-                    <button type="submit" class="dropdown-item-1 bg-transparent d-inline-flex">{{ get_phrase('Sign Out') }}</button>
-                </form>
+                <a href="{{route('logout')}}" class="dropdown-item-1 bg-transparent d-inline-flex">{{ get_phrase('Sign Out') }}</a>
             </div>
         </div>
     </div>

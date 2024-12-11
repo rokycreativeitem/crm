@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddonController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
@@ -132,19 +133,19 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     // manage roles
     Route::controller(RoleController::class)->group(function () {
         Route::get('roles', 'index')->name('roles');
-        Route::get('roles/create', 'create')->name('roles.create');
-        Route::post('roles/store', 'store')->name('roles.store');
+        // Route::get('roles/create', 'create')->name('roles.create');
+        // Route::post('roles/store', 'store')->name('roles.store');
 
-        Route::middleware(['check:roles,id'])->group(function () {
-            Route::get('roles/edit/{id}', 'edit')->name('roles.edit');
-            Route::get('roles/delete/{id}', 'delete')->name('roles.delete');
-            Route::post('roles/update/{id}', 'update')->name('roles.update');
-        });
+        // Route::middleware(['check:roles,id'])->group(function () {
+        //     Route::get('roles/edit/{id}', 'edit')->name('roles.edit');
+        //     Route::get('roles/delete/{id}', 'delete')->name('roles.delete');
+        //     Route::post('roles/update/{id}', 'update')->name('roles.update');
+        // });
     });
 
     // assign permission
     Route::controller(RolePermissionController::class)->group(function () {
-        Route::post('assign/permissions/store/{role_id}/{permission_id}', 'store')->name('store.permissions');
+        Route::post('permissions/store', 'store')->name('store.permissions');
     });
 
     Route::controller(EventController::class)->group(function () {
@@ -171,29 +172,35 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::get('client_report', 'client_report')->name('client_report');
 
     });
+    Route::controller(AddonController::class)->group(function () {
+        Route::get('update/center', 'index')->name('update.center');
+        Route::get('addon/add', 'add')->name('addon.add');
+        Route::post('addon/store', 'store')->name('addon.store');
+    });
 
     Route::controller(SettingsController::class)->group(function () {
         Route::get('system_settings', 'system_settings')->name('system_settings');
         Route::post('system_settings/update', 'system_settings_update')->name('system_settings.update');
-
+        
         Route::get('payment_settings', 'payment_settings')->name('payment_settings');
         Route::post('payment_settings/update', 'payment_settings_update')->name('payment_settings.update');
-
+        
         Route::get('notification_settings', 'notification_settings')->name('notification_settings');
         Route::any('notification_settings/store/{param1}/{id?}', 'notification_settings_store')->name('notification_settings.store');
-
+        
         Route::get('manage_language', 'manage_language')->name('manage_language');
         Route::post('language/store', 'language_store')->name('language.store');
         Route::post('language/direction/update', 'language_direction_update')->name('language.direction.update');
         Route::post('language/import', 'language_import')->name('language.import');
         Route::get('language/delete/{id}', 'language_delete')->name('language.delete');
-
+        
         Route::get('language/phrase/edit/{lan_id}', 'edit_phrase')->name('language.phrase.edit');
         Route::post('language/phrase/update/{phrase_id?}', 'update_phrase')->name('language.phrase.update');
         Route::get('language/phrase/import/{lan_id}', 'phrase_import')->name('language.phrase.import');
-
+        
         Route::get('about', 'about')->name('about');
         Route::any('save_valid_purchase_code/{action_type?}', 'save_valid_purchase_code')->name('save_valid_purchase_code');
+
     });
 
 });

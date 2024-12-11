@@ -6514,7 +6514,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     text-transform: uppercase;
 }
 .project-dashboard tbody tr {
-    border-bottom: 1.6px dashed #dbdfeb;
+    border-bottom: 1px dashed #dbdfeb;
 }
 .project-dashboard tbody tr:last-child {
     border-bottom: 0 !important;
@@ -6535,6 +6535,8 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     background: white;
     padding: 20px;
     border-radius: 6px;
+    box-shadow: 0 4px 40px 0 var(--shadow);
+    height: 100%;
 }
 .role-card h4 {
     color: #212534;
@@ -6545,6 +6547,9 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 .role-card .form-check {
     padding-bottom: 12px;
     border-bottom: 1px dashed #dbdfeb;
+}
+.role-card .form-check:last-child {
+    border-bottom: 0;
 }
 .role-card .form-check-input {
     font-size: 14px !important;

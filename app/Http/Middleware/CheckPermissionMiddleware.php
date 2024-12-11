@@ -33,10 +33,12 @@ class CheckPermissionMiddleware
         $permissions    = Permission::whereIn('id', $permission_ids)->pluck('route')->toArray();
 
         $role           = Role::where('id', Auth::user()->role_id)->value('title');
+        
         $prefixedRoutes = array_map(function ($route) use ($role) {
             return "{$role}.{$route}";
         }, $permissions);
-
+        // print_r($prefixedRoutes);
+        // die;
         array_push($prefixedRoutes, "{$role}.dashboard");
         $route = Route::currentRouteName();
 

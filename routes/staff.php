@@ -17,7 +17,7 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::controller(ProjectController::class)->group(function () {
-        Route::get('projects', 'index')->name('projects');
+        Route::get('{layout?}/projects', 'index')->name('projects');
         Route::get('project/create', 'create')->name('project.create');
         Route::post('project/store', 'store')->name('project.store');
         Route::get('project/delete/{code}', 'delete')->name('project.delete');
@@ -25,6 +25,12 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::post('project/update/{code}', 'update')->name('project.update');
         Route::get('project/{code}/{tab?}', 'show')->name('project.details');
         Route::post('project/multi-delete', 'multiDelete')->name('project.multi-delete');
+
+        Route::get('categories', 'categories')->name('project.categories');
+        Route::get('project-category/create', 'category_create')->name('project.category.create');
+        Route::post('project-category/store/{id?}', 'category_store')->name('project.category.store');
+        Route::get('project-category/delete/{id}', 'category_delete')->name('project.category.delete');
+        Route::get('project-category/edit/{id}', 'category_edit')->name('project.category.edit');
 
     });
 

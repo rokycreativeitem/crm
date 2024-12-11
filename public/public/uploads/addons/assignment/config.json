@@ -1,0 +1,19 @@
+{
+    "name" : "Assignment",
+    "unique_identifier" : "assignment",
+    "version" : "1.2",
+    "about" : "You can create assignments for students enrolled in your course, and review the submitted assignment to know the course progress of your enrolled students using this add-on.",
+    "directories" :
+    [
+        {
+            "name" : "public/uploads/test"
+        }
+    ],
+    "files"     :
+    [
+        {
+            "root_directory"    : "public/uploads/addons/assignment/test/test.php",
+            "update_directory"  : "public/uploads/test/test.php"
+        }
+    ]
+}

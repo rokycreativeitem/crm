@@ -22,7 +22,7 @@
                             </span>
                             <input type="text" class="form-control" id="custom-search-box" name="customSearch" placeholder="Search">
                         </div>
-                        <button onclick="rightCanvas('{{ route(get_current_user_role() . '.project.category.create') }}', 'Create project')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
+                        <button onclick="rightCanvas('{{ route(get_current_user_role() . '.project.category.create') }}', '{{get_phrase('Create Category')}}')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
                             <span class="fi-rr-plus"></span>
                             <span>{{ get_phrase('Add new') }}</span>
                         </button>
