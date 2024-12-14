@@ -7,7 +7,7 @@
                 <div class="col-12">
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="code">{{ get_phrase('Purchase Code') }}</label>
-                        <input class="form-control ol-form-control" type="text" id="code" name="code">
+                        <input class="form-control ol-form-control" type="text" id="code" name="code" placeholder="{{get_phrase('your purchase code')}}">
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="file">{{ get_phrase('Zip File') }}</label>
