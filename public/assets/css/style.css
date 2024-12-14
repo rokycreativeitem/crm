@@ -5214,7 +5214,7 @@ div.dt-container .dt-paging {
 
 .offcanvas.global {
     width: 40%;
-    background: #fff;
+    /* background: #fff; */
 }
 .offcanvas.global .offcanvas-body::-webkit-scrollbar {
     display: none;
