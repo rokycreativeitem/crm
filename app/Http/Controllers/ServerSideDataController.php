@@ -1040,11 +1040,10 @@ class ServerSideDataController extends Controller
             ->addColumn('status', function ($addon) {
                 return $addon->status;
             })
-            ->addColumn('options', function ($invoice) {
+            ->addColumn('options', function ($addon) {
                 // Generate routes dynamically .milestone.edit', $milestone->id
-                $editRoute   = route(get_current_user_role() . '.invoice.edit', $invoice->id);
-                $deleteRoute = route(get_current_user_role() . '.invoice.delete', $invoice->id);
-                $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $editRoute   = route(get_current_user_role() . '.addon.edit', $addon->id);
+                $deleteRoute = route(get_current_user_role() . '.addon.delete', $addon->id);
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -1052,10 +1051,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="'.$invoiceRoute.'">' . get_phrase('Invoice') . '</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Update Addon\')" href="#">' . get_phrase('Update') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>

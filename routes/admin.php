@@ -16,13 +16,14 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TimesheetController;
+use App\Http\Controllers\Updater as ControllersUpdater;
 use App\Http\Controllers\UserController;
 use App\Models\Updater;
 use Illuminate\Support\Facades\Route;
 
 Route::view('demo', 'demo');
 
-Route::middleware(['auth', 'verified', 'admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::controller(ProjectController::class)->group(function () {
@@ -173,9 +174,16 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     });
     Route::controller(AddonController::class)->group(function () {
-        Route::get('update/center', 'index')->name('update.center');
+        Route::get('addons', 'index')->name('addons');
         Route::get('addon/add', 'add')->name('addon.add');
-        Route::post('addon/store', 'store')->name('addon.store');
+        Route::post('addon/store/{id?}', 'store')->name('addon.store');
+        Route::get('addon/edit/{id}', 'edit')->name('addon.edit');
+        Route::get('addon/delete/{id}', 'delete')->name('addon.delete');
+    });
+    
+    Route::controller(ControllersUpdater::class)->group(function () {
+        Route::get('updater', 'updater')->name('updater');
+        Route::post('updater/store', 'update')->name('updater.store');
     });
 
     Route::controller(SettingsController::class)->group(function () {
