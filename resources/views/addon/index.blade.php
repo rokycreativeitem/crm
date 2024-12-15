@@ -14,7 +14,7 @@
                         <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
                             <h4 class="title fs-16px">
                                 <i class="fi-rr-settings-sliders me-2"></i>
-                                {{ get_phrase('Manage') }}
+                                {{ get_phrase('Manage Addons') }}
                             </h4>
                             <div class="top-bar d-flex align-items-center">
                                 <div class="input-group dt-custom-search">
@@ -69,7 +69,7 @@
                 <!-- DataTable -->
                 <table class="table server-side-datatable" id="project_list">
                     <thead>
-                        <tr>
+                        <tr class="context-menu-header">
                             <th scope="col"> # </th>
                             <th scope="col">{{ get_phrase('Name') }}</th>
                             <th scope="col">{{ get_phrase('Version') }}</th>
@@ -90,7 +90,7 @@
                         <option value="50">50</option>
                         <option value="100">100</option>
                     </select>
-                    {{-- <label for="page-length-select" class="ps-2 w-100"> {{get_phrase('of').' '.count($timesheets) }}</label> --}}
+                    <label for="page-length-select" class="ps-2 w-100"> {{get_phrase('of').' '.count($addons) }}</label>
                 </div>
 
                 <input type="hidden" value="timesheet" id="datatable_type">
@@ -104,6 +104,13 @@
     </div>
 </div>
 
+addon code start
+
+<div id="testId"></div>
+
+addon code end
+
+
 {{-- @include('projects.budget_range') --}}
 @include('components.datatable')
 @endsection
@@ -111,7 +118,7 @@
     <script>
         setTimeout(function() {
             server_side_datatable('["id","name","version","status","options"]',
-                "{{ route(get_current_user_role() . '.update.center') }}");
+                "{{ route(get_current_user_role() . '.addons') }}");
         }, 500);
     </script>
 @endpush

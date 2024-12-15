@@ -2519,6 +2519,7 @@ textarea.ol-form-textarea {
     min-width: 133px;
 }
 
+
 .ol-icon-dropdown .dropdown-menu li:not(:last-child),
 .context-menu-list li:not(:last-child) {
     margin-bottom: 2px;
@@ -5240,6 +5241,7 @@ div.dt-container .dt-paging {
 
 .offcanvas.global {
     width: 40%;
+    /* background: #fff; */
 }
 .offcanvas.global .offcanvas-body::-webkit-scrollbar {
     display: none;
@@ -5976,7 +5978,7 @@ button.dt-paging-button.previous {
 div.dt-container.dt-empty-footer tbody > tr:last-child > * {
     border-bottom: 0;
 }
-.context-menu {
+.context-menu, .server-side-datatable tbody tr {
     border-bottom: 1px solid #dbdfeb !important;
 }
 .context-menu-header {

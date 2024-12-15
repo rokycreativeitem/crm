@@ -4,6 +4,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CheckPermissionMiddleware;
 use App\Http\Middleware\CheckRolePermissionMiddleware;
 use App\Http\Middleware\ClientMiddleware;
+use App\Http\Middleware\InjectMiddleware;
 use App\Http\Middleware\RedirectIfMiddleware;
 use App\Http\Middleware\StaffMiddleware;
 use App\Http\Middleware\WebConfig;
@@ -25,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'redirect'         => RedirectIfMiddleware::class,
             'check.permission' => CheckPermissionMiddleware::class,
             'web_config'       => WebConfig::class,
+            'inject'           => InjectMiddleware::class,
         ]);
 
     })
