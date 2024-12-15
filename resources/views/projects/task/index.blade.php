@@ -134,35 +134,39 @@
                 </div>
 
                 <!-- DataTable -->
-                <table class="table server-side-datatable" id="project_list">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="d-flex align-items-center">
-                                <input type="checkbox" id="select-all" class="me-2 table-checkbox">
-                                <span> # </span>
-                            </th>
-                            <th scope="col">{{ get_phrase('Title') }}</th>
-                            <th scope="col">{{ get_phrase('Team') }}</th>
-                            <th scope="col">{{ get_phrase('Start Date') }}</th>
-                            <th scope="col">{{ get_phrase('End Date') }}</th>
-                            <th scope="col">{{ get_phrase('Status') }}</th>
-                            <th scope="col">{{ get_phrase('Progress') }}</th>
-                            <th scope="col" class="d-flex justify-content-center print-d-none">{{ get_phrase('Options') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- DataTable will populate this -->
-                    </tbody>
-                </table>
-                <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
-                    <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
-                    <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
-                        <option value="10" selected>10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <label for="page-length-select" class="ps-2 w-100"> {{ get_phrase('of') . ' ' . count($tasks) }}</label>
+                <div class="table-responsive">
+                    <table class="table server-side-datatable" id="project_list">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="d-flex align-items-center">
+                                    <input type="checkbox" id="select-all" class="me-2 table-checkbox">
+                                    <span> # </span>
+                                </th>
+                                <th scope="col">{{ get_phrase('Title') }}</th>
+                                <th scope="col">{{ get_phrase('Team') }}</th>
+                                <th scope="col">{{ get_phrase('Start Date') }}</th>
+                                <th scope="col">{{ get_phrase('End Date') }}</th>
+                                <th scope="col">{{ get_phrase('Status') }}</th>
+                                <th scope="col">{{ get_phrase('Progress') }}</th>
+                                <th scope="col" class="d-flex justify-content-center print-d-none">{{ get_phrase('Options') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- DataTable will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-none d-lg-block">
+                    <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
+                        <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
+                        <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <label for="page-length-select" class="ps-2 w-100"> {{ get_phrase('of') . ' ' . count($tasks) }}</label>
+                    </div>
                 </div>
 
                 <input type="hidden" value="task" id="datatable_type">

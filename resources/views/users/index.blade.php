@@ -83,24 +83,26 @@
                         </div>
                     </div>
 
-                    <table class="table server-side-datatable" id="user_list">
-                        <thead>
-                            <tr class="context-menu-header">
-                                <th scope="col" class="d-flex align-items-center">
-                                    <input type="checkbox" id="select-all" class="me-2 table-checkbox">
-                                    <span>#</span>
-                                </th>
-                                <th scope="col">{{ get_phrase('Name') }}</th>
-                                <th scope="col">{{ get_phrase('Email') }}</th>
-                                <th scope="col" class="d-flex justify-content-center">{{ get_phrase('Options') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div class="table-responsive">
+                        <table class="table server-side-datatable" id="user_list">
+                            <thead>
+                                <tr class="context-menu-header">
+                                    <th scope="col" class="d-flex align-items-center">
+                                        <input type="checkbox" id="select-all" class="me-2 table-checkbox">
+                                        <span>#</span>
+                                    </th>
+                                    <th scope="col">{{ get_phrase('Name') }}</th>
+                                    <th scope="col">{{ get_phrase('Email') }}</th>
+                                    <th scope="col" class="d-flex justify-content-center">{{ get_phrase('Options') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
-                        <label for="page-length-select" class="pe-2">Showing:</label>
+                        <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
                         <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
@@ -129,5 +131,27 @@
         setTimeout(function() {
             server_side_datatable('["id","name","email","options"]', "{{ route(get_current_user_role() . '.users', request()->route()->parameter('type')) }}");
         }, 500);
+    </script>
+@endpush
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('smtp_file').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                const preview = document.getElementById('preview');
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+            });
+        });
     </script>
 @endpush

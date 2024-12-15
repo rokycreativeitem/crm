@@ -6,12 +6,12 @@
 
                 <div class="ol-card radius-8px print-d-none">
                     <div class="ol-card-body px-2">
-                        <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
+                        <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-lg-nowrap">
                             <h4 class="title fs-16px">
                                 <i class="fi-rr-settings-sliders me-2"></i>
                                 {{ get_phrase('Manage Project') }}
                             </h4>
-                            <div class="top-bar d-flex align-items-center">
+                            <div class="top-bar flex-wrap d-flex align-items-center">
                                 <div class="input-group dt-custom-search">
                                     <span class="input-group-text">
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -183,37 +183,42 @@
                 </div>
 
                 <!-- DataTable -->
-                <table class="table server-side-datatable" id="table_list">
-                    <thead>
-                        <tr class="context-menu-header">
-                            <th scope="col" class="d-flex align-items-center">
-                                <input type="checkbox" id="select-all" class="me-2 table-checkbox">
-                                <span> # </span>
-                            </th>
-                            <th scope="col">{{ get_phrase('Title') }}</th>
-                            <th scope="col">{{ get_phrase('Code') }}</th>
-                            <th scope="col">{{ get_phrase('Client') }}</th>
-                            <th scope="col">{{ get_phrase('Staff') }}</th>
-                            <th scope="col">{{ get_phrase('Budget') }}</th>
-                            <th scope="col">{{ get_phrase('Progress') }}</th>
-                            <th scope="col">{{ get_phrase('Status') }}</th>
-                            <th scope="col" class="d-flex justify-content-center">{{ get_phrase('Options') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- DataTable will populate this -->
-                    </tbody>
-                </table>
-                <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
-                    <label for="page-length-select" class="pe-2">Showing:</label>
-                    <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
-                        <option value="10" selected>10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <label for="page-length-select" class="ps-2 w-100"> of {{ count($projects) }}</label>
+                <div class="table-responsive">
+                    <table class="table server-side-datatable" id="table_list">
+                        <thead>
+                            <tr class="context-menu-header">
+                                <th scope="col" class="d-flex align-items-center">
+                                    <input type="checkbox" id="select-all" class="me-2 table-checkbox">
+                                    <span> # </span>
+                                </th>
+                                <th scope="col">{{ get_phrase('Title') }}</th>
+                                <th scope="col">{{ get_phrase('Code') }}</th>
+                                <th scope="col">{{ get_phrase('Client') }}</th>
+                                <th scope="col">{{ get_phrase('Staff') }}</th>
+                                <th scope="col">{{ get_phrase('Budget') }}</th>
+                                <th scope="col">{{ get_phrase('Progress') }}</th>
+                                <th scope="col">{{ get_phrase('Status') }}</th>
+                                <th scope="col" class="d-flex justify-content-center">{{ get_phrase('Options') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- DataTable will populate this -->
+                        </tbody>
+                    </table>
                 </div>
+                <div class="d-none d-lg-block">
+                    <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
+                        <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
+                        <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <label for="page-length-select" class="ps-2 w-100"> of {{ count($projects) }}</label>
+                    </div>
+                </div>
+
 
                 <input type="hidden" value="project" id="datatable_type">
                 <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">

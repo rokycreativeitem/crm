@@ -153,50 +153,50 @@ class ServerSideDataController extends Controller
             ';
             })
             ->addColumn('context_menu', function ($project) {
-                $editRoute   = route(get_current_user_role() . '.project.edit', $project->code);
-                $deleteRoute = route(get_current_user_role() . '.project.delete', $project->code);
-                $dashboardRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'dashboard']);
-                $milestoneRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'milestone']);
-                $milestoneRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'milestone']);
-                $taskRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'task']);
-                $fileRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'file']);
-                $meetingRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'meeting']);
-                $invoiceRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'invoice']);
-                $ganttRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'gantt_chart']);
-                $timesheetRoute   = route(get_current_user_role() . '.project.details',['code'=>$project->code, 'tab'=>'timesheet']);
+                $editRoute      = route(get_current_user_role() . '.project.edit', $project->code);
+                $deleteRoute    = route(get_current_user_role() . '.project.delete', $project->code);
+                $dashboardRoute = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'dashboard']);
+                $milestoneRoute = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'milestone']);
+                $milestoneRoute = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'milestone']);
+                $taskRoute      = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'task']);
+                $fileRoute      = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'file']);
+                $meetingRoute   = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'meeting']);
+                $invoiceRoute   = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'invoice']);
+                $ganttRoute     = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'gantt_chart']);
+                $timesheetRoute = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'timesheet']);
                 // Generate the context menu
                 $contextMenu = [
-                    'Edit'   => [
+                    'Edit'      => [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editRoute,
                         'title'       => 'Edit project',
                     ],
-                    'Delete' => [
+                    'Delete'    => [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteRoute,
                         'title'       => 'Delete project',
                     ],
-                    'Dashboard'   => [
+                    'Dashboard' => [
                         'type'        => 'ajax',
                         'name'        => 'Dashboard',
                         'action_link' => $dashboardRoute,
                         'title'       => 'Dashboard',
                     ],
-                    'Milestone'   => [
+                    'Milestone' => [
                         'type'        => 'ajax',
                         'name'        => 'Milestone',
                         'action_link' => $milestoneRoute,
                         'title'       => 'Milestone',
                     ],
-                    'Task'   => [
+                    'Task'      => [
                         'type'        => 'ajax',
                         'name'        => 'Task',
                         'action_link' => $taskRoute,
                         'title'       => 'Task',
                     ],
-                    'File'   => [
+                    'File'      => [
                         'type'        => 'ajax',
                         'name'        => 'File',
                         'action_link' => $fileRoute,
@@ -214,18 +214,18 @@ class ServerSideDataController extends Controller
                         'action_link' => $invoiceRoute,
                         'title'       => 'Invoice',
                     ],
-                    'Timesheet'   => [
+                    'Timesheet' => [
                         'type'        => 'ajax',
                         'name'        => 'Timesheet',
                         'action_link' => $timesheetRoute,
                         'title'       => 'Timesheet',
                     ],
-                    'Gantt'   => [
+                    'Gantt'     => [
                         'type'        => 'ajax',
                         'name'        => 'Gantt Chart',
                         'action_link' => $ganttRoute,
                         'title'       => 'Gantt Chart',
-                    ]
+                    ],
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
@@ -436,6 +436,11 @@ class ServerSideDataController extends Controller
                 return 'context-menu';
             })
             ->with('filter_count', count($filter_count))
+            // if ($query->count() === 0) {
+            //     $noDataHtml = view('no-data')->render();
+            //     return $dataTable->with('no_data', $noDataHtml)->make(true);
+            // }
+            // return $dataTable
             ->make(true);
     }
 
@@ -607,22 +612,21 @@ class ServerSideDataController extends Controller
                 $q->where('timestamp_end', '<=', $end_date);
             });
         }
-        if($type != 'all') {
+        if ($type != 'all') {
             $filter_count[] = $type;
             $query->where('extension', $type);
         }
-        if($uploaded_by != 'all') {
+        if ($uploaded_by != 'all') {
             $filter_count[] = $uploaded_by;
             $query->where('user_id', $uploaded_by);
         }
         if ($size !== 'all') {
-            $filter_count[] = $size;
+            $filter_count[]          = $size;
             list($minSize, $maxSize) = explode('|', $size);
-            $minSize = (float)$minSize;
-            $maxSize = (float)$maxSize;
+            $minSize                 = (float) $minSize;
+            $maxSize                 = (float) $maxSize;
             $query->whereBetween('size', [$minSize, $maxSize]);
         }
-        
 
         return datatables()
             ->eloquent($query)
@@ -807,7 +811,8 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function timesheet_server_side($project_code, $string, $start_date, $end_date, $user) {
+    public function timesheet_server_side($project_code, $string, $start_date, $end_date, $user)
+    {
         $query = Timesheet::query();
         $query->where('project_id', project_id_by_code($project_code));
         if (!empty($string)) {
@@ -849,7 +854,7 @@ class ServerSideDataController extends Controller
             })
             ->addColumn('user', function ($time) {
                 $user = User::where('id', $time->staff)->first();
-                if($user) {
+                if ($user) {
                     return $user->name;
                 } else {
                     return '';
@@ -857,11 +862,11 @@ class ServerSideDataController extends Controller
             })
             ->addColumn('hours', function ($time) {
                 $start_time = strtotime($time->timestamp_start);
-                $end_time = strtotime($time->timestamp_end);
-                $hours = round(($end_time - $start_time) / 3600, 2);
-                return $hours.' '.get_phrase('Hours');
+                $end_time   = strtotime($time->timestamp_end);
+                $hours      = round(($end_time - $start_time) / 3600, 2);
+                return $hours . ' ' . get_phrase('Hours');
             })
-            
+
             ->addColumn('to', function ($time) {
                 return date('d-M-y h:i A', strtotime($time->timestamp_end));
             })
@@ -891,24 +896,24 @@ class ServerSideDataController extends Controller
                 $deleteRoute = route(get_current_user_role() . '.timesheet.delete', $time->id);
                 // Generate the context menu
                 $contextMenu = [
-                    'Edit' => [
-                        'type' => 'ajax',
-                        'name' => 'Edit',
+                    'Edit'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Edit',
                         'action_link' => $editRoute,
-                        'title' => 'Edit meeting'
+                        'title'       => 'Edit meeting',
                     ],
                     'Delete' => [
-                        'type' => 'ajax',
-                        'name' => 'Delete',
+                        'type'        => 'ajax',
+                        'name'        => 'Delete',
                         'action_link' => $deleteRoute,
-                        'title' => 'Delete meeting'
-                    ]
+                        'title'       => 'Delete meeting',
+                    ],
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id","title","user","from","hours","to","options"])
+            ->rawColumns(["id", "title", "user", "from", "hours", "to", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -916,7 +921,8 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function invoice_server_side($project_code, $string, $date) {
+    public function invoice_server_side($project_code, $string, $date)
+    {
         $query = Payment::query();
         $query->where('project_id', project_id_by_code($project_code));
         if (!empty($string)) {
@@ -953,8 +959,8 @@ class ServerSideDataController extends Controller
             })
             ->addColumn('options', function ($invoice) {
                 // Generate routes dynamically .milestone.edit', $milestone->id
-                $editRoute   = route(get_current_user_role() . '.invoice.edit', $invoice->id);
-                $deleteRoute = route(get_current_user_role() . '.invoice.delete', $invoice->id);
+                $editRoute    = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $deleteRoute  = route(get_current_user_role() . '.invoice.delete', $invoice->id);
                 $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -963,7 +969,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="'.$invoiceRoute.'">' . get_phrase('Invoice') . '</a>
+                            <a class="dropdown-item" href="' . $invoiceRoute . '">' . get_phrase('Invoice') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
@@ -976,35 +982,35 @@ class ServerSideDataController extends Controller
             ';
             })
             ->addColumn('context_menu', function ($invoice) {
-                $editRoute   = route(get_current_user_role() . '.invoice.edit', $invoice->id);
-                $deleteRoute = route(get_current_user_role() . '.invoice.delete', $invoice->id);
+                $editRoute    = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $deleteRoute  = route(get_current_user_role() . '.invoice.delete', $invoice->id);
                 $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
                 // Generate the context menu
                 $contextMenu = [
                     'Invoice' => [
-                        'type' => 'url',
-                        'name' => 'Invoice',
+                        'type'        => 'url',
+                        'name'        => 'Invoice',
                         'action_link' => $invoiceRoute,
-                        'title' => 'View Invoice'
+                        'title'       => 'View Invoice',
                     ],
-                    'Edit' => [
-                        'type' => 'ajax',
-                        'name' => 'Edit',
+                    'Edit'    => [
+                        'type'        => 'ajax',
+                        'name'        => 'Edit',
                         'action_link' => $editRoute,
-                        'title' => 'Edit meeting'
+                        'title'       => 'Edit meeting',
                     ],
-                    'Delete' => [
-                        'type' => 'ajax',
-                        'name' => 'Delete',
+                    'Delete'  => [
+                        'type'        => 'ajax',
+                        'name'        => 'Delete',
                         'action_link' => $deleteRoute,
-                        'title' => 'Delete meeting'
-                    ]
+                        'title'       => 'Delete meeting',
+                    ],
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id","title","payment","time","options"])
+            ->rawColumns(["id", "title", "payment", "time", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -1012,7 +1018,8 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function addon_server_side($string) {
+    public function addon_server_side($string)
+    {
         $query = Addon::query();
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
@@ -1042,8 +1049,8 @@ class ServerSideDataController extends Controller
             })
             ->addColumn('options', function ($invoice) {
                 // Generate routes dynamically .milestone.edit', $milestone->id
-                $editRoute   = route(get_current_user_role() . '.invoice.edit', $invoice->id);
-                $deleteRoute = route(get_current_user_role() . '.invoice.delete', $invoice->id);
+                $editRoute    = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $deleteRoute  = route(get_current_user_role() . '.invoice.delete', $invoice->id);
                 $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -1052,7 +1059,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="'.$invoiceRoute.'">' . get_phrase('Invoice') . '</a>
+                            <a class="dropdown-item" href="' . $invoiceRoute . '">' . get_phrase('Invoice') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
@@ -1065,29 +1072,29 @@ class ServerSideDataController extends Controller
             ';
             })
             ->addColumn('context_menu', function ($invoice) {
-                $editRoute   = route(get_current_user_role() . '.invoice.edit', $invoice->id);
-                $deleteRoute = route(get_current_user_role() . '.invoice.delete', $invoice->id);
+                $editRoute    = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $deleteRoute  = route(get_current_user_role() . '.invoice.delete', $invoice->id);
                 $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
                 // Generate the context menu
                 $contextMenu = [
-                    'Edit' => [
-                        'type' => 'ajax',
-                        'name' => 'Edit',
+                    'Edit'   => [
+                        'type'        => 'ajax',
+                        'name'        => 'Edit',
                         'action_link' => $editRoute,
-                        'title' => 'Edit meeting'
+                        'title'       => 'Edit meeting',
                     ],
                     'Delete' => [
-                        'type' => 'ajax',
-                        'name' => 'Delete',
+                        'type'        => 'ajax',
+                        'name'        => 'Delete',
                         'action_link' => $deleteRoute,
-                        'title' => 'Delete meeting'
-                    ]
+                        'title'       => 'Delete meeting',
+                    ],
                 ];
 
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id","name","version","status","options"])
+            ->rawColumns(["id", "name", "version", "status", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -1101,10 +1108,11 @@ class ServerSideDataController extends Controller
         return datatables()
             ->eloquent($query)
             ->addColumn('id', function ($payment) {
+                static $key = 1;
                 return '
             <div class="d-flex align-items-center">
                 <input type="checkbox" class="checkbox-item me-2 table-checkbox">
-                <p class="row-number fs-12px">' . $payment->id . '</p>
+                <p class="row-number fs-12px">' . $key++ . '</p>
                 <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
             </div>';
             })
@@ -1227,9 +1235,10 @@ class ServerSideDataController extends Controller
         return datatables()
             ->eloquent($query)
             ->addColumn('id', function ($payment) {
+                static $key = 1;
                 return '        <div class="d-flex align-items-center">
                                     <input type="checkbox" class="checkbox-item me-2 table-checkbox">
-                                    <p class="row-number fs-12px">' . $payment->id . '</p>
+                                    <p class="row-number fs-12px">' . $key++ . '</p>
                                     <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
                                 </div>';
             })

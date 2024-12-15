@@ -111,7 +111,7 @@
                     </div>
                     <div class="col-md-6 col-lg-5">
                         <div class="login-form-wrap">
-                            <form class="form" method="POST" action="{{ route('login') }}">
+                            <form class="form" method="POST" action="{{ route('login') }}" id="ajaxForm">
                                 @csrf
                                 <h1 class="title fs-36px mb-20px">{{ get_phrase('Log in') }}</h1>
                                 <p class="sub-title3 fs-15px mb-30px">
@@ -138,7 +138,7 @@
                                             {{ get_phrase('Remember me') }}
                                         </label>
                                     </div>
-                                    <a href="{{ route('password.request') }}">{{ get_phrase('Forget Password?') }}</a>
+                                    <a href="{{ route('password.request') }}">{{ get_phrase('Forgot Password?') }}</a>
                                 </div>
                                 <button type="submit" class="btn ol2-btn-primary w-100 mb-3">{{ get_phrase('Log in') }}</button>
                             </form>
@@ -155,3 +155,4 @@
 </body>
 
 </html>
+@include('toastr')

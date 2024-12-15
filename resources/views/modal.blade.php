@@ -1,10 +1,10 @@
 <div class="placeholder-content d-none">
     <div class="d-flex justify-content-center align-items-center">
         <div class="spinner-border text-primary spinner-border-lg" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">{{ get_phrase('Loading...') }}</span>
         </div>
     </div>
-    <p class="py-4 text-center">Loading please wait...</p>
+    <p class="py-4 text-center">{{ get_phrase('Loading please wait...') }}</p>
 </div>
 
 
@@ -148,7 +148,7 @@
                             table.ajax.reload();
                         }, 1000);
                         processServerResponse(response);
-                        setTimeout(function(){
+                        setTimeout(function() {
                             if (window.location.pathname.includes('/admin/events')) {
                                 location.reload();
                             }
@@ -227,59 +227,5 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-    </div>
-</div>
-
-
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasRightLabel">AI Assistant</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <form class="aiAjaxFormSubmission" action="#open-ai/generate" method="post">
-            <input type="hidden" name="_token" value="UQzRLXQ0TGBRQpRQXL94kNkAK4juUyIyQ4hYVMsN" autocomplete="off">
-            <div class="mb-3">
-                <label class="form-label ol-form-label" for="ai_service_selector">Select your service</label>
-                <select class="ol-select2" id="ai_service_selector" name="service_type" onchange="if(this.value == 'Course thumbnail'){$('#aiLanguageField').hide()}else{$('#aiLanguageField').show()}">
-                    <option value="Course title" data-select2-id="2">Course title</option>
-                    <option value="Course short description">Course short description</option>
-                    <option value="Course short description">Course long description</option>
-                    <option value="Course requirements">Course requirements</option>
-                    <option value="Course outcomes">Course outcomes</option>
-                    <option value="Course FAQ">Course faq</option>
-                    <option value="Course SEO Tags">Course seo tags</option>
-                    <option value="Course lesson text">Course lesson text</option>
-                    <option value="Course certificate text">Course certificate text</option>
-                    <option value="Course quiz text">Course quiz text</option>
-                    <option value="Course blog title">Course blog title</option>
-                    <option value="Course blog post">Course blog post</option>
-                    <option value="Course thumbnail">Course thumbnail</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label ol-form-label" for="ai_keywords">Enter your keyword</label>
-                <input type="text" class="form-control ol-form-control" id="ai_keywords" name="ai_keywords">
-            </div>
-
-            <div class="mb-3" id="aiLanguageField">
-                <label class="form-label ol-form-label" for="language">Language</label>
-                <select class="ol-select2" name="language">
-                    <option value="english" class="text-capitalize">English</option>
-                    <option value="hindi" class="text-capitalize">Hindi</option>
-                    <option value="spanish" class="text-capitalize">Spanish</option>
-                </select>
-            </div>
-
-            <button type="submit" id="aiSubmissionBtn" class="btn ol-btn-primary w-100">Generate</button>
-        </form>
-
-        <div class="row mt-3">
-            <div class="col-md-12">
-                <h5 id="aiResultHeader"></h5>
-                <div id="aiGeneratedText" contenteditable="true"></div>
-            </div>
-        </div>
     </div>
 </div>

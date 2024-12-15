@@ -571,11 +571,17 @@ span[class="fi-rr-"]:before {
     text-align: center;
     width: max-content;
 }
+.ol-btn-primary path {
+    transition: 0.3s;
+}
+.ol-btn-primary:hover path {
+    stroke: #ffffff !important;
+}
 
 .ol-btn-primary:active,
 .ol-btn-primary:hover {
-    color: var(--active-color) !important;
-    background-color: var(--btn-hover-color) !important;
+    background: #3291ff !important;
+    color: #ffffff !important;
 }
 
 /* Light button  */
@@ -584,6 +590,19 @@ span[class="fi-rr-"]:before {
     padding: 8px 12px;
     background: #f7f7f9;
     color: #212534;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    transition: 0.3s;
+    border: none;
+    text-align: center;
+    width: max-content;
+}
+#export-btn1 .ol-btn-light {
+    border-radius: 6px;
+    padding: 8px 12px;
+    background: #f7f7f9;
+    color: #6d718c;
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.01em;
@@ -4828,6 +4847,14 @@ div.dt-container .dt-processing,
 div.dt-container .dt-paging {
     color: inherit;
 }
+
+@media all and (max-width: 767px) {
+    div.dt-container div.dt-layout-row div.dt-layout-cell.dt-layout-end {
+        justify-content: flex-end !important;
+        display: flex !important;
+        margin-left: auto !important;
+    }
+}
 .dt-layout-row .dt-layout-cell .dt-info {
     display: none;
 }
@@ -5280,16 +5307,15 @@ div.dt-container .dt-paging {
 }
 
 .note-toolbar {
-    background-color: var(--input-background);
+    background-color: #f7f7f9;
     border-color: var(--line-color);
 }
 
 .note-toolbar .note-btn {
-    background-color: var(--hover-background-color);
-    color: var(--active-color);
-    border-radius: 8px;
-    border: 1px solid var(--hover-background-color);
-    border-radius: 8px;
+    background-color: white;
+    color: #212534;
+    border: 1px solid #ededed;
+    border-radius: 4px;
     transition: 0.3s;
 }
 
@@ -5298,9 +5324,9 @@ div.dt-container .dt-paging {
 .note-btn:active,
 .note-btn:focus,
 .note-btn:hover {
-    background-color: var(--active-color);
+    background-color: #ebf4ff;
     border: 1px solid var(--active-color);
-    color: var(--white-color);
+    color: #1b84ff;
 }
 
 .note-editor .note-toolbar .note-color .dropdown-toggle,

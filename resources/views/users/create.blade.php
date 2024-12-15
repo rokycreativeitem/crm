@@ -29,10 +29,21 @@
                             @endforeach
                         </div>
                     </div>
-                    <div class="fpb7 mb-2">
+                    {{-- <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="photo">{{ get_phrase('Photo') }}</label>
                         <input class="form-control ol-form-control" type="file" id="photo" name="photo">
+                        <div id="preview-container" class="mt-2">
+                            <img id="preview" src="" alt="Preview" style="display: none; max-width: 100%; height: auto; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">
+                        </div>
+                    </div> --}}
+                    <div class="fpb-7 mb-3">
+                        <label class="form-label ol-form-label" for="smtp_file">{{ get_phrase('Photo') }}</label>
+                        <input class="form-control ol-form-control" type="file" id="smtp_file" name="smtp_file" accept="image/*">
+                        <div id="preview-container" class="mt-2">
+                            <img id="preview" src="" alt="Preview" style="display: none; max-width: 100%; height: auto; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">
+                        </div>
                     </div>
+
                     <div class="fpb7 mb-2">
                         <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Add user') }}</button>
                     </div>
@@ -44,3 +55,26 @@
 
 @include('script')
 @include('ajax')
+
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('smtp_file').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                const preview = document.getElementById('preview');
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+            });
+        });
+    </script>
+@endpush

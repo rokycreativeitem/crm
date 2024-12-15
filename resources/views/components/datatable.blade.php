@@ -59,6 +59,13 @@
             }
         });
 
+        // $('.server-side-datatable').on('xhr.dt', function(e, settings, json) {
+        //     if (json.no_data) {
+        //         $('#server_side_table_wrapper').html(json.no_data);
+        //     }
+        // });
+
+
         $('.server-side-datatable tbody').on('contextmenu', 'tr', function(e) {
             e.preventDefault();
             e.stopPropagation();

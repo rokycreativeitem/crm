@@ -47,69 +47,65 @@
         </div>
 
 
-
-        <a href="#" class="list text-18px d-inline-flex" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-            <span class="d-block h-100 w-100" data-bs-toggle="tooltip" data-bs-placement="bottom" title="AI Assistant">
-                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0" viewBox="0 0 64 64" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
-                    <g>
-                        <g fill="#424242">
-                            <path
-                                d="M36.5 20C27.953 20 21 13.047 21 4.5a.5.5 0 0 0-1 0C20 13.047 13.047 20 4.5 20a.5.5 0 0 0 0 1C13.047 21 20 27.953 20 36.5a.5.5 0 0 0 1 0C21 27.953 27.953 21 36.5 21a.5.5 0 0 0 0-1zM60 34.5a.5.5 0 0 0-.5-.5C52.607 34 47 28.393 47 21.5a.5.5 0 0 0-1 0C46 28.393 40.393 34 33.5 34a.5.5 0 0 0 0 1C40.393 35 46 40.607 46 47.5a.5.5 0 0 0 1 0C47 40.607 52.607 35 59.5 35a.5.5 0 0 0 .5-.5zM38 49.5a.5.5 0 0 0-.5-.5c-5.238 0-9.5-4.262-9.5-9.5a.5.5 0 0 0-1 0c0 5.238-4.262 9.5-9.5 9.5a.5.5 0 0 0 0 1c5.238 0 9.5 4.262 9.5 9.5a.5.5 0 0 0 1 0c0-5.238 4.262-9.5 9.5-9.5a.5.5 0 0 0 .5-.5z"
-                                fill="#424242" opacity="1" data-original="#424242" class=""></path>
-                        </g>
-                    </g>
-                </svg>
-            </span>
-        </a>
-
-
         <div class="dropdown ol-icon-dropdown ol-icon-dropdown-transparent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Help center">
             <button class="btn ol-btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fi-rr-messages-question text-20px"></i>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_1182_7818)">
+                        <path
+                            d="M13.7832 6.61386H13.7436V5.64356C13.7436 2.52671 11.217 0 8.10007 0C4.98318 0 2.4565 2.52671 2.4565 5.64356V6.61386H2.2189C1.3476 6.61386 0.674343 7.38612 0.674343 8.27724V10.7525C0.652398 11.6162 1.33479 12.3341 2.19847 12.356C2.20529 12.3562 2.21207 12.3563 2.2189 12.3564H3.68423C3.89179 12.3467 4.05215 12.1705 4.04237 11.9629C4.04203 11.9555 4.04146 11.948 4.04067 11.9406V7.08908C4.04067 6.85147 3.90206 6.61382 3.68423 6.61382H3.24859V5.64353C3.24859 2.96414 5.42068 0.792042 8.10007 0.792042C10.7795 0.792042 12.9515 2.96414 12.9515 5.64353V6.61382H12.5159C12.2981 6.61382 12.1595 6.85143 12.1595 7.08908V11.9406C12.1374 12.1472 12.2869 12.3326 12.4935 12.3547C12.501 12.3555 12.5084 12.356 12.5159 12.3564H12.9713L12.9317 12.4158C12.3375 13.2055 11.4051 13.668 10.4169 13.6633C10.2005 12.6024 9.16512 11.9178 8.10427 12.1342C7.19708 12.3192 6.54301 13.1137 6.53569 14.0395C6.54653 15.1254 7.42996 16 8.51589 15.9999C9.05346 15.9912 9.56586 15.7706 9.94162 15.3861C10.1951 15.1264 10.3613 14.7941 10.4169 14.4355C11.6545 14.4402 12.8216 13.8603 13.5654 12.8712L13.9416 12.3167C14.7931 12.2573 15.3278 11.7227 15.3278 10.9504V8.47516C15.3278 7.62376 14.6941 6.61386 13.7832 6.61386ZM3.24859 11.5643H2.2189C1.7925 11.554 1.45524 11.1999 1.46563 10.7735C1.46582 10.7665 1.46608 10.7595 1.46642 10.7524V8.2772C1.46642 7.82177 1.78325 7.4059 2.2189 7.4059H3.24859V11.5643ZM9.3674 14.8317C9.14795 15.0696 8.83962 15.2059 8.51593 15.2079C7.87167 15.1977 7.34885 14.6836 7.32781 14.0396C7.32754 13.3943 7.85041 12.8711 8.49565 12.8708C9.1409 12.8705 9.66418 13.3934 9.66444 14.0386C9.66444 14.0389 9.66444 14.0393 9.66444 14.0396C9.68093 14.3336 9.57314 14.621 9.3674 14.8317ZM14.5357 10.9505C14.5357 11.4851 14.0208 11.5643 13.7832 11.5643H12.9515V7.40594H13.7832C14.2189 7.40594 14.5357 8.0198 14.5357 8.47524V10.9505Z"
+                            fill="#6D718C" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_1182_7818">
+                            <rect width="16" height="16" fill="white" />
+                        </clipPath>
+                    </defs>
+                </svg>
+
             </button>
 
             <ul class="dropdown-menu dropdown-menu-end">
                 <div class="p-2">
-                    <h5 class="title text-14px">Help center</h6>
+                    <h5 class="title text-14px">{{ get_phrase('Help center') }}</h6>
                 </div>
                 <li>
                     <a href="https://creativeitem.com/docs/academy-lms" target="_blank" class="dropdown-item">
                         <i class="fi-rr-document-signed"></i>
-                        <span>Read documentation</span>
+                        <span>{{ get_phrase('Read documentation') }}</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="https://www.youtube.com/watch?v=-HHhJUGQPeU&list=PLR1GrQCi5Zqvhh7wgtt-ShMAM1RROYJgE" target="_blank" class="dropdown-item">
                         <i class="fi-rr-video-arrow-up-right"></i>
-                        <span>Watch video tutorial</span>
+                        <span>{{ get_phrase('Watch video tutorial') }}</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="https://support.creativeitem.com" target="_blank" class="dropdown-item">
                         <i class="fi-rr-envelope-plus"></i>
-                        <span>Get customer support</span>
+                        <span>{{ get_phrase('Get customer support') }}</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="https://support.creativeitem.com" target="_blank" class="dropdown-item">
                         <i class="fi-rr-box-up"></i>
-                        <span>Order customization</span>
+                        <span>{{ get_phrase('Order customization') }}</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="https://support.creativeitem.com" target="_blank" class="select-text text-capitalize">
                         <i class="fi-rr-add"></i>
-                        <span>Request a new feature</span>
+                        <span>{{ get_phrase('Request a new feature') }}</span>
                     </a>
                 </li>
                 <li>
                     <a href="https://creativeitem.com/services" target="_blank" class="text-premium select-text text-capitalize d-flex align-items-center">
                         <i class="fi-rr-settings-sliders me-1"></i>
-                        <span>Get Services</span>
+                        <span>{{ get_phrase('Get Services') }}</span>
                         <i class="fi-rr-crown ms-auto"></i>
                     </a>
                 </li>
@@ -131,7 +127,6 @@
                     </div>
                     <div>
                         <h6 class="title fs-12px mb-2px">{{ $my_data->name }}</h6>
-                        <p class="sub-title fs-12px">Admin</p>
                     </div>
                 </div>
                 <ul class="mb-12px pb-12px ol-border-bottom-2">
@@ -140,7 +135,7 @@
                     <li class="dropdown-list-1"><a class="dropdown-item-1" href="#system_settings">{{ get_phrase('Settings') }}</a>
                     </li>
                 </ul>
-                <a href="{{route('logout')}}" class="dropdown-item-1 bg-transparent d-inline-flex">{{ get_phrase('Sign Out') }}</a>
+                <a href="{{ route('logout') }}" class="dropdown-item-1 bg-transparent d-inline-flex">{{ get_phrase('Sign Out') }}</a>
             </div>
         </div>
     </div>

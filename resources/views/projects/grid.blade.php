@@ -281,7 +281,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-4"> <!-- Changed to mt-4 for better Bootstrap spacing -->
+                                <div class="mt-4">
                                     <div class="d-flex justify-content-between mb-1">
                                         <span class="text-muted">{{ get_phrase('Progress') }}</span>
                                         <span class="text-muted">{{ $project->progress }}%</span>
@@ -309,7 +309,7 @@
 
                     <div class="d-flex justify-content-between align-items-center d-lpaginate">
                         <div class="page-length-select fs-12px d-flex align-items-center mt-3 w-260">
-                            <label for="page-length-select" class="pe-2">Showing:</label>
+                            <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
                             <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
                                 <option value="10" {{ $page_item == 10 ? 'selected' : '' }}>10</option>
                                 <option value="20" {{ $page_item == 20 ? 'selected' : '' }}>20</option>

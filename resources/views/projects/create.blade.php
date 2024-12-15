@@ -25,7 +25,7 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="category_id">{{ get_phrase('Category') }}</label>
-                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" name="category_id" required>
+                        <select class="form-control ol-form-control ol-select2" name="category_id" required>
                             <option value=""> {{ get_phrase('select category') }} </option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -63,10 +63,6 @@
                         <label class="form-label ol-form-label" for="progress">{{ get_phrase('Progress') }}</label>
                         <input type="number" class="form-control" id="progress" name="progress" placeholder="Enter progress in %" required>
                     </div>
-                    <div class="slidecontainer">
-                        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-                    </div>
-
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="note">{{ get_phrase('Note') }}</label>
                         <textarea class="form-control ol-form-control" id="note" name="note" required></textarea>
@@ -78,21 +74,6 @@
                             <option value="">{{ get_phrase('Select Privacy') }}</option>
                             <option value="public">{{ get_phrase('Public') }}</option>
                             <option value="private">{{ get_phrase('Private') }}</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <select class="">
-                            <option value="English">English</option>
-                            <option value="Hindi">Hindi</option>
-                            <option value="Urdu">Urdu</option>
-                        </select>
-                    </div>
-                    <!-- Select with Search -->
-                    <div class="mb-3">
-                        <select class="">
-                            <option value="English">English</option>
-                            <option value="Hindi">Hindi</option>
-                            <option value="Urdu">Urdu</option>
                         </select>
                     </div>
                     <div class="fpb7 mb-2">

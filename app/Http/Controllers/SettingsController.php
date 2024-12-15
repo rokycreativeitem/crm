@@ -235,9 +235,8 @@ class SettingsController extends Controller
             } else {
                 $page_data['tab'] = 'smtp-settings';
             }
-            return response()->json([
-                'success' => 'SMTP setting update successfully.',
-            ]);
+            return redirect()->back()->with('success', get_phrase('SMTP setting update successfully.'));
+
         }
         if ($param1 == 'edit_email_template') {
             array_shift($data);

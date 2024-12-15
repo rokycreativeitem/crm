@@ -6,6 +6,7 @@ use App\Http\Middleware\CheckRolePermissionMiddleware;
 use App\Http\Middleware\ClientMiddleware;
 use App\Http\Middleware\RedirectIfMiddleware;
 use App\Http\Middleware\StaffMiddleware;
+use App\Http\Middleware\WebConfig;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'staff'            => StaffMiddleware::class,
             'redirect'         => RedirectIfMiddleware::class,
             'check.permission' => CheckPermissionMiddleware::class,
+            'web_config'       => WebConfig::class,
         ]);
 
     })

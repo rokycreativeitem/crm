@@ -14,9 +14,13 @@
                     <div class="fpb-7 mb-2">
                         <label class="form-label ol-form-label" for="role_id">{{ get_phrase('User Type') }}</label>
                         <div class="d-flex flex-row flex-wrap align-items-center">
+                            @php
+                                $roles = App\Models\Role::all();
+                                $user_roles = is_array($user->role_id) ? $user->role_id : [$user->role_id];
+                            @endphp
                             @foreach ($roles as $role)
                                 <div class="form-check me-3">
-                                    <input type="checkbox" class="form-check-input" id="role_{{ $role->id }}" name="role[]" value="{{ $role->id }}" @if (in_array($role->id, $user_roles)) checked @endif>
+                                    <input type="checkbox" class="form-check-input" id="role_{{ $role->id }}" name="role[]" value="{{ $role->id }}" {{ in_array($role->id, $user_roles) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="role_{{ $role->id }}">
                                         {{ $role->title }}
                                     </label>

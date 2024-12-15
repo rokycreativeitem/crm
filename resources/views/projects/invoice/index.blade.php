@@ -10,9 +10,9 @@
                         <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
                             <h4 class="title fs-16px">
                                 <i class="fi-rr-settings-sliders me-2"></i>
-                                {{ get_phrase('Manage') }}
+                                {{ get_phrase('Manage invoice') }}
                             </h4>
-                            <input type="hidden" value="{{request()->route()->parameter('code')}}" name="project_id">
+                            <input type="hidden" value="{{ request()->route()->parameter('code') }}" name="project_id">
                             <div class="top-bar d-flex align-items-center">
                                 <div class="input-group dt-custom-search">
                                     <span class="input-group-text">
@@ -51,7 +51,7 @@
                                                 {{ get_phrase('Print') }}</a>
                                         </li>
                                     </ul>
-                                    
+
                                 </div>
 
                                 <div class="custom-dropdown dropdown filter-dropdown btn-group" id="export-btn">
@@ -68,22 +68,22 @@
                                         <span class="filter-count-display d-none" id="filter-count-display"></span>
                                     </button>
 
-                                    <a href="javascript:void(0)" class="border-0 filter-reset d-none d-flex align-items-center" id="filter-reset"> 
+                                    <a href="javascript:void(0)" class="border-0 filter-reset d-none d-flex align-items-center" id="filter-reset">
                                         <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7 6.99927L1.00141 1.00068" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round"/>
-                                            <path d="M1 6.99936L6.99859 1.00077" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round"/>
+                                            <path d="M7 6.99927L1.00141 1.00068" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
+                                            <path d="M1 6.99936L6.99859 1.00077" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
                                         </svg>
-                                            
+
                                         <span>|</span>
                                     </a>
-                                        
+
                                     <!-- Dropdown Menu -->
                                     <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
-                                       
+
                                         <!-- start date -->
                                         <div class="mb-3">
                                             <label for="start_date" class="form-label">{{ get_phrase('Invoice Date') }}</label>
-                                            <input type="datetime-local" name="start_date" id="start_date" placeholder="{{get_phrase('Start date')}}" class="form-control fs-14px">
+                                            <input type="datetime-local" name="start_date" id="start_date" placeholder="{{ get_phrase('Start date') }}" class="form-control fs-14px">
                                         </div>
 
                                         <!-- Apply Button -->
@@ -92,7 +92,7 @@
                                         </div>
                                     </div>
                                 </div>
-                          
+
                                 <button onclick="rightCanvas('{{ route(get_current_user_role() . '.invoice.create', ['code' => request()->route()->parameter('code')]) }}', 'Create Invoice')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
                                     <span class="fi-rr-plus"></span>
                                     <span>{{ get_phrase('Add new') }}</span>
@@ -103,32 +103,36 @@
                 </div>
 
                 <!-- DataTable -->
-                <table class="table server-side-datatable" id="project_list">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="d-flex align-items-center">
-                                <input type="checkbox" id="select-all" class="me-2 table-checkbox">
-                                <span> # </span>
-                            </th>
-                            <th scope="col">{{ get_phrase('Title') }}</th>
-                            <th scope="col">{{ get_phrase('Payment') }}</th>
-                            <th scope="col">{{ get_phrase('Time') }}</th>
-                            <th scope="col" class="d-flex justify-content-center print-d-none">{{ get_phrase('Options') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- DataTable will populate this -->
-                    </tbody>
-                </table>
-                <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
-                    <label for="page-length-select" class="pe-2">{{get_phrase('Showing')}}:</label>
-                    <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
-                        <option value="10" selected>10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <label for="page-length-select" class="ps-2 w-100"> {{get_phrase('of').' '.count($payments) }}</label>
+                <div class="table-responsive">
+                    <table class="table server-side-datatable" id="project_list">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="d-flex align-items-center">
+                                    <input type="checkbox" id="select-all" class="me-2 table-checkbox">
+                                    <span> # </span>
+                                </th>
+                                <th scope="col">{{ get_phrase('Title') }}</th>
+                                <th scope="col">{{ get_phrase('Payment') }}</th>
+                                <th scope="col">{{ get_phrase('Time') }}</th>
+                                <th scope="col" class="d-flex justify-content-center print-d-none">{{ get_phrase('Options') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- DataTable will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-none d-lg-block">
+                    <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
+                        <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
+                        <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <label for="page-length-select" class="ps-2 w-100"> {{ get_phrase('of') . ' ' . count($payments) }}</label>
+                    </div>
                 </div>
 
                 <input type="hidden" value="payment" id="datatable_type">
@@ -148,12 +152,12 @@
     <script>
         const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search__field');
         dropdownItems.forEach(item => {
-            item.addEventListener('click', function (e) {
-                e.stopPropagation(); 
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
             });
         });
         setTimeout(function() {
-            server_side_datatable('["id","title","payment","time","options"]', "{{ route(get_current_user_role() . '.invoice',) }}");
+            server_side_datatable('["id","title","payment","time","options"]', "{{ route(get_current_user_role() . '.invoice') }}");
         }, 500);
     </script>
 @endpush

@@ -23,13 +23,21 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
+
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
-        $request->session()->regenerate();
+        try {
+            $request->authenticate();
+            $request->session()->regenerate();
 
-        $role = Role::where('id', Auth::user()->role_id)->value('title');
-        return redirect()->intended(route($role . '.dashboard', [], false));
+            $role = Role::where('id', Auth::user()->role_id)->value('title');
+
+            return redirect()->intended(route($role . '.dashboard', [], false))
+                ->with('success', 'Login successful!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Login failed! Please check your credentials.');
+        }
     }
 
     /**
@@ -43,6 +51,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/')->with('success', 'You have been logged out successfully.');
     }
 }

@@ -43,17 +43,17 @@ return [
             'host'         => env('MAIL_HOST', 'smtp.gmail.com'),
             'port'         => env('MAIL_PORT', 587),
             'encryption'   => env('MAIL_ENCRYPTION', 'tls'),
-            'username'     => env('MAIL_USERNAME', 'bikiroy0707@gmail.com'),
-            'password'     => env('MAIL_PASSWORD', 'qfocuayguxpudcxl'),
+            'username'     => env('MAIL_USERNAME'),
+            'password'     => env('MAIL_PASSWORD'),
             'timeout'      => null,
-            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+            'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
         'ses'        => [
             'transport' => 'ses',
         ],
 
-        'postmark'   => [
+        'mailgun'    => [
             'transport' => 'mailgun',
             // 'message_stream_id' => env('POSTMARK_MESSAGE_STREAM_ID'),
             // 'client' => [
@@ -61,8 +61,11 @@ return [
             // ],
         ],
 
-        'resend'     => [
-            'transport' => 'resend',
+        'postmark'   => [
+            'transport' => 'postmark',
+            // 'client' => [
+            //     'timeout' => 5,
+            // ],
         ],
 
         'sendmail'   => [
@@ -109,8 +112,8 @@ return [
      */
 
     'from'    => [
-        'address' => env('MAIL_FROM_ADDRESS', 'bikiroy0707@gmail.com'),
-        'name'    => env('MAIL_FROM_NAME', 'Biki'),
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@gmail.com'),
+        'name'    => env('MAIL_FROM_NAME', 'Example'),
     ],
 
 ];

@@ -102,7 +102,7 @@
                     </div>
                 </div>
                 <div class="row align-items-center justify-content-end">
-                    <div class="col-md-6 col-lg-7">
+                    <div class="col-md-6 col-lg-7 d-none d-md-block">
                         <div class="pe-lg-4">
                             <div class="login-form-banner ">
                                 <img src="{{ asset('assets/images/login.webp') }}" alt="">
@@ -111,12 +111,10 @@
                     </div>
                     <div class="col-md-6 col-lg-5">
                         <div class="login-form-wrap">
-                            {{-- <x-auth-session-status class="mb-4" :status="session('status')" /> --}}
-
                             @if (!session('status'))
-                                <form class="form" method="POST" action="{{ route('password.email') }}">
+                                <form class="form" method="POST" action="{{ route('password.email') }}" id="ajaxForm">
                                     @csrf
-                                    <h1 class="title fs-36px mb-20px">{{ get_phrase('Forget Password') }}</h1>
+                                    <h1 class="title fs-36px mb-20px">{{ get_phrase('Forgot Password') }}</h1>
                                     <p class="sub-title3 fs-15px mb-30px">
                                         {{ get_phrase('Lost your password? Please enter your email address. You will receive a link to create a new password via email.') }}
                                     </p>
@@ -142,3 +140,4 @@
 </body>
 
 </html>
+@include('toastr')
