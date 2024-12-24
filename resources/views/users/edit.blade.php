@@ -16,11 +16,10 @@
                         <div class="d-flex flex-row flex-wrap align-items-center">
                             @php
                                 $roles = App\Models\Role::all();
-                                $user_roles = is_array($user->role_id) ? $user->role_id : [$user->role_id];
                             @endphp
                             @foreach ($roles as $role)
-                                <div class="form-check me-3">
-                                    <input type="checkbox" class="form-check-input" id="role_{{ $role->id }}" name="role[]" value="{{ $role->id }}" {{ in_array($role->id, $user_roles) ? 'checked' : '' }}>
+                                <div class="radio-check form-check me-3">
+                                    <input type="radio" class="radio-input form-check-input" id="role_{{ $role->id }}" name="role_id" value="{{ $role->id }}" @checked($user->role_id == $role->id)>
                                     <label class="form-check-label" for="role_{{ $role->id }}">
                                         {{ $role->title }}
                                     </label>

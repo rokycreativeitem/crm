@@ -89,14 +89,16 @@ if (!function_exists('get_current_user_role')) {
 }
 
 if (!function_exists('has_permission')) {
-    function has_permission($route) {
-        if(get_current_user_role() == 'admin'){
+    function has_permission($route)
+    {
+        if (get_current_user_role() == 'admin') {
             return true;
-        }elseif ($route) {
+        } elseif ($route) {
             $permission_id = Permission::where('route', $route)->value('id');
-            $role_id = Role::where('id', Auth::user()->role_id)->value('id');
-            $permission = RolePermission::where('role_id', $role_id)->where('permission_id', $permission_id)->first();
-            if($permission) {
+            $role_id       = Role::where('id', Auth::user()->role_id)->value('id');
+            $permission    = RolePermission::where('role_id', $role_id)->where('permission_id', $permission_id)->first();
+
+            if ($permission) {
                 return true;
             } else {
                 return false;
@@ -134,7 +136,7 @@ if (!function_exists('project_id_by_code')) {
 if (!function_exists('get_image')) {
     function get_image($url = null, $optimized = false)
     {
-        
+
         if ($url == null) {
             return asset('uploads/system/placeholder.png');
         }

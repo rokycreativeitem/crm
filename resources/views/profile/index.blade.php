@@ -69,13 +69,9 @@
                             <label class="form-label ol-form-label">{{ get_phrase('Photo') }}
                                 <small>({{ get_phrase('The image size should be any square image') }})</small>
                             </label>
-                            <div class="row align-items-center">
-                                <div class="col-2">
-                                    <img class = "rounded-circle img-thumbnail image-50" src="{{ get_image($auth->photo) }}">
-                                </div>
-                                <div class="col-10">
-                                    <input class="form-control ol-form-control" type="file" id="user_image" name="photo">
-                                </div>
+                            <div class="gap-2 d-flex align-items-center">
+                                <img class = "rounded-circle img-thumbnail image-50" src="{{ get_image($auth->photo) }}">
+                                <input class="form-control ol-form-control w-100" type="file" id="user_image" name="photo">
                             </div>
                         </div>
 

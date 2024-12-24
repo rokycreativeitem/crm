@@ -106,7 +106,7 @@
                 <div class="table-responsive">
                     <table class="table server-side-datatable" id="project_list">
                         <thead>
-                            <tr>
+                            <tr class="context-menu-header">
                                 <th scope="col" class="d-flex align-items-center">
                                     <input type="checkbox" id="select-all" class="me-2 table-checkbox">
                                     <span> # </span>
@@ -131,7 +131,7 @@
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        <label for="page-length-select" class="ps-2 w-100"> {{ get_phrase('of') . ' ' . count($payments) }}</label>
+                        <label for="page-length-select" class="ps-2 w-100"> {{ get_phrase('of') . ' ' . count($invoices) }}</label>
                     </div>
                 </div>
 

@@ -277,42 +277,42 @@
     }
 
     function downloadPDF(elem = ".server-side-datatable", fileName = 'data') {
-    try {
-        $('.print-d-none:not(.row, .ol-header, .ol-card)').addClass('d-none');
-        $('.d-lpaginate').addClass('d-none');
+        try {
+            $('.print-d-none:not(.row, .ol-header, .ol-card)').addClass('d-none');
+            $('.d-lpaginate').addClass('d-none');
 
-        const table = document.querySelector(elem);
-        if (!table) {
-            throw new Error(`Element with selector "${elem}" not found`);
-        }
-
-        const options = {
-            margin: 0.5,
-            filename: fileName,
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2
-            },
-            jsPDF: {
-                unit: 'in',
-                format: 'letter',
-                orientation: 'portrait'
+            const table = document.querySelector(elem);
+            if (!table) {
+                throw new Error(`Element with selector "${elem}" not found`);
             }
-        };
 
-        html2pdf().from(table).set(options).save().then(() => {
-            setTimeout(() => {
-                $('.print-d-none').removeClass('d-none');
-            }, 2000);
-        });
+            const options = {
+                margin: 0.5,
+                filename: fileName,
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'letter',
+                    orientation: 'portrait'
+                }
+            };
 
-    } catch (error) {
-        console.error("Error in downloadPDF function:", error.message);
+            html2pdf().from(table).set(options).save().then(() => {
+                setTimeout(() => {
+                    $('.print-d-none').removeClass('d-none');
+                }, 2000);
+            });
+
+        } catch (error) {
+            console.error("Error in downloadPDF function:", error.message);
+        }
     }
-}
 
 
     function downloadTableAsCSV(elem, filename = 'data.csv') {
@@ -402,5 +402,26 @@
         } else {
             $('#delete-selected').addClass('d-none');
         }
+    }
+
+    function create_permission(permission) {
+        var url = '{{ route(get_current_user_role() . '.store.permissions') }}';
+        var csrfToken = '{{ csrf_token() }}';
+        var role_id = @json(request()->query('role'));
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            data: {
+                role_id: role_id,
+                permission: permission
+            },
+            success: function(response) {
+                processServerResponse(response);
+            }
+        });
     }
 </script>
