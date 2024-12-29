@@ -1,6 +1,5 @@
 @php
     $model = $payment_details['success_method']['model_name'];
-
     if ($model == 'InstructorPayment') {
         $payment_keys = DB::table('users')
             ->where('id', $payment_details['items'][0]['id'])

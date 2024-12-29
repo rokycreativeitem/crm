@@ -58,7 +58,7 @@ class PaymentController extends Controller
             $success_function = $payment_details['success_method']['function_name'];
 
             $model_full_path = str_replace(' ', '', 'App\Models\ ' . $success_model);
-            dd($model_full_path);
+            // dd($model_full_path);
             return $model_full_path::$success_function($identifier);
         } else {
             Session::flash('success', get_phrase('Payment failed! Please try again.'));
@@ -89,42 +89,42 @@ class PaymentController extends Controller
         return view('payment.razorpay.payment', compact('data'));
     }
 
-    // public function payment_paytm(Request $request)
-    // {
-    //     $user    = DB::table('users')->where('id', $request->user)->first();
-    //     $payment = PaytmWallet::with('receive');
-    //     $payment->prepare([
-    //         'order'         => $user->phone . "_" . rand(1, 1000),
-    //         'user'          => auth()->user()->id,
-    //         'mobile_number' => $user->phone,
-    //         'email'         => $user->email,
-    //         'amount'        => $request->amount,
-    //         'callback_url'  => route('payment.status', ['identifier' => 'paytm']),
-    //     ]);
-    //     return $payment->receive();
-    // }
+    public function payment_paytm(Request $request)
+    {
+        $user    = DB::table('users')->where('id', $request->user)->first();
+        $payment = PaytmWallet::with('receive');
+        $payment->prepare([
+            'order'         => $user->phone . "_" . rand(1, 1000),
+            'user'          => auth()->user()->id,
+            'mobile_number' => $user->phone,
+            'email'         => $user->email,
+            'amount'        => $request->amount,
+            'callback_url'  => route('payment.status', ['identifier' => 'paytm']),
+        ]);
+        return $payment->receive();
+    }
 
-    // public function paytm_paymentCallback()
-    // {
-    //     $transaction = PaytmWallet::with('receive');
-    //     $response    = $transaction->response();
-    //     $order_id    = $transaction->getOrderId(); // return a order id
-    //     $transaction->getTransactionId(); // return a transaction id
+    public function paytm_paymentCallback()
+    {
+        $transaction = PaytmWallet::with('receive');
+        $response    = $transaction->response();
+        $order_id    = $transaction->getOrderId(); // return a order id
+        $transaction->getTransactionId(); // return a transaction id
 
-    //     // update the db data as per result from api call
-    //     if ($transaction->isSuccessful()) {
-    //         Paytm::where('order_id', $order_id)->update(['status' => 1, 'transaction_id' => $transaction->getTransactionId()]);
-    //         return redirect(route('initiate.payment'))->with('message', "Your payment is successfull.");
-    //     } else if ($transaction->isFailed()) {
-    //         Paytm::where('order_id', $order_id)->update(['status' => 0, 'transaction_id' => $transaction->getTransactionId()]);
-    //         return redirect(route('initiate.payment'))->with('message', "Your payment is failed.");
-    //     } else if ($transaction->isOpen()) {
-    //         Paytm::where('order_id', $order_id)->update(['status' => 2, 'transaction_id' => $transaction->getTransactionId()]);
-    //         return redirect(route('initiate.payment'))->with('message', "Your payment is processing.");
-    //     }
-    //     $transaction->getResponseMessage(); //Get Response Message If Available
+        // update the db data as per result from api call
+        if ($transaction->isSuccessful()) {
+            Paytm::where('order_id', $order_id)->update(['status' => 1, 'transaction_id' => $transaction->getTransactionId()]);
+            return redirect(route('initiate.payment'))->with('message', "Your payment is successfull.");
+        } else if ($transaction->isFailed()) {
+            Paytm::where('order_id', $order_id)->update(['status' => 0, 'transaction_id' => $transaction->getTransactionId()]);
+            return redirect(route('initiate.payment'))->with('message', "Your payment is failed.");
+        } else if ($transaction->isOpen()) {
+            Paytm::where('order_id', $order_id)->update(['status' => 2, 'transaction_id' => $transaction->getTransactionId()]);
+            return redirect(route('initiate.payment'))->with('message', "Your payment is processing.");
+        }
+        $transaction->getResponseMessage(); //Get Response Message If Available
 
-    // }
+    }
 
     // public function webRedirectToPayFee(Request $request)
     // {

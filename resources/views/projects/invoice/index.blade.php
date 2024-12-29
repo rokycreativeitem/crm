@@ -114,6 +114,7 @@
                                 <th scope="col">{{ get_phrase('Title') }}</th>
                                 <th scope="col">{{ get_phrase('Payment') }}</th>
                                 <th scope="col">{{ get_phrase('Time') }}</th>
+                                <th scope="col">{{ get_phrase('Payment Status') }}</th>
                                 <th scope="col" class="d-flex justify-content-center print-d-none">{{ get_phrase('Options') }}</th>
                             </tr>
                         </thead>
@@ -157,7 +158,7 @@
             });
         });
         setTimeout(function() {
-            server_side_datatable('["id","title","payment","time","options"]', "{{ route(get_current_user_role() . '.invoice') }}");
+            server_side_datatable('["id","title","payment","time","payment_status","options"]', "{{ route(get_current_user_role() . '.invoice') }}");
         }, 500);
     </script>
 @endpush

@@ -32,3 +32,4 @@ Route::middleware('check.permission')->group(function () {
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/payment.php';
+require __DIR__ . '/admin.php';

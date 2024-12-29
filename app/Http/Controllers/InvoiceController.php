@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,11 +38,20 @@ class InvoiceController extends Controller
                 'validationError' => $validator->getMessageBag()->toArray(),
             ]);
         }
+        $user_id = Auth::user()->id;
+        if (DB::table('offline_payments')->where('user_id', $user_id)->exists()) {
+            $payment_status = 'processing';
+        } elseif (DB::table('payment_histories')->where('invoice_id', $request->id)->exists()) {
+            $payment_status = 'paid';
+        } else {
+            $payment_status = 'unpaid';
+        }
 
-        $data['project_id'] = $request->project_id;
-        $data['user_id']    = Auth::user()->id;
-        $data['title']      = $request->title;
-        $data['payment']    = $request->payment;
+        $data['project_id']     = $request->project_id;
+        $data['user_id']        = $user_id;
+        $data['title']          = $request->title;
+        $data['payment']        = $request->payment;
+        $data['payment_status'] = $payment_status;
 
         Invoice::insert($data);
         return response()->json([
@@ -89,32 +99,34 @@ class InvoiceController extends Controller
 
     public function payout($id)
     {
-        // dd('payout');
-        $invoice = Invoice::where('id', $id)->first();
-        $items[] = [
-            'id'    => $invoice->id,
-            'title' => $invoice->title,
-            'price' => $invoice->payment,
+        $invoice         = Invoice::where('id', $id)->first();
+        $payment_purpose = DB::table('payment_purposes')->where('title', 'invoice')->first();
+        $items[]         = [
+            'id'           => $invoice->id,
+            'title'        => $invoice->title,
+            'price'        => $invoice->payment,
+            'project_code' => Project::where('id', $invoice->project_id)->value('code'),
         ];
 
         $payment_details = [
-            'items'          => $items,
+            'items'           => $items,
 
-            'custom_field'   => [
-                'item_type'  => 'invoice',
-                'pay_for'    => 'invoice payment',
+            'custom_field'    => [
+                'item_type'  => $payment_purpose->title,
+                'pay_for'    => $payment_purpose->pay_for,
                 'user_id'    => Auth::user()->id,
                 'user_photo' => Auth::user()->photo,
             ],
 
-            'success_method' => [
-                'model_name'    => 'Invoice',
-                'function_name' => 'payment_invoice',
+            'success_method'  => [
+                'model_name'    => $payment_purpose->model,
+                'function_name' => $payment_purpose->function_name,
             ],
 
-            'payable_amount' => $invoice->payment,
-            'cancel_url'     => route('admin.invoice'),
-            'success_url'    => route('payment.success', ''),
+            'payable_amount'  => $invoice->payment,
+            'payment_purpose' => $payment_purpose->id,
+            'cancel_url'      => route('admin.invoice'),
+            'success_url'     => route('payment.success', ''),
         ];
 
         Session::put(['payment_details' => $payment_details]);

@@ -282,3 +282,16 @@ if (!function_exists('get_task_progress')) {
         return 0;
     }
 }
+
+if (!function_exists('get_invoice_creator_id')) {
+    function get_invoice_creator_id($invoice_id = "")
+    {
+        if ($invoice_id != '') {
+            $invoice = DB::table('invoices')->where('id', $invoice_id)->get();
+            foreach ($invoice as $value) {
+                $creator = App\Models\User::where('id', $value->user_id)->firstOrNew();
+            }
+            return $creator;
+        }
+    }
+}

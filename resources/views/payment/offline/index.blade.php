@@ -24,7 +24,7 @@
         if ($payment_keys != '') {
             if ($payment_gateway->status == 1) {
                 $bank_information = $payment_keys['bank_information'];
-                
+
                 if ($bank_information == '') {
                     $msg = get_phrase("This payment gateway isn't configured.");
                 }
@@ -39,7 +39,7 @@
 
 <div class="row my-5">
     <div class="col-md-12 text-start">
-        {{$bank_information}}
+        {{ $bank_information }}
     </div>
 </div>
 <form action="{{ route('payment.offline.store') }}" method="post" enctype="multipart/form-data">@csrf
@@ -48,9 +48,21 @@
             <span>{{ get_phrase('Payment Document') }}</span>
             <span>{{ get_phrase('(jpg, pdf, txt, png, docx)') }}</span>
         </label>
-        <input type="hidden" name="item_type" value="course" required>
-        <input type="file" name="doc" class="form-control" required>
+        <div class="fpb7 mb-2">
+            <label class="form-label ol-form-label text-start" for="bank_no">{{ get_phrase('Bank no.') }}</label>
+            <input class="form-control ol-form-control" type="number" id="bank_no" name="bank_no" placeholder="{{ get_phrase('Bank no.') }}" required>
+        </div>
+        <div class="fpb7 mb-2">
+            <label class="form-label ol-form-label" for="phone_no">{{ get_phrase('Phone no.') }}</label>
+            <input class="form-control ol-form-control" type="number" id="phone_no" name="phone_no" placeholder="{{ get_phrase('Phone no.') }}" required>
+        </div>
+        <div class="fpb7 mb-2">
+            <label class="form-label ol-form-label" for="doc">{{ get_phrase('Document') }}</label>
+            <input class="form-control ol-form-control" type="file" id="doc" name="doc" placeholder="{{ get_phrase('Document') }}" required>
+        </div>
     </div>
 
-    <input type="submit" class="btn btn-primary" value="{{ get_phrase('Pay offline') }}">
+    <div class="text-end">
+        <input type="submit" class="btn btn-primary" value="{{ get_phrase('Pay offline') }}">
+    </div>
 </form>

@@ -4,6 +4,7 @@ namespace App\Models\payment_gateway;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Razorpay\Api\Api;
@@ -24,11 +25,11 @@ class Razorpay extends Model
     public static function payment_create($identifier)
     {
         $payment_details = session('payment_details');
-        $user            = DB::table('users')->where('id', auth()->user()->id)->first();
+        $user            = DB::table('users')->where('id', Auth::user()->id)->first();
         $model           = $payment_details['success_method']['model_name'];
         $payment_gateway = DB::table('payment_gateways')
-                ->where('identifier', $identifier)
-                ->first();
+            ->where('identifier', $identifier)
+            ->first();
 
         if ($model == 'InstructorPayment') {
             $settings = DB::table('users')->where('id', $payment_details['items'][0]['id'])
@@ -42,7 +43,7 @@ class Razorpay extends Model
             }
 
         } else {
-            
+
             $keys = json_decode($payment_gateway->keys, true);
 
             $public_key = $keys['public_key'];

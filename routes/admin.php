@@ -10,6 +10,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MilestoneController;
+use App\Http\Controllers\OfflinePaymentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
@@ -117,6 +118,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::get('invoice/edit/{id}', 'edit')->name('invoice.edit');
         Route::post('invoice/update/{id}', 'update')->name('invoice.update');
         Route::post('invoice/multi-delete', 'multiDelete')->name('invoice.multi-delete');
+        Route::get('invoice/payout/{id}', 'payout')->name('invoice.payout');
     });
 
     Route::controller(TimesheetController::class)->group(function () {
@@ -199,6 +201,15 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::any('save_valid_purchase_code/{action_type?}', 'save_valid_purchase_code')->name('save_valid_purchase_code');
 
     });
+
+    Route::controller(OfflinePaymentController::class)->group(function () {
+        Route::get('offline-payments', 'index')->name('offline.payments');
+        Route::get('offline-payment/doc/{id}', 'download_doc')->name('offline.payment.doc');
+        Route::get('offline-payment/accept/{id}', 'accept_payment')->name('offline.payment.accept');
+        Route::get('offline-payment/decline/{id}', 'decline_payment')->name('offline.payment.decline');
+    });
+
+    Route::post('payment/offline/store', [OfflinePaymentController::class, 'store'])->name('payment.offline.store');
 
     Route::get('select-language/{language}', [LanguageController::class, 'select_lng'])->name('select.language');
 

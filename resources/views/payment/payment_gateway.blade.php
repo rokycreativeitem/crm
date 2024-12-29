@@ -110,7 +110,7 @@
 
         <!-- Content -->
         <div class="tab-content">
-            <div class="tab-pane fade show active text-end" id="showPaymentGatewayByAjax">
+            <div class="tab-pane fade show active" id="showPaymentGatewayByAjax">
             </div>
         </div>
     </div>
