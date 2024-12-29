@@ -36,7 +36,7 @@
                         }
                     });
                 },
-                // success: function (response) {
+                // success: function(response) {
                 //     console.log(response.filter_count);
                 //     $('#filter-count-display').text(response.filter_count);
                 // },

@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Addon;
 use App\Models\Category;
 use App\Models\File;
+use App\Models\Invoice;
 use App\Models\Meeting;
 use App\Models\Milestone;
-use App\Models\Payment;
+use App\Models\offlinePayment;
 use App\Models\Project;
+use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\Task;
 use App\Models\Timesheet;
 use App\Models\User;
@@ -923,7 +926,7 @@ class ServerSideDataController extends Controller
 
     public function invoice_server_side($project_code, $string, $date)
     {
-        $query = Payment::query();
+        $query = Invoice::query();
         $query->where('project_id', project_id_by_code($project_code));
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
@@ -957,11 +960,36 @@ class ServerSideDataController extends Controller
             ->addColumn('time', function ($invoice) {
                 return date('d-M-y h:i A', strtotime($invoice->timestamp_start));
             })
+            ->addColumn('payment_status', function ($invoice) {
+                $statusLabel = '';
+
+                switch ($invoice->payment_status) {
+                    case 'processing':
+                        $statusLabel = '<span class="processing">' . get_phrase('Processing') . '</span>';
+                        break;
+                    case 'unpaid':
+                        $statusLabel = '<span class="unpaid">' . get_phrase('Unpaid') . '</span>';
+                        break;
+                    case 'paid':
+                        $statusLabel = '<span class="completed">' . get_phrase('Completed') . '</span>';
+                        break;
+                    default:
+                        $statusLabel = '<span class="unknown">' . get_phrase('Unknown') . '</span>';
+                        break;
+                }
+                return $statusLabel;
+            })
             ->addColumn('options', function ($invoice) {
-                // Generate routes dynamically .milestone.edit', $milestone->id
+                // Generate routes dynamically
                 $editRoute    = route(get_current_user_role() . '.invoice.edit', $invoice->id);
                 $deleteRoute  = route(get_current_user_role() . '.invoice.delete', $invoice->id);
                 $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $payoutRoute  = route(get_current_user_role() . '.invoice.payout', $invoice->id);
+
+                // $payoutRoute = '';
+                // if (get_current_user_role() == 'client') {
+                // }
+
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -972,14 +1000,17 @@ class ServerSideDataController extends Controller
                             <a class="dropdown-item" href="' . $invoiceRoute . '">' . get_phrase('Invoice') . '</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                        <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit invoice\')" href="#">' . get_phrase('Edit') . '</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="' . $payoutRoute . '">' . get_phrase('Payout') . '</a>
                         </li>
                     </ul>
                 </div>
-            ';
+                ';
             })
             ->addColumn('context_menu', function ($invoice) {
                 $editRoute    = route(get_current_user_role() . '.invoice.edit', $invoice->id);
@@ -1010,7 +1041,7 @@ class ServerSideDataController extends Controller
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id", "title", "payment", "time", "options"])
+            ->rawColumns(["id", "title", "payment", "time", "payment_status", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -1099,33 +1130,33 @@ class ServerSideDataController extends Controller
 
     public function project_report_server_side($string, $project, $paymentMethod, $status, $minAmount, $maxAmount)
     {
-        $query = Payment::query();
+        $query = Invoice::query();
 
         return datatables()
             ->eloquent($query)
-            ->addColumn('id', function ($payment) {
+            ->addColumn('id', function ($invoice) {
                 static $key = 1;
                 return '
             <div class="d-flex align-items-center">
                 <input type="checkbox" class="checkbox-item me-2 table-checkbox">
                 <p class="row-number fs-12px">' . $key++ . '</p>
-                <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
+                <input type="hidden" class="datatable-row-id" value="' . $invoice->id . '">
             </div>';
             })
-            ->addColumn('date', function ($payment) {
-                return date('Y-m-d', strtotime($payment->timestamp_start));
+            ->addColumn('date', function ($invoice) {
+                return date('Y-m-d', strtotime($invoice->timestamp_start));
             })
-            ->addColumn('project', function ($payment) {
-                return $payment->project->title ?? '-';
+            ->addColumn('project', function ($invoice) {
+                return $invoice->project->title ?? '-';
             })
-            ->addColumn('amount', function ($payment) {
-                return currency($payment->payment);
+            ->addColumn('amount', function ($invoice) {
+                return currency($invoice->payment);
             })
-            ->addColumn('payment_method', function ($payment) {
-                return $payment->payment_method;
+            ->addColumn('payment_method', function ($invoice) {
+                return $invoice->payment_method;
             })
-            ->addColumn('status', function ($payment) {
-                $status      = $payment->status;
+            ->addColumn('status', function ($invoice) {
+                $status      = $invoice->status;
                 $statusLabel = '';
                 if ($status == 'completed') {
                     $statusLabel = '<span class="badge bg-success">' . get_phrase('Completed') . '</span>';
@@ -1143,56 +1174,11 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    // public function report_server_side($string, $status, $paymentMethod, $minPayment, $maxPayment)
-    // {
-    //     $query = Payment::query();
-
-    //     return datatables()
-    //         ->eloquent($query)
-    //         ->addColumn('id', function ($payment) {
-    //             return '
-    //         <div class="d-flex align-items-center">
-    //             <input type="checkbox" class="checkbox-item me-2 table-checkbox">
-    //             <p class="row-number fs-12px">' . $payment->id . '</p>
-    //             <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
-    //         </div>';
-    //         })
-    //         ->addColumn('date', function ($payment) {
-    //             return date('Y-m-d', strtotime($payment->timestamp_start));
-    //         })
-    //         ->addColumn('project', function ($payment) {
-    //             return $payment->project->title ?? '-';
-    //         })
-    //         ->addColumn('amount', function ($payment) {
-    //             return currency($payment->payment);
-    //         })
-    //         ->addColumn('payment_method', function ($payment) {
-    //             return $payment->payment_method;
-    //         })
-    //         ->addColumn('status', function ($payment) {
-    //             $status      = $payment->status;
-    //             $statusLabel = '';
-    //             if ($status == 'completed') {
-    //                 $statusLabel = '<span class="badge bg-success">' . get_phrase('Completed') . '</span>';
-    //             } elseif ($status == 'pending') {
-    //                 $statusLabel = '<span class="badge bg-warning">' . get_phrase('Pending') . '</span>';
-    //             } elseif ($status == 'failed') {
-    //                 $statusLabel = '<span class="badge bg-danger">' . get_phrase('Failed') . '</span>';
-    //             }
-    //             return $statusLabel;
-    //         })
-    //         ->rawColumns(['id', 'timestamp_start', 'project', 'payment', 'payment_method', 'status'])
-    //         ->setRowClass(function () {
-    //             return 'context-menu';
-    //         })
-    //         ->make(true);
-    // }
-
     public function client_report_server_side($string, $project, $paymentMethod, $status, $minAmount, $maxAmount)
     {
         // $query = Payment::query();
         // $query = $query->select('*')->groupBy('user_id');
-        $query = Payment::query();
+        $query = Invoice::query();
         $query = $query->select('user_id', DB::raw('SUM(amount) as total_amount'))
             ->groupBy('user_id');
 
@@ -1230,28 +1216,28 @@ class ServerSideDataController extends Controller
 
         return datatables()
             ->eloquent($query)
-            ->addColumn('id', function ($payment) {
+            ->addColumn('id', function ($invoice) {
                 static $key = 1;
                 return '        <div class="d-flex align-items-center">
                                     <input type="checkbox" class="checkbox-item me-2 table-checkbox">
                                     <p class="row-number fs-12px">' . $key++ . '</p>
-                                    <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
+                                    <input type="hidden" class="datatable-row-id" value="' . $invoice->id . '">
                                 </div>';
             })
-            ->addColumn('date', function ($payment) {
-                return date('Y-m-d', strtotime($payment->timestamp_start));
+            ->addColumn('date', function ($invoice) {
+                return date('Y-m-d', strtotime($invoice->timestamp_start));
             })
-            ->addColumn('user_id', function ($payment) {
-                return $payments->user_id ?? '-';
+            ->addColumn('user_id', function ($invoice) {
+                return $invoices->user_id ?? '-';
             })
-            ->addColumn('amount', function ($payment) {
-                return currency($payment->payment);
+            ->addColumn('amount', function ($invoice) {
+                return currency($invoice->payment);
             })
-            ->addColumn('payment_method', function ($payment) {
-                return $payment->payment_method;
+            ->addColumn('payment_method', function ($invoice) {
+                return $invoice->payment_method;
             })
-            ->addColumn('status', function ($payment) {
-                $status      = $payment->status;
+            ->addColumn('status', function ($invoice) {
+                $status      = $invoice->status;
                 $statusLabel = '';
                 if ($status == 'completed') {
                     $statusLabel = '<span class="badge bg-success">' . get_phrase('Completed') . '</span>';
@@ -1269,6 +1255,79 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
+    public function role_server_side($string, $role)
+    {
+        $query = Role::query();
+
+        // General string search
+        // if (!empty($string)) {
+        //     $query->where(function ($q) use ($string) {
+        //         $q->where('name', 'like', "%{$string}%")
+        //             ->orWhere('email', 'like', "%{$string}%")
+        //             ->orWhere('id', 'like', "%{$string}%");
+        //     });
+        // }
+
+        // // Filter by name if provided
+        // if (!empty($name)) {
+        //     $query->where('name', 'like', "%{$name}%");
+        // }
+
+        // // Filter by email if provided
+        // if (!empty($email)) {
+        //     $query->where('email', 'like', "%{$email}%");
+        // }
+
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('id', function ($role) {
+                static $key = 1;
+                return '
+            <div class="d-flex align-items-center">
+                <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                <p class="row-number fs-12px">' . $key++ . '</p>
+                <input type="hidden" class="datatable-row-id" value="' . $role->id . '">
+            </div>';
+            })
+            ->addColumn('role', function ($role) {
+                return $role->title ?: '-';
+            })
+            ->addColumn('options', function ($role) {
+                $permissionRoute = route(get_current_user_role() . '.role.permission', ['role' => $role->id]);
+
+                return '
+            <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
+                <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="fi-rr-menu-dots-vertical"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" onclick="modal(\'Permission\',\'' . $permissionRoute . '\', \'modal-xl\')">' . get_phrase('Permissions') . '</a>
+                    </li>
+                </ul>
+            </div>';
+            })
+            ->addColumn('context_menu', function ($role) {
+                $permissionRoute = route(get_current_user_role() . '.role.permission', $role->title);
+                // Generate the context menu
+                $contextMenu = [
+                    'Permission' => [
+                        'type'        => 'ajax',
+                        'name'        => 'Permission',
+                        'action_link' => $permissionRoute,
+                        'title'       => 'Role permission',
+                    ],
+                ];
+
+                // JSON encode with unescaped slashes for cleaner URLs
+                return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            })
+            ->rawColumns(['id', 'title', 'options'])
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
+            ->make(true);
+    }
     public function user_server_side($string, $name, $email)
     {
         $role  = request()->route()->parameter('type');
@@ -1324,7 +1383,7 @@ class ServerSideDataController extends Controller
                 </button>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit user\')" href="#">' . get_phrase('Edit') . '</a>
+                        <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit user\')">' . get_phrase('Edit') . '</a>
                     </li>
                     <li>
                         <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -1358,6 +1417,86 @@ class ServerSideDataController extends Controller
             ->setRowClass(function () {
                 return 'context-menu';
             })
+            ->make(true);
+    }
+
+    public function renderPaymentsTable($payments)
+    {
+        $query = OfflinePayment::query();
+
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('id', function ($payment) {
+                static $key = 1;
+                return '
+            <div class="d-flex align-items-center">
+                <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                <p class="row-number fs-12px">' . $key++ . '</p>
+                <input type="hidden" class="datatable-row-id" value="' . $role->id . '">
+            </div>';
+            })
+            ->addColumn('user_info', function ($payment) {
+                $user = get_user_info($payment->user_id);
+                return '<div class="dAdmin_profile d-flex align-items-center min-w-200px">
+                        <div class="dAdmin_profile_name">
+                            <h4 class="title fs-14px">' . $user->name . '</h4>
+                            <p class="sub-title text-12px">' . $user->email . '</p>
+                            <p class="sub-title text-12px">' . get_phrase('Phone') . ': ' . $user->phone . '</p>
+                        </div>
+                    </div>';
+            })
+            ->addColumn('item_type', function ($payment) {
+                if ($payment->item_type === 'invoice') {
+                    $invoices     = Invoice::whereIn('id', json_decode($payment->items, true))->get();
+                    $invoiceLinks = '';
+                    foreach ($invoices as $invoice) {
+                        $invoiceLinks .= '<p class="sub-title text-12px">
+                                        <a href="#" class="text-muted me-3">' . $invoice->title . '</a>
+                                     </p>';
+                    }
+                    return $invoiceLinks;
+                }
+                return '';
+            })
+            ->addColumn('total_amount', function ($payment) {
+                return '<div class="sub-title2 text-12px">' . $payment->total_amount . '</div>';
+            })
+            ->addColumn('date', function ($payment) {
+                return '<div class="sub-title2 text-12px">
+                        <p>' . date('d-M-y', strtotime($payment->created_at)) . '</p>
+                    </div>';
+            })
+            ->addColumn('download', function ($payment) {
+                $route = route('admin.offline.payment.doc', $payment->id);
+                return '<a class="dropdown-item btn ol-btn-primary px-2 py-1" href="' . $route . '">
+                        <i class="fi-rr-cloud-download"></i> ' . get_phrase('Download') . '
+                    </a>';
+            })
+            ->addColumn('status', function ($payment) {
+                $statuses = [
+                    1 => '<span class="badge bg-success">' . get_phrase('Accepted') . '</span>',
+                    2 => '<span class="badge bg-danger">' . get_phrase('Suspended') . '</span>',
+                    0 => '<span class="badge bg-warning">' . get_phrase('Pending') . '</span>',
+                ];
+                return $statuses[$payment->status] ?? '<span class="badge bg-secondary">Unknown</span>';
+            })
+            ->addColumn('options', function ($payment) {
+                $downloadRoute = route('admin.offline.payment.doc', $payment->id);
+                $acceptRoute   = route('admin.offline.payment.accept', $payment->id);
+                $declineRoute  = route('admin.offline.payment.decline', $payment->id);
+
+                return '<div class="dropdown ol-icon-dropdown ol-icon-dropdown-transparent">
+                        <button class="btn ol-btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="fi-rr-menu-dots-vertical"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="' . $downloadRoute . '">' . get_phrase('Download') . '</a></li>
+                            <li><a class="dropdown-item" href="' . $acceptRoute . '">' . get_phrase('Accept') . '</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a></li>
+                        </ul>
+                    </div>';
+            })
+            ->rawColumns(['id', 'user_info', 'item_type', 'total_amount', 'date', 'download', 'status', 'options'])
             ->make(true);
     }
 

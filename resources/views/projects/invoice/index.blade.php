@@ -106,7 +106,7 @@
                 <div class="table-responsive">
                     <table class="table server-side-datatable" id="project_list">
                         <thead>
-                            <tr>
+                            <tr class="context-menu-header">
                                 <th scope="col" class="d-flex align-items-center">
                                     <input type="checkbox" id="select-all" class="me-2 table-checkbox">
                                     <span> # </span>
@@ -114,6 +114,7 @@
                                 <th scope="col">{{ get_phrase('Title') }}</th>
                                 <th scope="col">{{ get_phrase('Payment') }}</th>
                                 <th scope="col">{{ get_phrase('Time') }}</th>
+                                <th scope="col">{{ get_phrase('Payment Status') }}</th>
                                 <th scope="col" class="d-flex justify-content-center print-d-none">{{ get_phrase('Options') }}</th>
                             </tr>
                         </thead>
@@ -131,7 +132,7 @@
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        <label for="page-length-select" class="ps-2 w-100"> {{ get_phrase('of') . ' ' . count($payments) }}</label>
+                        <label for="page-length-select" class="ps-2 w-100"> {{ get_phrase('of') . ' ' . count($invoices) }}</label>
                     </div>
                 </div>
 
@@ -157,7 +158,7 @@
             });
         });
         setTimeout(function() {
-            server_side_datatable('["id","title","payment","time","options"]', "{{ route(get_current_user_role() . '.invoice') }}");
+            server_side_datatable('["id","title","payment","time","payment_status","options"]', "{{ route(get_current_user_role() . '.invoice') }}");
         }, 500);
     </script>
 @endpush

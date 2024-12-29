@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Payment;
+use App\Models\Invoice;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -23,7 +23,7 @@ class ReportController extends Controller
             );
         }
 
-        $query = Payment::query();
+        $query = Invoice::query();
 
         if (request()->has('start_date') && request()->has('end_date')) {
             $start_date = request()->query('start_date');
@@ -67,7 +67,7 @@ class ReportController extends Controller
             );
         }
 
-        $query = Payment::query();
+        $query = Invoice::query();
 
         if (request()->has('start_date') && request()->has('end_date')) {
             $start_date = request()->query('start_date');
@@ -81,7 +81,7 @@ class ReportController extends Controller
         foreach ($users as $user) {
             $data[] = [
                 'client' => get_user($user)->name,
-                'amount' => Payment::where('user_id', $user)->sum('payment'),
+                'amount' => Invoice::where('user_id', $user)->sum('payment'),
             ];
         }
 

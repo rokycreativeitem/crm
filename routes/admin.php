@@ -5,27 +5,28 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\GanttChartController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MilestoneController;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OfflinePaymentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\RouteController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\Updater as ControllersUpdater;
 use App\Http\Controllers\UserController;
-use App\Models\Updater;
 use Illuminate\Support\Facades\Route;
 
-Route::view('demo', 'demo');
+// Route::view('demo', 'demo');
 
 Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'admin_dashboard'])->name('dashboard');
 
     Route::controller(ProjectController::class)->group(function () {
         Route::get('{layout?}/projects', 'index')->name('projects');
@@ -112,7 +113,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
 
     });
 
-    Route::controller(PaymentController::class)->group(function () {
+    Route::controller(InvoiceController::class)->group(function () {
         Route::get('invoice', 'index')->name('invoice');
         Route::get('invoice/create', 'create')->name('invoice.create');
         Route::post('invoice/store', 'store')->name('invoice.store');
@@ -120,6 +121,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::get('invoice/edit/{id}', 'edit')->name('invoice.edit');
         Route::post('invoice/update/{id}', 'update')->name('invoice.update');
         Route::post('invoice/multi-delete', 'multiDelete')->name('invoice.multi-delete');
+        Route::get('invoice/payout/{id}', 'payout')->name('invoice.payout');
     });
 
     Route::controller(TimesheetController::class)->group(function () {
@@ -135,20 +137,18 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
     // manage roles
     Route::controller(RoleController::class)->group(function () {
         Route::get('roles', 'index')->name('roles');
-        // Route::get('roles/create', 'create')->name('roles.create');
-        // Route::post('roles/store', 'store')->name('roles.store');
+        Route::get('role/permission', 'permission')->name('role.permission');
 
-        // Route::middleware(['check:roles,id'])->group(function () {
-        //     Route::get('roles/edit/{id}', 'edit')->name('roles.edit');
-        //     Route::get('roles/delete/{id}', 'delete')->name('roles.delete');
-        //     Route::post('roles/update/{id}', 'update')->name('roles.update');
-        // });
     });
 
     // assign permission
     Route::controller(RolePermissionController::class)->group(function () {
         Route::post('permissions/store', 'store')->name('store.permissions');
+
     });
+
+    Route::get('/all-routes', [RouteController::class, 'index'])->name('routes.index');
+    Route::get('/routes/insert', [RouteController::class, 'insertRoutes'])->name('routes.insert');
 
     Route::controller(EventController::class)->group(function () {
         Route::get('events', 'index')->name('events');
@@ -190,27 +190,36 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
     Route::controller(SettingsController::class)->group(function () {
         Route::get('system_settings', 'system_settings')->name('system_settings');
         Route::post('system_settings/update', 'system_settings_update')->name('system_settings.update');
-        
+
         Route::get('payment_settings', 'payment_settings')->name('payment_settings');
         Route::post('payment_settings/update', 'payment_settings_update')->name('payment_settings.update');
-        
+
         Route::get('notification_settings', 'notification_settings')->name('notification_settings');
         Route::any('notification_settings/store/{param1}/{id?}', 'notification_settings_store')->name('notification_settings.store');
-        
+
         Route::get('manage_language', 'manage_language')->name('manage_language');
         Route::post('language/store', 'language_store')->name('language.store');
         Route::post('language/direction/update', 'language_direction_update')->name('language.direction.update');
         Route::post('language/import', 'language_import')->name('language.import');
         Route::get('language/delete/{id}', 'language_delete')->name('language.delete');
-        
+
         Route::get('language/phrase/edit/{lan_id}', 'edit_phrase')->name('language.phrase.edit');
         Route::post('language/phrase/update/{phrase_id?}', 'update_phrase')->name('language.phrase.update');
         Route::get('language/phrase/import/{lan_id}', 'phrase_import')->name('language.phrase.import');
-        
+
         Route::get('about', 'about')->name('about');
         Route::any('save_valid_purchase_code/{action_type?}', 'save_valid_purchase_code')->name('save_valid_purchase_code');
 
     });
+
+    Route::controller(OfflinePaymentController::class)->group(function () {
+        Route::get('offline-payments', 'index')->name('offline.payments');
+        Route::get('offline-payment/doc/{id}', 'download_doc')->name('offline.payment.doc');
+        Route::get('offline-payment/accept/{id}', 'accept_payment')->name('offline.payment.accept');
+        Route::get('offline-payment/decline/{id}', 'decline_payment')->name('offline.payment.decline');
+    });
+
+    Route::post('payment/offline/store', [OfflinePaymentController::class, 'store'])->name('payment.offline.store');
 
     Route::get('select-language/{language}', [LanguageController::class, 'select_lng'])->name('select.language');
 

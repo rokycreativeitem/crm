@@ -20,8 +20,8 @@
                         <label class="form-label ol-form-label" for="role_id">{{ get_phrase('User Type') }}</label>
                         <div class="d-flex flex-row flex-wrap align-items-center">
                             @foreach ($roles as $role)
-                                <div class="form-check me-3">
-                                    <input type="checkbox" @checked(request()->query('type') == $role->title) class="form-check-input" id="role_{{ $role->id }}" name="role[]" value="{{ $role->id }}">
+                                <div class="radio-check form-check me-3">
+                                    <input type="radio" @checked(request()->query('type') == $role->title) class="radio-input form-check-input" id="role_{{ $role->id }}" name="role_id" value="{{ $role->id }}">
                                     <label class="form-check-label" for="role_{{ $role->id }}">
                                         {{ $role->title }}
                                     </label>
@@ -29,19 +29,9 @@
                             @endforeach
                         </div>
                     </div>
-                    {{-- <div class="fpb7 mb-2">
+                    <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="photo">{{ get_phrase('Photo') }}</label>
                         <input class="form-control ol-form-control" type="file" id="photo" name="photo">
-                        <div id="preview-container" class="mt-2">
-                            <img id="preview" src="" alt="Preview" style="display: none; max-width: 100%; height: auto; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">
-                        </div>
-                    </div> --}}
-                    <div class="fpb-7 mb-3">
-                        <label class="form-label ol-form-label" for="smtp_file">{{ get_phrase('Photo') }}</label>
-                        <input class="form-control ol-form-control" type="file" id="smtp_file" name="smtp_file" accept="image/*">
-                        <div id="preview-container" class="mt-2">
-                            <img id="preview" src="" alt="Preview" style="display: none; max-width: 100%; height: auto; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">
-                        </div>
                     </div>
 
                     <div class="fpb7 mb-2">
@@ -55,26 +45,3 @@
 
 @include('script')
 @include('ajax')
-
-@push('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('smtp_file').addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                const preview = document.getElementById('preview');
-
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    preview.src = '';
-                    preview.style.display = 'none';
-                }
-            });
-        });
-    </script>
-@endpush

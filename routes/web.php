@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Mail\OrderShipped;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login')->middleware('redirect');
@@ -29,3 +31,5 @@ Route::middleware('check.permission')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+require __DIR__ . '/payment.php';
+require __DIR__ . '/admin.php';

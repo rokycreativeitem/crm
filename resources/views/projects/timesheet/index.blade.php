@@ -118,7 +118,7 @@
                 <div class="table-responsive">
                     <table class="table server-side-datatable" id="project_list">
                         <thead>
-                            <tr>
+                            <tr class="context-menu-header">
                                 <th scope="col" class="d-flex align-items-center">
                                     <input type="checkbox" id="select-all" class="me-2 table-checkbox">
                                     <span> # </span>
