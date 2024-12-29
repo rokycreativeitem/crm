@@ -45,4 +45,5 @@ slider.noUiSlider.on('update', function (values, handle) {
     document.getElementById('maxPrice').innerHTML = values[1];
     document.getElementById('minPrice').innerHTML = values[0];
 });
+
 </script>
