@@ -11,5 +11,4 @@ class DashboardController extends Controller
         return view('dashboard.'.get_current_user_role().'_dashboard');
     }
 
-    public function payout()
 }
