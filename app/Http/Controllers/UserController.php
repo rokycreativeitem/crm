@@ -99,10 +99,11 @@ class UserController extends Controller
                 'error' => 'User record not found.',
             ], 404);
         }
-
-        $filePath = public_path($file_record->photo);
-        if (file_exists($filePath)) {
-            unlink($filePath);
+        if($file_record->photo) {
+            $filePath = public_path($file_record->photo);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
         $file_record->delete();
 

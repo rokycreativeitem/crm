@@ -28,68 +28,80 @@ class InjectMiddleware
         $company_components = Addon_hook::whereHas('addon', function ($query) {
             $query->where('status', 1);
         })
-            ->where('app_route', $currentRouteName)
-            ->with('addon')->get();
+        ->where('app_route', $currentRouteName)
+        ->with('addon')
+        ->get();
+
+        // Skip DOM manipulation if no components are available
+        if ($company_components->isEmpty() || $response->headers->get('Content-Type') !== 'text/html; charset=UTF-8') {
+            return $response;
+        }
 
         // Modify the response content (HTML)
-        if ($response->headers->get('Content-Type') === 'text/html; charset=UTF-8') {
-            $content = $response->getContent();
+        $content = $response->getContent();
 
-            $dom = new \DOMDocument();
-            @$dom->loadHTML($content);
+        libxml_use_internal_errors(true);
+        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom->preserveWhiteSpace = false;
+        @$dom->loadHTML($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
-            $err = [];
-            foreach ($company_components as $component) {
-                $component_dom = $component->dom ? json_decode($component->dom, true) : [];
+        $errors = [];
 
-                // check component dom
-                if (! $component_dom) {
-                    $err[] = "Component not found : {$component->addon->title}";
-                    continue;
-                }
+        foreach ($company_components as $component) {
+            $componentDom = $component->dom ? json_decode($component->dom, true) : [];
 
-                // check component routes
-                $route = Route::getRoutes()->getByName($component->addon_route);
-                if (! $route) {
-                    $err[] = "Requested addon failed to load : {$component->addon_route}.";
-                    continue;
-                }
-
-                // check parent hook
-                $section = $dom->getElementById($component_dom['parent']);
-                if (! $section) {
-                    $err[] = "Component parent hook not found.";
-                    continue;
-                }
-
-                // render and push the component
-                $rendered_component = App::call($route->getAction('uses'));
-
-                // Check if rendered component is not empty
-                if (empty(trim($rendered_component))) {
-                    continue;
-                }
-
-                $fragment = $dom->createDocumentFragment();
-                $fragment->appendXML($rendered_component);
-
-                $component_dom['position'] == 'inside'
-                ? $section->appendChild($fragment)
-                : $section->parentNode->insertBefore($fragment, $section->nextSibling);
+            // Validate component DOM structure
+            if (!$componentDom) {
+                $errors[] = "Component DOM not found for addon: {$component->addon->title}";
+                continue;
             }
 
-            $modifiedContent = $dom->saveHTML();
+            // Validate addon route
+            $route = Route::getRoutes()->getByName($component->addon_route);
+            if (!$route) {
+                $errors[] = "Addon route '{$component->addon_route}' not found.";
+                continue;
+            }
 
-            // Set the modified content back to the response
+            // Find parent element in DOM
+            $parentElement = $dom->getElementById($componentDom['parent']);
+            if (!$parentElement) {
+                $errors[] = "Parent element '{$componentDom['parent']}' not found in DOM.";
+                continue;
+            }
+
+            // Render and insert the component
+            $renderedComponent = App::call($route->getAction('uses'));
+
+            if (!trim($renderedComponent)) {
+                continue;
+            }
+
+            $fragment = $dom->createDocumentFragment();
+            $fragment->appendXML($renderedComponent);
+
+            // Append or insert based on position
+            if ($componentDom['position'] === 'inside') {
+                $parentElement->appendChild($fragment);
+            } else {
+                $parentElement->parentNode->insertBefore($fragment, $parentElement->nextSibling);
+            }
+        }
+
+        $modifiedContent = $dom->saveHTML();
+
+        // Update response content only if modifications were made
+        if ($modifiedContent !== $content) {
             $response->setContent($modifiedContent);
+        }
 
-            if (count($err) > 0) {
-                Session::flash('component_error', $err);
-            }
-        }    
+        // Store errors in session for display
+        if (!empty($errors)) {
+            Session::flash('component_errors', $errors);
+        }
 
+        libxml_clear_errors();
 
         return $response;
     }
-    
 }

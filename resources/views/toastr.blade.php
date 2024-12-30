@@ -6,11 +6,17 @@
         var toasterMessage = '<div class="toast ' + type +
             ' fade text-12" role="alert" aria-live="assertive" aria-atomic="true" class="rounded-3"><div class="toast-header"> <i class="' +
             icon + ' me-2 mt-2px text-14 d-flex"></i> <strong class="me-auto"> ' + header +
-            ' </strong><small>{{ get_phrase('Just Now') }}</small><button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button></div><div class="toast-body">' +
+            ' </strong><small>{{ get_phrase("Just Now") }}</small><button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button></div><div class="toast-body">' +
             message + '</div></div>';
+       
         $('.toast-container').prepend(toasterMessage);
         const toast = new bootstrap.Toast('.toast')
         toast.show()
+
+
+
+
+        console.log('<div>djygvui</div>')
     }
 
     function success(message) {

@@ -1500,4 +1500,102 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
+    public function offline_payments_server_side($string)
+    {
+        $query = OfflinePayment::query();
+
+        if (!empty($string)) {
+            $query->where(function ($q) use ($string) {
+                $q->where('name', 'like', "%{$string}%")
+                    ->orWhere('email', 'like', "%{$string}%")
+                    ->orWhere('id', 'like', "%{$string}%");
+            });
+        }
+
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('id', function ($payment) {
+                static $key = 1;
+                return '
+            <div class="d-flex align-items-center">
+                <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                <p class="row-number fs-12px">' . $key++ . '</p>
+                <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
+            </div>';
+            })
+            ->addColumn('user_info', function ($payment) {
+                $user = get_user_info($payment->user_id);
+                return '<div class="dAdmin_profile d-flex align-items-center min-w-200px">
+                        <div class="dAdmin_profile_name">
+                            <h4 class="title fs-14px">' . $user->name . '</h4>
+                            <p class="sub-title text-12px">' . $user->email . '</p>
+                        </div>
+                    </div>';
+            })
+            ->addColumn('item_type', function ($payment) {
+                if ($payment->item_type === 'invoice') {
+                    $invoices     = Invoice::whereIn('id', json_decode($payment->items, true))->get();
+                    $invoiceLinks = '';
+                    foreach ($invoices as $invoice) {
+                        $invoiceLinks .= '<p class="sub-title text-12px">
+                                        <a href="#" class="text-muted me-3">' . $invoice->title . '</a>
+                                     </p>';
+                    }
+                    return $invoiceLinks;
+                }
+                return '';
+            })
+            ->addColumn('total_amount', function ($payment) {
+                return $payment->total_amount;
+            })
+            ->addColumn('date', function ($payment) {
+                return '<div class="sub-title2 text-12px">
+                        <p>' . date('d-M-y', strtotime($payment->created_at)) . '</p>
+                    </div>';
+            })
+            ->addColumn('download', function ($payment) {
+                $route = route('admin.offline.payment.doc', $payment->id);
+                return '<a class="download-btn" href="' . $route . '">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.92958 5.39042L4.92958 5.39041L4.92862 5.3905C3.61385 5.5146 2.6542 5.93651 2.02459 6.70783C1.39588 7.47804 1.10332 8.58816 1.10332 10.0736V10.1603C1.10332 11.8027 1.45436 12.987 2.22713 13.7598C2.99991 14.5326 4.18424 14.8836 5.82665 14.8836H10.1733C11.8157 14.8836 13 14.5326 13.7728 13.7615C14.5456 12.9904 14.8967 11.8094 14.8967 10.1736V10.0869C14.8967 8.59144 14.5991 7.4745 13.9602 6.70257C13.3204 5.92962 12.3457 5.5112 11.0111 5.39715C10.7022 5.36786 10.4461 5.59636 10.4169 5.89543C10.3874 6.19756 10.6157 6.46083 10.9151 6.49005L10.9158 6.4901C11.9763 6.57958 12.6917 6.86862 13.1444 7.43161C13.5984 7.99634 13.7967 8.84694 13.7967 10.0803V10.1669C13.7967 11.5202 13.5567 12.4212 12.9921 12.9858C12.4275 13.5504 11.5265 13.7903 10.1733 13.7903H5.82665C4.47345 13.7903 3.57245 13.5504 3.00784 12.9858C2.44324 12.4212 2.20332 11.5202 2.20332 10.1669V10.0803C2.20332 8.85356 2.39823 8.00609 2.84423 7.44127C3.28876 6.8783 3.99097 6.58615 5.03125 6.49007L5.03139 6.49006C5.33896 6.46076 5.5591 6.18959 5.52975 5.88876C5.50032 5.58704 5.22199 5.36849 4.92958 5.39042Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
+                    <path d="M7.45 9.92028C7.45 10.2212 7.69905 10.4703 8 10.4703C8.30051 10.4703 8.55 10.2283 8.55 9.92028V1.33362C8.55 1.03267 8.30095 0.783618 8 0.783618C7.69905 0.783618 7.45 1.03267 7.45 1.33362V9.92028Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
+                    <path d="M7.61153 11.0556C7.7214 11.1655 7.86101 11.2169 8.00022 11.2169C8.13943 11.2169 8.27904 11.1655 8.38891 11.0556L10.6222 8.8223C10.8351 8.60944 10.8351 8.25778 10.6222 8.04492C10.4094 7.83206 10.0577 7.83206 9.84487 8.04492L8.00022 9.88957L6.15558 8.04492C5.94272 7.83206 5.59106 7.83206 5.3782 8.04492C5.16534 8.25778 5.16534 8.60944 5.3782 8.8223L7.61153 11.0556Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
+                    </svg>
+                    </a>';
+            })
+            ->addColumn('status', function ($payment) {
+                $statuses = [
+                    1 => '<span class="accepted">' . get_phrase('Accepted') . '</span>',
+                    2 => '<span class="suspended">' . get_phrase('Suspended') . '</span>',
+                    0 => '<span class="pending">' . get_phrase('Pending') . '</span>',
+                ];
+                return $statuses[$payment->status] ?? '<span class="badge bg-secondary">Unknown</span>';
+            })
+            ->addColumn('options', function ($payment) {
+                $downloadRoute = route('admin.offline.payment.doc', $payment->id);
+                $acceptRoute   = route('admin.offline.payment.accept', $payment->id);
+                $declineRoute  = route('admin.offline.payment.decline', $payment->id);
+
+                return '
+                <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
+                        <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="fi-rr-menu-dots-vertical"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                            <a class="dropdown-item" href="' . $downloadRoute . '">' . get_phrase('Download') . '</a>
+                            </li>
+                            <li>
+                            <a class="dropdown-item" href="' . $acceptRoute . '">' . get_phrase('Accept') . '</a>
+                            </li>
+                            <li>
+                            <a class="dropdown-item" href="#" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a>
+                            </li>
+                        </ul>
+                    </div>';
+            })
+            ->rawColumns(['id', 'user_info', 'item_type', 'total_amount', 'date', 'download', 'status', 'options'])
+            ->make(true);
+    }
+
 }
