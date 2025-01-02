@@ -1,4 +1,4 @@
-@extends('install.index')
+{{-- @extends('install.index')
 
 @section('content')
     <?php if(isset($error)) { ?>
@@ -65,4 +65,4 @@
             });
         });
     </script>
-@endsection
+@endsection --}}

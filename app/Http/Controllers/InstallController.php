@@ -96,7 +96,6 @@ class InstallController extends Controller
     {
         $db_connection = "";
         $data = $request->all();
-
         $this->check_purchase_code_verification();
 
         if ($data) {
@@ -131,7 +130,6 @@ class InstallController extends Controller
     {
 
         $newName = uniqid('db'); //example of unique name
-
         Config::set("database.connections." . $newName, [
             "host"      => $hostname,
             "port"      => env('DB_PORT', '3306'),
@@ -151,21 +149,21 @@ class InstallController extends Controller
 
     public function step4(Request $request)
     {
-
+        $this->configure_database();
         return view('install.step4');
     }
 
 
-    public function confirmImport($param1 = '')
-    {
-        if ($param1 = 'confirm_import') {
-            // write database.php here
-            $this->configure_database();
+    // public function confirmImport($param1 = '')
+    // {
+    //     if ($param1 = 'confirm_import') {
+    //         // write database.php here
+    //         $this->configure_database();
 
-            // redirect to admin creation page
-            return view('install.install');
-        }
-    }
+    //         // redirect to admin creation page
+    //         return view('install.install');
+    //     }
+    // }
 
     public function confirmInstall()
     {
@@ -173,7 +171,12 @@ class InstallController extends Controller
         $this->run_blank_sql();
 
         // redirect to admin creation page
-        return redirect()->route('finalizing_setup');
+        return redirect()->route('step5');
+        // return redirect()->route('finalizing_setup');
+    }
+
+    public function step5() {
+        return view('install.step5');
     }
 
     public function configure_database()
@@ -241,12 +244,8 @@ class InstallController extends Controller
             /*admin data*/
             $admin_data['name']      = $data['admin_name'];
             $admin_data['email']     = $data['admin_email'];
-            $admin_data['status']     = 1;
-            $admin_data['skills']     = json_encode([]);
             $admin_data['password']  = Hash::make($data['admin_password']);
-            $admin_data['role']      = 'admin';
-            $admin_data['address']      = $data['admin_address'];
-            $admin_data['phone']      = $data['admin_phone'];
+            $admin_data['role_id']      = 1;
             $admin_data['email_verified_at'] = date('Y-m-d H:i:s', time());
             $admin_data['created_at'] = date('Y-m-d H:i:s');
 
@@ -257,18 +256,18 @@ class InstallController extends Controller
             return view('install.success', ['admin_email' => $admin_data['email']]);
         }
 
-        return view('install.finalizing_setup');
+        return view('install.step5');
     }
 
     public function success($param1 = '')
     {
-        $this->configure_routes();
+        // $this->configure_routes();
 
         if ($param1 == 'login') {
             return view('auth.login');
         }
 
-        $admin_email = User::where('role', 'admin')->first()->email;
+        $admin_email = User::where('role_id', 1)->first()->email;
 
         $page_data['admin_email'] = $admin_email;
         $page_data['page_name'] = 'success';

@@ -1,7 +1,7 @@
 @extends('install.index')
 
 @section('content')
-<?php if(isset($error)) { ?>
+    <?php if(isset($error)) { ?>
     <div class="row justify-content-center ins-seven">
         <div class="col-md-6">
             <div class="alert alert-danger">
@@ -19,15 +19,20 @@
                 <h4> {{ __('Installation') }} </h4>
             </div>
             <p class="ins-p-1">
-                {!! __("The provided information will be written into your application's <b>config/database.php</b> file, so click the Confirm button to write the file")!!}.
+                <strong>{{ __('Your database is successfully connected') }}</strong>.
+                {{ __('All you need to do now is hit the ') }}
+                <strong>{{ __("'Install'") }}</strong> {{ __('button') }}.
+                {{ __('The auto installer will run a sql file, will do all the tiresome works and set up your application automatically.') }}'
             </p>
             <div class="d-flex align-items-center justify-content-between pt-2">
                 <div>
-                    <div class="mt-3" id="loader">
-                        {{ __('Configuring the database....') }}
+                    <div id="loader" class="ins-seven mt-2">
+                        {{ __('Importing database....') }}
                     </div>
                 </div>
-                <button type="button" id="install_button" class="ins-btn"> Continue </a>
+                <button type="button" id="install_button" class="ins-btn">
+                    {{ __('Install') }}
+                </button>
             </div>
 
             <ul class="ins-step">
@@ -55,12 +60,9 @@
                 $('#loader').fadeIn();
                 setTimeout(
                     function() {
-                        window.location.href = "{{ route('step4.confirm_import', ['confirm_import' => 'confirm_install']) }}";
+                        window.location.href = "{{ route('confirm_install') }}";
                     }, 5000);
             });
         });
     </script>
 @endsection
-
-
-

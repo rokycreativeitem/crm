@@ -53,7 +53,7 @@
             
             <br>
             <div class="d-flex align-items-center justify-content-between pt-2">
-                <a href="{{ route('step0') }}" class="ins-back">
+                <a href="{{ route('step2') }}" class="ins-back">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path

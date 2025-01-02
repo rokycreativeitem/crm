@@ -18,44 +18,21 @@
             <div class="page-title">
                 <h4> {{ __('Installation') }} </h4>
             </div>
-            <p class="ins-p-1">
-                <strong
-                    class="text-success">{{ __('Installation was successfull.') . ' ' . __('Please login to continue..') }}</strong>
-            </p>
-            <table>
-                <tbody>
-                    <tr>
-                        <td class="ins-eight"><strong class="mb-2 d-inline-block">{{ __('Administrator Email') }} </strong>
-                        </td>
-                        <td class="ins-eight"><span class="mx-4 mb-2 d-inline-block">|</span></td>
-                        <td class="ins-eight"><span class="mb-2 d-inline-block">{{ $admin_email }}</span></td>
-                    </tr>
-                    <tr>
-                        <td class="ins-eight"><strong>{{ __('Password') }} </strong></td>
-                        <td class="ins-eight"><span class="mx-4">|</span></td>
-                        <td class="ins-eight">{{ __('Your chosen password') }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="d-flex align-items-center justify-content-between pt-2">
-                <div></div>
-                <a href="{{ route('login') }}" class="ins-btn"> {{ __('Continue') }} </a>
+            <div class="text-center mb-4">
+                <img src="{{asset('assets/install/images/complete.png')}}" alt="" />
+                <p class="py-3">{{__('Now Log in to admin panel')}}</p>
+
+                <a href="{{route('login')}}" class="ins-btn">
+                    <span class="me-2"> Finish </span>
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M11.5837 1C11.2503 0.666667 10.7503 0.666667 10.417 1L4.16699 7.25L1.58366 4.66667C1.25032 4.33333 0.750325 4.33333 0.416992 4.66667C0.0836589 5 0.0836589 5.5 0.416992 5.83333L3.58366 9C3.75032 9.16667 3.91699 9.25 4.16699 9.25C4.41699 9.25 4.58366 9.16667 4.75032 9L11.5837 2.16667C11.917 1.83333 11.917 1.33333 11.5837 1Z"
+                            fill="white" />
+                    </svg>
+                </a>
             </div>
 
-            <ul class="ins-step">
-                <li class="active"></li>
-                <li class="active"></li>
-                <li class="active"></li>
-                <li class="active"></li>
-                <li class="active"></li>
-                <li class="active"></li>
-            </ul>
-            <span> Step-6 </span>
-            <div class="text-center">
-                <p>Need any help? <a href="">Contact Us</a></p>
-            </div>
         </div>
     </div>
-    <!-- jQuery -->
-    <script type="text/javascript" src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
 @endsection
