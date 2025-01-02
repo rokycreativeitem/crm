@@ -22,13 +22,13 @@ Route::middleware('auth')->group(function () {
 
 });
 
-// Route::get('server-side-datatable', [ProjectController::class, 'server_side_table'])->name('server.side.datatable');
-
 Route::middleware('check.permission')->group(function () {
     Route::get('check-access', function () {
         return '<h1>Welcome</h1>';
     })->name('check.access');
 });
+// Route::get('server-side-datatable', [ProjectController::class, 'server_side_table'])->name('server.side.datatable');
+
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/payment.php';
