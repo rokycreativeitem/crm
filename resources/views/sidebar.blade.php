@@ -313,17 +313,12 @@
                     <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.addons') active showMenu @endif">
                         <a href="{{ route(get_current_user_role() . '.addons') }}">
 
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M17.6201 9.62H12.3701C11.9601 9.62 11.6201 9.28 11.6201 8.87C11.6201 8.46 11.9601 8.12 12.3701 8.12H17.6201C18.0301 8.12 18.3701 8.46 18.3701 8.87C18.3701 9.28 18.0401 9.62 17.6201 9.62Z"
-                                    fill="currentColor" />
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.6201 9.62H12.3701C11.9601 9.62 11.6201 9.28 11.6201 8.87C11.6201 8.46 11.9601 8.12 12.3701 8.12H17.6201C18.0301 8.12 18.3701 8.46 18.3701 8.87C18.3701 9.28 18.0401 9.62 17.6201 9.62Z" fill="currentColor" />
                                 <path
                                     d="M7.12006 10.38C6.93006 10.38 6.74006 10.31 6.59006 10.16L5.84006 9.41001C5.55006 9.12001 5.55006 8.64001 5.84006 8.35001C6.13006 8.06001 6.61006 8.06001 6.90006 8.35001L7.12006 8.57001L8.84006 6.85001C9.13006 6.56001 9.61006 6.56001 9.90006 6.85001C10.1901 7.14001 10.1901 7.62001 9.90006 7.91001L7.65006 10.16C7.51006 10.3 7.32006 10.38 7.12006 10.38Z"
                                     fill="currentColor" />
-                                <path
-                                    d="M17.6201 16.62H12.3701C11.9601 16.62 11.6201 16.28 11.6201 15.87C11.6201 15.46 11.9601 15.12 12.3701 15.12H17.6201C18.0301 15.12 18.3701 15.46 18.3701 15.87C18.3701 16.28 18.0401 16.62 17.6201 16.62Z"
-                                    fill="currentColor" />
+                                <path d="M17.6201 16.62H12.3701C11.9601 16.62 11.6201 16.28 11.6201 15.87C11.6201 15.46 11.9601 15.12 12.3701 15.12H17.6201C18.0301 15.12 18.3701 15.46 18.3701 15.87C18.3701 16.28 18.0401 16.62 17.6201 16.62Z" fill="currentColor" />
                                 <path
                                     d="M7.12006 17.38C6.93006 17.38 6.74006 17.31 6.59006 17.16L5.84006 16.41C5.55006 16.12 5.55006 15.64 5.84006 15.35C6.13006 15.06 6.61006 15.06 6.90006 15.35L7.12006 15.57L8.84006 13.85C9.13006 13.56 9.61006 13.56 9.90006 13.85C10.1901 14.14 10.1901 14.62 9.90006 14.91L7.65006 17.16C7.51006 17.3 7.32006 17.38 7.12006 17.38Z"
                                     fill="currentColor" />
@@ -358,7 +353,7 @@
                 @endif
 
                 @if (has_permission('project_report', 'client_report'))
-                    <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.project_report' || $current_route == get_current_user_role() . '.client_report') active showMenu @endif">
+                    <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.project_report' || $current_route == get_current_user_role() . '.client_report' || $current_route == get_current_user_role() . '.offline.payments') active showMenu @endif">
                         <a href="javascript:void(0);">
                             <span>
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -387,6 +382,9 @@
                             </li>
                             <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.client_report') active showMenu @endif">
                                 <a href="{{ route(get_current_user_role() . '.client_report') }}">{{ get_phrase('Client Report') }}</a>
+                            </li>
+                            <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.offline.payments') active showMenu @endif">
+                                <a href="{{ route(get_current_user_role() . '.offline.payments') }}">{{ get_phrase('Offline payment') }}</a>
                             </li>
                         </ul>
                     </li>
@@ -442,38 +440,15 @@
                             <li class="sidebar-second-li {{ $current_route == get_current_user_role() . '.manage_language' || $current_route == get_current_user_role() . '.language.phrase.edit' ? 'active' : '' }}">
                                 <a href="{{ route(get_current_user_role() . '.manage_language') }}">{{ get_phrase('Manage Language') }}</a>
                             </li>
-                          
+
                             <li class="sidebar-second-li {{ $current_route == get_current_user_role() . '.about' ? 'active' : '' }}"><a href="{{ route(get_current_user_role() . '.about') }}">{{ get_phrase('About') }}</a></li>
                         </ul>
                     </li>
                 @endif
 
                 @if (has_permission('dd'))
-                <li class="sidebar-first-li {{ $current_route == 'admin.manage_profile' ? 'active' : '' }}">
-                    <a href="{{ route('admin.manage_profile') }}">
-                        <span>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M10.1 11.275C10.0833 11.275 10.0583 11.275 10.0417 11.275C10.0167 11.275 9.98333 11.275 9.95833 11.275C8.06667 11.2167 6.65 9.74167 6.65 7.925C6.65 6.075 8.15833 4.56667 10.0083 4.56667C11.8583 4.56667 13.3667 6.075 13.3667 7.925C13.3583 9.75 11.9333 11.2167 10.125 11.275C10.1083 11.275 10.1083 11.275 10.1 11.275ZM10 5.80833C8.83333 5.80833 7.89167 6.75833 7.89167 7.91667C7.89167 9.05833 8.78333 9.98333 9.91667 10.025C9.94167 10.0167 10.025 10.0167 10.1083 10.025C11.225 9.96667 12.1 9.05 12.1083 7.91667C12.1083 6.75833 11.1667 5.80833 10 5.80833Z"
-                                    fill="currentColor" />
-                                <path
-                                    d="M10 18.9583C7.75833 18.9583 5.61667 18.125 3.95833 16.6083C3.80833 16.475 3.74167 16.275 3.75833 16.0833C3.86667 15.0917 4.48333 14.1667 5.50833 13.4833C7.99167 11.8333 12.0167 11.8333 14.4917 13.4833C15.5167 14.175 16.1333 15.0917 16.2417 16.0833C16.2667 16.2833 16.1917 16.475 16.0417 16.6083C14.3833 18.125 12.2417 18.9583 10 18.9583ZM5.06667 15.9167C6.45 17.075 8.19167 17.7083 10 17.7083C11.8083 17.7083 13.55 17.075 14.9333 15.9167C14.7833 15.4083 14.3833 14.9167 13.7917 14.5167C11.7417 13.15 8.26667 13.15 6.2 14.5167C5.60833 14.9167 5.21667 15.4083 5.06667 15.9167Z"
-                                    fill="currentColor" />
-                                <path
-                                    d="M10 18.9583C5.05833 18.9583 1.04167 14.9417 1.04167 10C1.04167 5.05833 5.05833 1.04167 10 1.04167C14.9417 1.04167 18.9583 5.05833 18.9583 10C18.9583 14.9417 14.9417 18.9583 10 18.9583ZM10 2.29167C5.75 2.29167 2.29167 5.75 2.29167 10C2.29167 14.25 5.75 17.7083 10 17.7083C14.25 17.7083 17.7083 14.25 17.7083 10C17.7083 5.75 14.25 2.29167 10 2.29167Z"
-                                    fill="currentColor" />
-                            </svg>
-                        </span>
-                        <div class="text">
-                            <span>{{ get_phrase('Manage Profile') }}</span>
-                        </div>
-                    </a>
-                </li>
-                @endif
-
-                @if (has_permission('dd'))
-                    <li class="sidebar-first-li {{ $current_route == 'admin.offline.payments' ? 'active' : '' }}">
-                        <a href="{{ route('admin.offline.payments') }}">
+                    <li class="sidebar-first-li {{ $current_route == 'admin.manage_profile' ? 'active' : '' }}">
+                        <a href="{{ route('admin.manage_profile') }}">
                             <span>
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -488,7 +463,7 @@
                                 </svg>
                             </span>
                             <div class="text">
-                                <span>{{ get_phrase('Offline payment') }}</span>
+                                <span>{{ get_phrase('Manage Profile') }}</span>
                             </div>
                         </a>
                     </li>
