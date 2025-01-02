@@ -439,7 +439,7 @@ span[class="fi-rr-"]:before {
     border-bottom: 1px solid var(--border-color);
 }
 
-.in_progress .processing {
+.in_progress {
     display: inline-block;
     background: #fffcf1;
     color: #f6c000;
@@ -510,7 +510,7 @@ span[class="fi-rr-"]:before {
 
 .sub-title {
     font-weight: 500;
-    color: var(--text-color);
+    color: #6d718c;
 }
 
 .sub-title2 {
@@ -2545,7 +2545,6 @@ textarea.ol-form-textarea {
     border: none;
     min-width: 133px;
 }
-
 
 .ol-icon-dropdown .dropdown-menu li:not(:last-child),
 .context-menu-list li:not(:last-child) {
@@ -6006,7 +6005,8 @@ button.dt-paging-button.previous {
 div.dt-container.dt-empty-footer tbody > tr:last-child > * {
     border-bottom: 0;
 }
-.context-menu, .server-side-datatable tbody tr {
+.context-menu,
+.server-side-datatable tbody tr {
     border-bottom: 1px solid #dbdfeb !important;
 }
 .context-menu-header {
