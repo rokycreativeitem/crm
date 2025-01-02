@@ -24,7 +24,7 @@
             </div>
             <p class="ins-p-1">
                 {{ __('Welcome to Insight social platform installation. You will need to
-                                                know the following items before proceeding.') }}
+                                                                know the following items before proceeding.') }}
             </p>
             <div class="ins-point">
 
@@ -69,9 +69,9 @@
                             stroke-linejoin="round" />
                     </svg>
 
-                    <span>Back</span>
+                    <span>{{__('Back')}}</span>
                 </a>
-                <a href="{{ route('step2') }}" class="ins-btn"> Continue </a>
+                <a href="{{ route('step2') }}" class="ins-btn"> {{__('Continue')}} </a>
             </div>
 
             <ul class="ins-step">
@@ -82,9 +82,9 @@
                 <li></li>
                 <li></li>
             </ul>
-            <span> Step-2 </span>
+            <span> {{ __('Step-2') }} </span>
             <div class="text-center">
-                <p>Need any help? <a href="">Contact Us</a></p>
+                <p>{{ __('Need any help?') }} <a href="">{{ __('Contact Us') }}</a></p>
             </div>
         </div>
     </div>

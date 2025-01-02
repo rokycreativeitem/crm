@@ -172,7 +172,6 @@ class InstallController extends Controller
 
         // redirect to admin creation page
         return redirect()->route('step5');
-        // return redirect()->route('finalizing_setup');
     }
 
     public function step5() {

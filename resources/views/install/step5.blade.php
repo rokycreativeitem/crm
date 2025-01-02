@@ -113,9 +113,9 @@
                 <li class="active"></li>
                 <li class="active"></li>
             </ul>
-            <span> Step-6 </span>
+            <span> {{ __('Step-6') }} </span>
             <div class="text-center">
-                <p>Need any help? <a href="">Contact Us</a></p>
+                <p>{{ __('Need any help?') }} <a href="">{{ __('Contact Us') }}</a></p>
             </div>
         </div>
     </div>
