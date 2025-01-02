@@ -15,21 +15,21 @@ class WebConfig
      */
     public function handle(Request $request, Closure $next): Response
     {
-        config(
-            [
-                'app.name'                       => get_settings('system_title'),
-                'mail.mailers.smtp.transport'    => get_settings('protocol'),
-                'mail.mailers.smtp.host'         => get_settings('smtp_host'),
-                'mail.mailers.smtp.port'         => get_settings('smtp_port'),
-                'mail.mailers.smtp.encryption'   => get_settings('smtp_crypto'),
-                'mail.mailers.smtp.username'     => get_settings('smtp_user'),
-                'mail.mailers.smtp.password'     => get_settings('smtp_pass'),
-                'mail.mailers.smtp.timeout'      => null,
-                'mail.mailers.smtp.local_domain' => $_SERVER['SERVER_NAME'],
-                'mail.from.name'                 => get_settings('system_title'),
-                'mail.from.address'              => get_settings('smtp_from_email'),
-            ]
-        );
+        // config(
+        //     [
+        //         'app.name'                       => get_settings('system_title'),
+        //         'mail.mailers.smtp.transport'    => get_settings('protocol'),
+        //         'mail.mailers.smtp.host'         => get_settings('smtp_host'),
+        //         'mail.mailers.smtp.port'         => get_settings('smtp_port'),
+        //         'mail.mailers.smtp.encryption'   => get_settings('smtp_crypto'),
+        //         'mail.mailers.smtp.username'     => get_settings('smtp_user'),
+        //         'mail.mailers.smtp.password'     => get_settings('smtp_pass'),
+        //         'mail.mailers.smtp.timeout'      => null,
+        //         'mail.mailers.smtp.local_domain' => $_SERVER['SERVER_NAME'],
+        //         'mail.from.name'                 => get_settings('system_title'),
+        //         'mail.from.address'              => get_settings('smtp_from_email'),
+        //     ]
+        // );
 
         return $next($request);
     }

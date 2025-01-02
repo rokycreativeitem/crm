@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\InstallController;
 use App\Mail\OrderShipped;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +29,21 @@ Route::middleware('check.permission')->group(function () {
 });
 // Route::get('server-side-datatable', [ProjectController::class, 'server_side_table'])->name('server.side.datatable');
 
+//Installation routes
+Route::controller(InstallController::class)->group(function () {
+    Route::get('/install', 'index')->name('install');
+    Route::get('install/step0', 'step0')->name('step0');
+    Route::get('install/step1', 'step1')->name('step1');
+    Route::get('install/step2', 'step2')->name('step2');
+    Route::any('install/step3', 'step3')->name('step3');
+    Route::get('install/step4', 'step4')->name('step4');
+    Route::get('install/step4/{confirm_import}', 'confirmImport')->name('step4.confirm_import');
+    Route::get('install/install', 'confirmInstall')->name('confirm_install');
+    Route::post('install/validate', 'validatePurchaseCode')->name('install.validate');
+    Route::any('install/finalizing_setup', 'finalizingSetup')->name('finalizing_setup');
+    Route::get('install/success', 'success')->name('success');
+});
+//Installation routes
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/payment.php';

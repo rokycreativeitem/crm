@@ -1,0 +1,113 @@
+@extends('install.index')
+
+@section('content')
+    
+<?php if(isset($db_connection) && $db_connection != "") { ?>
+    <div class="row ins-seven justify-content-center">
+        <div class="col-md-6">
+            <div class="alert alert-danger">
+                <strong>{{ $db_connection }}</strong>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
+    <div class="card">
+        <div class="card-body">
+            <div class="text-center pt-2">
+                <img src="{{ asset('assets/install/images/logo.png') }}" alt="" />
+            </div>
+            <div class="page-title">
+                <h4> {{ __('Installation') }} </h4>
+            </div>
+            <p class="ins-p-1">{{ __('Below you should enter your database connection details.') . ' ' . __('If you’re not sure about these, contact your host.') }}</p>     
+            <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm" action="{{ route('step3') }}">
+              @csrf 
+              <div class="form-group mb-2">
+                <label class="control-label">{{ __('Database Name') }}</label>
+                <input type="text" class="form-control eForm-control" name="dbname" placeholder="" required autofocus>
+                <small class="text-muted">
+                    {{ __('The name of the database you want to use with this application') }}
+                </small>
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label">{{ __('Username') }}</label>
+                <input type="text" class="form-control eForm-control" name="username" placeholder="" required>
+                <small class="text-muted">
+                    {{ __('Your database Username') }}
+                </small>
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label">{{ __('Password') }}</label>
+                <input type="password" class="form-control eForm-control" name="password" placeholder="">
+                <small class="text-muted">
+                    {{ __('Your database Password') }}
+                </small>
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label">{{ __('Database Host') }}</label>
+                <input type="text" class="form-control eForm-control" name="hostname" placeholder="" required>
+                <small class="text-muted">
+                    {{ __("If 'localhost' does not work, you can get the hostname from web host") }}
+                </small>
+            </div>
+            
+            <br>
+            <div class="d-flex align-items-center justify-content-between pt-2">
+                <a href="{{ route('step0') }}" class="ins-back">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M11.3274 14.9401L6.43739 10.0501C5.85989 9.47256 5.85989 8.52756 6.43739 7.95006L11.3274 3.06006"
+                            stroke="#6D718C" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+
+                    <span>{{__('Back')}}</span>
+                </a>
+                <button type="submit" class="ins-btn"> {{__('Continue')}} </a>
+            </div>
+            </form>
+            <ul class="ins-step">
+                <li class="active"></li>
+                <li class="active"></li>
+                <li class="active"></li>
+                <li class="active"></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <span> Step-4 </span>
+            <div class="text-center">
+                <p>Need any help? <a href="">Contact Us</a></p>
+            </div>
+        </div>
+    </div>
+@endsection
+
+
+    {{-- <div class="row justify-content-center ins-two">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body px-4">
+                    <div class="panel panel-default ins-three" data-collapsed="0">
+                        <!-- panel body -->
+                        <div class="panel-body ins-four">
+                            <h6 class="ins-four">
+                                {{ __('Below you should enter your database connection details.') . ' ' . __('If you’re not sure about these, contact your host.') }}
+                            </h6>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form class="form-horizontal form-groups" method="post" action="{{ route('step3') }}">
+                                        @csrf
+                                        <hr>
+                                        
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+

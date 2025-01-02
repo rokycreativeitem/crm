@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\DB;
 
 class RedirectIfMiddleware
 {
@@ -17,10 +18,14 @@ class RedirectIfMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()) {
-            $role = Role::where('id', Auth::user()->role_id)->value('title');
-            return redirect()->route($role . '.dashboard');
+        if(DB::connection()->getDatabaseName() != 'db_name') {
+            if (Auth::check() && Auth::user()) {
+                $role = Role::where('id', Auth::user()->role_id)->value('title');
+                return redirect()->route($role . '.dashboard');
+            }
+            return $next($request);
+        } else {
+            return redirect('/install');
         }
-        return $next($request);
     }
 }
