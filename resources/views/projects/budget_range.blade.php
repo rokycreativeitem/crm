@@ -1,3 +1,4 @@
+<script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
 <link rel="stylesheet" href="{{asset('assets/css/nouislider.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/jquery-ui.css')}}">
 @php
@@ -10,7 +11,7 @@
 <script src="{{asset('assets/js/jquery-ui.min.js')}}"></script>
 <script src="{{asset('assets/js/nouislider.min.js')}}"></script>
 <script>
-var max = {{$max_value}};
+var max = {{isset($max_value) ? $max_value : 0}};
 const dropdownItems = document.querySelectorAll('.dropdown-menu');
 dropdownItems.forEach(item => {
     item.addEventListener('click', function (e) {
@@ -42,8 +43,8 @@ noUiSlider.create(slider, {
 slider.noUiSlider.on('update', function (values, handle) {
     document.getElementById('min-price').value = values[0];
     document.getElementById('max-price').value = values[1];
-    document.getElementById('maxPrice').innerHTML = values[1];
-    document.getElementById('minPrice').innerHTML = values[0];
+    document.getElementById('max-price').innerHTML = values[1];
+    document.getElementById('min-price').innerHTML = values[0];
 });
 
 </script>

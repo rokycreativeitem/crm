@@ -136,6 +136,7 @@ class UserController extends Controller
             $profile['email']     = $request->email;
             $profile['facebook']  = $request->facebook;
             $profile['linkedin']  = $request->linkedin;
+            $profile['twitter']  = $request->twitter;
             $profile['about']     = $request->about;
             $profile['skills']    = $request->skills;
             $profile['biography'] = $request->biography;

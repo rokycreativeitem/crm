@@ -91,9 +91,9 @@
     {{-- <script type="text/javascript" src="{{ asset('assets/js/chart.js') }}"></script> --}}
 
 
-    @include('init_js')
+    {{-- @include('init_js')
     @include('toastr')
-    @include('script')
+    @include('script') --}}
 
     @stack('js')
 </body>

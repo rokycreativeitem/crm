@@ -134,7 +134,7 @@
     </script>
 @endpush
 @push('js')
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('smtp_file').addEventListener('change', function(event) {
                 const file = event.target.files[0];
@@ -153,5 +153,5 @@
                 }
             });
         });
-    </script>
+    </script> --}}
 @endpush

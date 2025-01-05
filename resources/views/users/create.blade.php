@@ -35,13 +35,13 @@
                     </div>
 
                     <div class="fpb7 mb-2">
-                        <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Add user') }}</button>
+                        <button type="submit" id="ajaxFormBtn" class="btn ol-btn-primary">{{ get_phrase('Add user') }}</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
-@include('script')
 @include('ajax')
+{{-- @include('script')
+@include('ajax') --}}

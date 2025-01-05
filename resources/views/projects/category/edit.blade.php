@@ -22,7 +22,7 @@
         </select>
     </div>
     <div class="fpb7 mb-2">
-        <button type="submit" class="btn btn-primary"> {{get_phrase('Update')}} </button>
+        <button type="submit" class="btn ol-btn-primary"> {{get_phrase('Update')}} </button>
     </div>
 
 
