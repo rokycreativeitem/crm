@@ -2,6 +2,15 @@
 <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
 <script src="{{ asset('assets/datatable/dataTables.js') }}"></script>
 <script src="{{ asset('assets/datatable/dataTables.bootstrap5.js') }}"></script>
+
+
+<div id="table-data-not-found" class="d-none">
+    <div class="no-data py-5">
+        <img src="{{asset('assets/images/no-data.png')}}" alt="No Data" style="max-width: 150px;">
+        <h3 class="py-3">{{get_phrase('No Result Found')}}</h3>
+        <p class="pb-4">{{get_phrase('A few questions to keep you make sure you’ve listened to the past ')}}</p>
+    </div>
+</div>
 <script>
     new DataTable('#basic-datatable', {
         orderCellsTop: true,
@@ -20,6 +29,7 @@
                 data: columnKey
             };
         });
+        const noData = $('#table-data-not-found').html();
         var table = new DataTable('.server-side-datatable', {
             processing: true,
             serverSide: true,
@@ -40,15 +50,18 @@
                 //     console.log(response.filter_count);
                 //     $('#filter-count-display').text(response.filter_count);
                 // },
-                error: function(xhr, error, thrown) {
-                    console.log(xhr.responseText);
-                }
+                // error: function(xhr, error, thrown) {
+                //     console.log(xhr.responseText);
+                // }
             },
             columns: columns,
             orderCellsTop: true,
             ordering: false,
             pageLength: 10,
             paging: true,
+            language: {
+                emptyTable: noData,
+            },
         });
 
         table.on('xhr', function(e, settings, json) {

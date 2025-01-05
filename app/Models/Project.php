@@ -30,10 +30,6 @@ class Project extends Model
     {
         return $this->hasMany(Milestone::class, 'project_id');
     }
-    public function payments()
-    {
-        return $this->hasMany(Payment::class, 'project_id');
-    }
     public function tasks()
     {
         return $this->hasMany(Task::class, 'project_id');
@@ -51,7 +47,6 @@ class Project extends Model
             $project->files()->delete();
             $project->meetings()->delete();
             $project->milestones()->delete();
-            $project->payments()->delete();
             $project->tasks()->delete();
             $project->timesheets()->delete();
 

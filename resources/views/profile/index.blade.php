@@ -50,18 +50,18 @@
 
                         <div class="fpb7 mb-2">
                             <label class="form-label ol-form-label">{{ get_phrase('A short title about yourself') }}</label>
-                            <textarea rows="5" id="short-title" class="form-control ol-form-control" name="about" placeholder="{{ $auth->about }}"></textarea>
+                            <textarea rows="5" id="short-title" class="form-control ol-form-control" name="about">{{ $auth->about }}</textarea>
                         </div>
 
                         <div class="fpb-7 mb-3">
                             <label class="form-label ol-form-label" for="skills">{{ get_phrase('Skills') }}</label>
-                            <input type="text" name="skills" value="{{ $auth->skills }}" id="skills" class="tagify ol-form-control w-100" data-role="tagsinput">
+                            <input type="text" name="skills" value="{{ $auth->skills }}" id="skills" class="tagify form-control ol-form-control w-100 p-2" data-role="tagsinput">
                             <small class="text-muted">{{ get_phrase('Write your skill and click the enter button') }}</small>
                         </div>
 
                         <div class="fpb7 mb-2">
                             <label class="form-label ol-form-label">{{ get_phrase('Biography') }}</label>
-                            <textarea rows="5" class="form-control ol-form-control text_editor" name="biography" placeholder="">{!! removeScripts($auth->biography) !!}</textarea>
+                            <textarea rows="5" class="form-control ol-form-control text_editor" name="biography">{!! $auth->biography !!}</textarea>
                         </div>
 
 

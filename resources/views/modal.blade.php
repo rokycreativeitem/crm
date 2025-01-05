@@ -48,38 +48,15 @@
 </script>
 
 
-
 <!-- setup offcanvas -->
-<div class="offcanvas global p-1" data-bs-scroll="true" tabindex="-1" id="Id1" aria-labelledby="backdrop">
+<div class="global offcanvas p-1" data-bs-scroll="true" tabindex="-1" id="Id1" aria-labelledby="backdrop">
     <div class="offcanvas-header pb-0">
         <h5 class="offcanvas-title" id="backdrop"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body pt-2"></div>
 </div>
-<script>
-    "use strict";
-
-    function rightCanvas(url, title, position = '') {
-        let spinner = $('.placeholder-spinner').html();
-        let offcanvasBody = $('.global .offcanvas-body').empty().append(spinner);
-        let canvasPosition = position == 'right' ? 'offcanvas-end' : 'offcanvas-start';
-
-        $('.global .offcanvas-title').text(title);
-        $('.global.offcanvas').addClass(position == '' ? 'offcanvas-end' : canvasPosition);
-        $('.global.offcanvas').offcanvas('show');
-
-        $.ajax({
-            type: "get",
-            url: url,
-            success: function(response) {
-                if (response) {
-                    $('.global.offcanvas .offcanvas-body').empty().html(response);
-                }
-            }
-        });
-    }
-</script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> --}}
 
 <!-- confirm modal -->
 <div class="modal fade" id="ajaxModal" aria-labelledby="ajaxModalLabel" aria-hidden="true">
@@ -161,6 +138,19 @@
             $('#confirmModal .confirm-btn').removeAttr('onclick');
         }
     }
+    function processServerResponse(response) {
+        if (response.success) {
+            success(response.success)
+        }
+
+        if (response.error) {
+            error(response.error)
+        }
+
+        if (response.validationError) {
+            console.log(JSON.stringify(response.validationError))
+        }
+    }
 </script>
 
 <div class="modal fade" id="multiDelete" aria-labelledby="ajaxModalLabel" aria-hidden="true">
@@ -220,12 +210,35 @@
     }
 </script>
 
-
-<div class="offcanvas offcanvas-end" tabindex="-1" id="right-modal" aria-labelledby="right-modalLabel">
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+{{-- <div class="offcanvas offcanvas-end" tabindex="-1" id="right-modal" aria-labelledby="right-modalLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title title text-16px" id="right-modalLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
     </div>
-</div>
+</div> --}}
+
+<script>
+    "use strict";
+        function rightCanvas(url, title, position = '') {
+            let spinner = $('.placeholder-spinner').html();
+            let offcanvasBody = $('.global .offcanvas-body').empty().append(spinner);
+            let canvasPosition = position == 'right' ? 'offcanvas-end' : 'offcanvas-start';
+    
+            $('.global .offcanvas-title').text(title);
+            $('.global.offcanvas').addClass(position == '' ? 'offcanvas-end' : canvasPosition);
+            $('.global.offcanvas').offcanvas('show');
+    
+            $.ajax({
+                type: "get",
+                url: url,
+                success: function(response) {
+                    if (response) {
+                        $('.global.offcanvas .offcanvas-body').empty().html(response);
+                    }
+                }
+            });
+        }
+    </script>

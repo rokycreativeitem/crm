@@ -130,9 +130,9 @@
                     </div>
                 </div>
                 <ul class="mb-12px pb-12px ol-border-bottom-2">
-                    <li class="dropdown-list-1"><a class="dropdown-item-1" href="#manage_profile">{{ get_phrase('My Profile') }}</a>
+                    <li class="dropdown-list-1"><a class="dropdown-item-1" href="{{ route(get_current_user_role().'.manage_profile') }}">{{ get_phrase('My Profile') }}</a>
                     </li>
-                    <li class="dropdown-list-1"><a class="dropdown-item-1" href="#system_settings">{{ get_phrase('Settings') }}</a>
+                    <li class="dropdown-list-1"><a class="dropdown-item-1" href="{{route(get_current_user_role() . '.system_settings')}}">{{ get_phrase('Settings') }}</a>
                     </li>
                 </ul>
                 <a href="{{ route('logout') }}" class="dropdown-item-1 bg-transparent d-inline-flex">{{ get_phrase('Sign Out') }}</a>

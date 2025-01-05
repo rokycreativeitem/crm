@@ -6641,3 +6641,12 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     background-size: 8px !important;
     background-image: url(../images/icons/radio-checked-bg.svg);
 }
+.no-data {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.no-data h3 {
+    font-size: 20px;
+    font-weight: 600;
+}
