@@ -123,38 +123,7 @@
             });
         });
         
-        // $('#ajaxForm').on('submit', function(e) {
-        //     e.preventDefault();
-        //     let formData = new FormData(this);
-        //     let url = $(this).attr('action');
-        //     let method = $(this).attr('method') || 'POST';
-
-        //     $.ajax({
-        //         type: method,
-        //         url: url,
-        //         data: formData,
-        //         processData: false,
-        //         contentType: false,
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         success: function(response) {
-        //             console.log('Success:', response);
-        //             processServerResponse(response);
-        //             $('.global.offcanvas').offcanvas('hide');
-        //             $('.server-side-datatable').DataTable().ajax.reload(null, false);
-        //             $('.global.modal').modal('hide');
-
-        //             if (window.location.pathname.includes('/admin/events')) {
-        //                 location.reload();
-        //             }
-
-        //         },
-        //         error: function(xhr, status, error) {
-        //             console.error('AJAX Error:', status, error);
-        //         }
-        //     });
-        // });
+       
         function processServerResponse(response) {
             if (response.success) {
                 // success(response.success)
