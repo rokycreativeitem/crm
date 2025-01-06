@@ -1432,7 +1432,7 @@ class ServerSideDataController extends Controller
             <div class="d-flex align-items-center">
                 <input type="checkbox" class="checkbox-item me-2 table-checkbox">
                 <p class="row-number fs-12px">' . $key++ . '</p>
-                <input type="hidden" class="datatable-row-id" value="' . $role->id . '">
+                <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
             </div>';
             })
             ->addColumn('user_info', function ($payment) {

@@ -493,6 +493,24 @@ span[class="fi-rr-"]:before {
     padding: 6px;
     font-size: 12px;
 }
+.accepted {
+    display: inline-block;
+    background: #d5fde5;
+    color: #17c653;
+    border: 1px solid #ecfdf3;
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 12px;
+}
+.form-check-input-radio:checked[type="radio"] {
+    display: inline-block;
+    background: #d5fde5;
+    color: #17c653;
+    border: 1px solid #ecfdf3;
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 12px;
+}
 #offcanvas-body {
     padding: 1px;
 }

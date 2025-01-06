@@ -125,6 +125,114 @@ class PaymentController extends Controller
         $transaction->getResponseMessage(); //Get Response Message If Available
 
     }
+    public function doku_checkout($identifier)
+    {
+        $payment_gateway = DB::table('payment_gateways')->where('identifier', $identifier)->first();
+        $keys            = json_decode($payment_gateway->keys, true);
+        $test_mode       = $payment_gateway->test_mode == 1 ? 1 : 0;
+        $client_id       = $keys['client_id'];
+        if ($test_mode == 1) {
+            $key        = $keys['public_test_key'];
+            $secret_key = $keys['secret_test_key'];
+        } else {
+            $key        = $keys['public_live_key'];
+            $secret_key = $keys['secret_live_key'];
+        }
+
+        $user_id         = auth()->user()->id;
+        $user            = DB::table('users')->where('id', $user_id)->first();
+        $currency        = $payment_gateway->currency;
+        $payment_details = session('payment_details');
+        $product_title   = $payment_details['items'][0]['title'];
+        $amount          = $payment_details['items'][0]['price'];
+
+        //Store temporary data
+        Doku::storeTempData();
+
+        $requestBody = array(
+            'order'    => array(
+                'amount'         => $amount,
+                'invoice_number' => 'INV-' . rand(1, 10000), // Change to your business logic
+                'currency' => $currency,
+                'callback_url'   => $payment_details["success_url"] . "/$identifier",
+                'line_items'     => array(
+                    0 => array(
+                        'name'     => $product_title,
+                        'price'    => $amount,
+                        'quantity' => 1,
+                    ),
+                ),
+            ),
+            'payment'  => array(
+                'payment_due_date' => 60,
+            ),
+            'customer' => array(
+                'id'      => 'CUST-' . rand(1, 1000), // Change to your customer ID mapping
+                'name' => $user->name,
+                'email'   => $user->email,
+                'phone'   => $user->phone,
+                'address' => $user->address,
+                'country' => 'ID',
+            ),
+        );
+
+        $requestId     = rand(1, 100000); // Change to UUID or anything that can generate unique value
+        $dateTime      = gmdate("Y-m-d H:i:s");
+        $isoDateTime   = date(DATE_ISO8601, strtotime($dateTime));
+        $dateTimeFinal = substr($isoDateTime, 0, 19) . "Z";
+        $clientId      = $client_id; // Change with your Client ID
+        $secretKey     = $secret_key; // Change with your Secret Key
+
+        // $getUrl = 'https://api-sandbox.doku.com';
+
+        if ($test_mode == 1) {
+            $getUrl = 'https://api-sandbox.doku.com';
+        } else {
+            $getUrl = 'https://api.doku.com';
+        }
+
+        $targetPath = '/checkout/v1/payment';
+        $url        = $getUrl . $targetPath;
+
+        // Generate digest
+        $digestValue = base64_encode(hash('sha256', json_encode($requestBody), true));
+
+        // Prepare signature component
+        $componentSignature = "Client-Id:" . $clientId . "\n" .
+            "Request-Id:" . $requestId . "\n" .
+            "Request-Timestamp:" . $dateTimeFinal . "\n" .
+            "Request-Target:" . $targetPath . "\n" .
+            "Digest:" . $digestValue;
+
+        // Generate signature
+        $signature = base64_encode(hash_hmac('sha256', $componentSignature, $secretKey, true));
+
+        // Execute request
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestBody));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Client-Id:' . $clientId,
+            'Request-Id:' . $requestId,
+            'Request-Timestamp:' . $dateTimeFinal,
+            'Signature:' . "HMACSHA256=" . $signature,
+        ));
+
+        // Set response json
+        $responseJson = curl_exec($ch);
+        $httpCode     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+        // Echo the response
+        if (is_string($responseJson) && $httpCode == 200) {
+            return json_decode($responseJson, true);
+        } else {
+            return null;
+        }
+    }
 
     // public function webRedirectToPayFee(Request $request)
     // {
