@@ -58,7 +58,6 @@ class PaymentController extends Controller
             $success_function = $payment_details['success_method']['function_name'];
 
             $model_full_path = str_replace(' ', '', 'App\Models\ ' . $success_model);
-            // dd($model_full_path);
             return $model_full_path::$success_function($identifier);
         } else {
             Session::flash('success', get_phrase('Payment failed! Please try again.'));
@@ -74,7 +73,6 @@ class PaymentController extends Controller
         $model_name           = $payment_gateway->model_name;
         $model_full_path      = str_replace(' ', '', 'App\Models\payment_gateway\ ' . $model_name);
         $created_payment_link = $model_full_path::payment_create($identifier);
-
         return redirect()->to($created_payment_link);
     }
 
@@ -124,6 +122,13 @@ class PaymentController extends Controller
         }
         $transaction->getResponseMessage(); //Get Response Message If Available
 
+    }
+
+    public function payment_notification(Request $request, $identifier)
+    {
+        if ($identifier == 'doku') {
+            Doku::payment_status($identifier, $request->all(), $request->headers->all());
+        }
     }
     public function doku_checkout($identifier)
     {

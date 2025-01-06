@@ -100,12 +100,11 @@ class Aamarpay extends Model
         ));
 
         $response = curl_exec($curl);
-
         curl_close($curl);
 
         $responseObj = json_decode($response);
 
-        if (isset($responseObj->payment_url) && ! empty($responseObj->payment_url)) {
+        if (isset($responseObj->payment_url) && !empty($responseObj->payment_url)) {
             $paymentUrl = $responseObj->payment_url;
 
             return $paymentUrl;
