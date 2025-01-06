@@ -49,7 +49,7 @@ class Paypal extends Model
             return false;
         } else {
             $jsonData = json_decode($response);
-            $curl = curl_init($paypalURL . 'payments/payment/' . $transaction_keys['payment_id']);
+            $curl = curl_init($paypalURL . 'checkout/orders/' . $transaction_keys['payment_id']);
             curl_setopt($curl, CURLOPT_POST, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_HEADER, false);
@@ -66,7 +66,7 @@ class Paypal extends Model
             $result = json_decode($response);
 
             // CHECK IF THE PAYMENT STATE IS APPROVED OR NOT
-            if ($result && $result->state == 'approved') {
+            if ($result->status == 'approved' || $result->status == 'COMPLETED') {
                 return true;
             } else {
                 return false;

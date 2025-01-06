@@ -17,6 +17,7 @@ Route::controller(PaymentController::class)->middleware('auth')->group(function 
     Route::post('payment/make/order/{identifier}', 'payment_paytm')->name('make.order');
     Route::get('payment/make/{identifier}/status', 'paytm_paymentCallback')->name('payment.status');
 
+    Route::post('payment/doku_checkout/{identifier}', 'doku_checkout')->name('payment.doku_checkout');
 
 });
 Route::get('payment/web_redirect_to_pay_fee', [PaymentController::class, 'webRedirectToPayFee'])->name('payment.web_redirect_to_pay_fee');

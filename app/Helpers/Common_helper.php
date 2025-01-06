@@ -41,9 +41,9 @@ if (!function_exists('get_phrase')) {
 if (!function_exists('currency')) {
     function currency($price = "")
     {
-        // $currency_position = DB::table('system_settings')->where('key', 'currency_position')->value('value');
-        // $code = DB::table('system_settings')->where('key', 'system_currency')->value('value');
-        $symbol            = DB::table('currencies')->where('id', 2)->value('symbol');
+        $currency_position = DB::table('settings')->where('type', 'currency_position')->value('description');
+        $symbol            = DB::table('settings')->where('type', 'system_currency')->value('description');
+        // $symbol            = DB::table('currencies')->where('id', 2)->value('symbol');
         $currency_position = 'left';
         if ($currency_position == 'left') {
             return $symbol . '' . $price;

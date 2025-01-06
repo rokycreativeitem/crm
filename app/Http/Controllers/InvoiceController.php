@@ -101,6 +101,7 @@ class InvoiceController extends Controller
     {
         $invoice         = Invoice::where('id', $id)->first();
         $payment_purpose = DB::table('payment_purposes')->where('title', 'invoice')->first();
+        $project_code    = Project::where('id', $invoice->project_id)->value('code');
         $items[]         = [
             'id'           => $invoice->id,
             'title'        => $invoice->title,
@@ -125,7 +126,7 @@ class InvoiceController extends Controller
 
             'payable_amount'  => $invoice->payment,
             'payment_purpose' => $payment_purpose->id,
-            'cancel_url'      => route('admin.invoice'),
+            'cancel_url'      => route(get_current_user_role() . '.project.details', [$project_code, 'invoice']),
             'success_url'     => route('payment.success', ''),
         ];
 
