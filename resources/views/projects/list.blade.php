@@ -3,7 +3,6 @@
         <div class="ol-card">
             <div class="ol-card-body p-3 position-relative" id="filters-container">
 
-
                 <div class="ol-card radius-8px print-d-none">
                     <div class="ol-card-body px-2">
                         <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-lg-nowrap">

@@ -183,7 +183,7 @@
                         'project.category.delete',
                         'project.category.edit',
                         'project.category.update'))
-                    <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.projects' || $current_route == get_current_user_role() . '.project.categories' || request()->is('admin/project*')) active showMenu @endif">
+                    <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.projects' || $current_route == get_current_user_role() . '.project.categories' || $current_route == get_current_user_role() . '.invoice.view' || request()->is('admin/project*')) active showMenu @endif">
                         <a href="javascript:void(0);">
                             <span>
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -205,7 +205,7 @@
                             <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.project.categories') active showMenu @endif">
                                 <a href="{{ route(get_current_user_role() . '.project.categories') }}">{{ get_phrase('Categories') }}</a>
                             </li>
-                            <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.projects' || request()->is('admin/project*')) active showMenu @endif">
+                            <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.projects' || $current_route == get_current_user_role() . '.invoice.view' || request()->is('admin/project*')) active showMenu @endif">
                                 <a href="{{ route(get_current_user_role() . '.projects', ['layout' => get_settings('list_view_type') ?? 'list']) }}">{{ get_phrase('Projects') }}</a>
                             </li>
                         </ul>
@@ -285,29 +285,6 @@
                         </a>
                     </li>
                 @endif
-
-                {{-- <li class="sidebar-first-li">
-                    <a href="">
-
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17.6201 9.62H12.3701C11.9601 9.62 11.6201 9.28 11.6201 8.87C11.6201 8.46 11.9601 8.12 12.3701 8.12H17.6201C18.0301 8.12 18.3701 8.46 18.3701 8.87C18.3701 9.28 18.0401 9.62 17.6201 9.62Z" fill="currentColor" />
-                            <path
-                                d="M7.12006 10.38C6.93006 10.38 6.74006 10.31 6.59006 10.16L5.84006 9.41001C5.55006 9.12001 5.55006 8.64001 5.84006 8.35001C6.13006 8.06001 6.61006 8.06001 6.90006 8.35001L7.12006 8.57001L8.84006 6.85001C9.13006 6.56001 9.61006 6.56001 9.90006 6.85001C10.1901 7.14001 10.1901 7.62001 9.90006 7.91001L7.65006 10.16C7.51006 10.3 7.32006 10.38 7.12006 10.38Z"
-                                fill="currentColor" />
-                            <path d="M17.6201 16.62H12.3701C11.9601 16.62 11.6201 16.28 11.6201 15.87C11.6201 15.46 11.9601 15.12 12.3701 15.12H17.6201C18.0301 15.12 18.3701 15.46 18.3701 15.87C18.3701 16.28 18.0401 16.62 17.6201 16.62Z" fill="currentColor" />
-                            <path
-                                d="M7.12006 17.38C6.93006 17.38 6.74006 17.31 6.59006 17.16L5.84006 16.41C5.55006 16.12 5.55006 15.64 5.84006 15.35C6.13006 15.06 6.61006 15.06 6.90006 15.35L7.12006 15.57L8.84006 13.85C9.13006 13.56 9.61006 13.56 9.90006 13.85C10.1901 14.14 10.1901 14.62 9.90006 14.91L7.65006 17.16C7.51006 17.3 7.32006 17.38 7.12006 17.38Z"
-                                fill="currentColor" />
-                            <path
-                                d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H15C20.43 1.25 22.75 3.57 22.75 9V15C22.75 20.43 20.43 22.75 15 22.75ZM9 2.75C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V9C21.25 4.39 19.61 2.75 15 2.75H9Z"
-                                fill="currentColor" />
-                        </svg>
-
-                        <div class="text">
-                            <span>{{ get_phrase('Tasks') }}</span>
-                        </div>
-                    </a>
-                </li> --}}
 
                 @if (has_permission('dd'))
                     <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.addons') active showMenu @endif">
@@ -411,6 +388,7 @@
                             $current_route == get_current_user_role() . '.payment_settings' ||
                             $current_route == get_current_user_role() . '.notification_settings' ||
                             $current_route == get_current_user_role() . '.manage_language' ||
+                            $current_route == get_current_user_role() . '.email.temp' ||
                             $current_route == get_current_user_role() . '.about') active showMenu @endif">
                         <a href="javascript:void(0);">
                             <span>
@@ -436,6 +414,9 @@
                             </li>
                             <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.notification_settings') active showMenu @endif">
                                 <a href="{{ route(get_current_user_role() . '.notification_settings') }}">{{ get_phrase('SMTP Settings') }}</a>
+                            </li>
+                            <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.email.temp') active showMenu @endif">
+                                <a href="{{ route(get_current_user_role() . '.email.temp') }}">{{ get_phrase('Email Template') }}</a>
                             </li>
                             <li class="sidebar-second-li {{ $current_route == get_current_user_role() . '.manage_language' || $current_route == get_current_user_role() . '.language.phrase.edit' ? 'active' : '' }}">
                                 <a href="{{ route(get_current_user_role() . '.manage_language') }}">{{ get_phrase('Manage Language') }}</a>
@@ -468,6 +449,9 @@
                         </a>
                     </li>
                 @endif
+
+                <div id="addon-crud-menu">
+                </div>
 
             </ul>
         </nav>

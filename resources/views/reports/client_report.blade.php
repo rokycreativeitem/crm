@@ -158,17 +158,16 @@
             </div>
         </div>
     </div>
+    @include('components.datatable')
 @endsection
-
-@include('components.datatable')
-
 
 @push('js')
     <script>
         setTimeout(function() {
-            server_side_datatable('["id","timestamp_start", "user_id", "payment","payment_method","status"]', "{{ route(get_current_user_role() . '.client_report') }}");
+            server_side_datatable('["id","date", "client", "amount","payment_method","status"]', "{{ route(get_current_user_role() . '.client_report') }}");
         }, 500);
     </script>
+    
     <script>
         "use strict";
         document.addEventListener('DOMContentLoaded', function() {

@@ -531,4 +531,24 @@ class SettingsController extends Controller
         }
     }
 
+    public function email_temp() {
+        return view('settings.email_template');
+    }
+
+    public function email_temp_edit($id) {
+        $page_data['template'] = NotificationSetting::where('id', $id)->first();
+        return view('settings.email_temp', $page_data);
+    }
+
+    public function email_temp_update(Request $request, $id) {
+        // NotificationSetting::where('id',$id)->udpate(['template'=>json_encode($request->template)]);
+        $data = [
+            'template' => json_encode($request->template)
+        ];
+        NotificationSetting::where('id',$id)->update($data);
+        return redirect()->back()->with('success', 'Templated updated successfully!');
+    }
+
+
+
 }

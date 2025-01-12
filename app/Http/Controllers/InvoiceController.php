@@ -49,6 +49,7 @@ class InvoiceController extends Controller
 
         $data['project_id']     = $request->project_id;
         $data['user_id']        = $user_id;
+        $data['due_date']        = $request->due_date;
         $data['title']          = $request->title;
         $data['payment']        = $request->payment;
         $data['payment_status'] = $payment_status;
@@ -73,10 +74,17 @@ class InvoiceController extends Controller
         return view('projects.invoice.edit', $data);
     }
 
+    public function view($id)
+    {
+        $data['invoice'] = Invoice::where('id', $id)->first();
+        return view('projects.invoice.view', $data);
+    }
+
     public function update(Request $request, $id)
     {
         $data['title']   = $request->title;
         $data['payment'] = $request->payment;
+        $data['due_date'] = $request->due_date;
 
         Invoice::where('id', $id)->update($data);
 

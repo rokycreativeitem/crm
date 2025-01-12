@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Smtp;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -25,17 +27,19 @@ class PasswordResetLinkController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
         $request->validate([
             'email' => ['required', 'email'],
         ]);
 
-        $status = Password::sendResetLink(
-            $request->only('email')
+        // Generate the password reset token
+        $token = app('auth.password.broker')->createToken(
+            User::where('email', $request->email)->first()
         );
 
-        return $status == Password::RESET_LINK_SENT
-        ? back()->with('status', __($status))
-        : back()->withInput($request->only('email'))
-            ->withErrors(['email' => __($status)]);
+        // Send the email
+        $status = Smtp::send_mail('forgot-password', $request->email, $token);
+
+        return back()->with('status', __($status));
     }
 }

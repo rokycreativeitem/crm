@@ -77,8 +77,8 @@
 
         </div>
     </div>
+    @include('components.datatable')
 @endsection
-@include('components.datatable')
 @push('js')
 
     <script>

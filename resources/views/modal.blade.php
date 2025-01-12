@@ -1,3 +1,5 @@
+<script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+
 <div class="placeholder-content d-none">
     <div class="d-flex justify-content-center align-items-center">
         <div class="spinner-border text-primary spinner-border-lg" role="status">
@@ -126,7 +128,7 @@
                         }, 1000);
                         processServerResponse(response);
                         setTimeout(function() {
-                            if (window.location.pathname.includes('/admin/events')) {
+                            if (window.location.pathname.includes('/admin/events') || window.location.pathname.includes('/admin/event/delete')) {
                                 location.reload();
                             }
                         }, 500)
@@ -211,34 +213,37 @@
 </script>
 
 {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-{{-- <div class="offcanvas offcanvas-end" tabindex="-1" id="right-modal" aria-labelledby="right-modalLabel">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="right-modal" aria-labelledby="right-modalLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title title text-16px" id="right-modalLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
     </div>
-</div> --}}
+</div>
 
 <script>
-    "use strict";
-        function rightCanvas(url, title, position = '') {
-            let spinner = $('.placeholder-spinner').html();
-            let offcanvasBody = $('.global .offcanvas-body').empty().append(spinner);
-            let canvasPosition = position == 'right' ? 'offcanvas-end' : 'offcanvas-start';
-    
-            $('.global .offcanvas-title').text(title);
-            $('.global.offcanvas').addClass(position == '' ? 'offcanvas-end' : canvasPosition);
-            $('.global.offcanvas').offcanvas('show');
-    
-            $.ajax({
-                type: "get",
-                url: url,
-                success: function(response) {
-                    if (response) {
-                        $('.global.offcanvas .offcanvas-body').empty().html(response);
-                    }
+"use strict";
+    function rightCanvas(url, title, position = '') {
+        let spinner = $('.placeholder-spinner').html();
+        let offcanvasBody = $('.global .offcanvas-body').empty().append(spinner);
+        let canvasPosition = position == 'right' ? 'offcanvas-end' : 'offcanvas-start';
+
+        $('.global .offcanvas-title').text(title);
+        $('.global.offcanvas').addClass(position == '' ? 'offcanvas-end' : canvasPosition);
+        $('.global.offcanvas').offcanvas('show');
+
+        $.ajax({
+            type: "get",
+            url: url,
+            success: function(response) {
+                if (response) {
+                    $('.global.offcanvas .offcanvas-body').empty().html(response);
                 }
-            });
-        }
-    </script>
+            }
+        });
+    }
+</script>
+@include('toastr')
+
+

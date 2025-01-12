@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -42,6 +43,8 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerate();
 
             $role = Role::where('id', Auth::user()->role_id)->value('title');
+
+            Session::put('user_id', Auth::user()->role_id);
 
             return redirect()->intended(route($role . '.dashboard', [], false))
                 ->with('success', 'Login successful!');

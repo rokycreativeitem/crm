@@ -6668,3 +6668,78 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     font-size: 20px;
     font-weight: 600;
 }
+
+.invoice-title {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 600;
+    padding-bottom: 20px;
+}
+
+.invoice p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 25px;
+}
+
+.in-row-p {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+}
+.in-note {
+    padding: 20px;
+    border: 1px solid #1b84ff;
+    border-radius: 12px;
+    background: #ebf4ff;
+    margin-top: 40px;
+    font-size: 16px !important;
+}
+.in-btn {
+    background: #ebf4ff;
+    border-radius: 50px;
+    padding: 10px 20px;
+    color: #1b84ff;
+}
+.in-16 {
+    font-size: 16px !important;
+    color: #6d718c;
+}
+.in-h-p {
+    width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+}
+hr {
+    border: 1px solid #dbdfeb !important;
+}
+.in-tr {
+    border-bottom: 1px solid #dbdfeb;
+}
+.in-tr th {
+    font-size: 16px;
+    color: #212534;
+    font-weight: 600;
+    padding: 20px;
+    padding-top: 0;
+}
+.in-tr td {
+    font-size: 14px;
+    color: #212534;
+    font-weight: 500;
+    padding: 20px;
+}
+.smtp-template th {
+    font-size: 16px;
+    font-weight: 600 !important;
+}
+.smtp-template h5 {
+    font-size: 14px;
+}
+.smtp-template tr {
+    border-bottom: 1px dashed #dbdfeb;
+}

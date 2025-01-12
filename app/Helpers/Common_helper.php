@@ -82,7 +82,8 @@ if (!function_exists('get_user_role')) {
 if (!function_exists('get_current_user_role')) {
     function get_current_user_role()
     {
-        $role = Role::where('id', Auth::user()->role_id)->value('title');
+       
+        $role = Role::where('id', auth()->user()->role_id)->value('title');
         return $role;
     }
 }
