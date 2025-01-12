@@ -122,6 +122,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('invoice/update/{id}', 'update')->name('invoice.update');
         Route::post('invoice/multi-delete', 'multiDelete')->name('invoice.multi-delete');
         Route::get('invoice/payout/{id}', 'payout')->name('invoice.payout');
+        Route::get('invoice/view/{id}', 'view')->name('invoice.view');
     });
 
     Route::controller(TimesheetController::class)->group(function () {
@@ -209,6 +210,11 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
 
         Route::get('about', 'about')->name('about');
         Route::any('save_valid_purchase_code/{action_type?}', 'save_valid_purchase_code')->name('save_valid_purchase_code');
+
+
+        Route::get('settings/email_temp', 'email_temp')->name('email.temp');
+        Route::get('settings/email_temp/edit/{id}', 'email_temp_edit')->name('email.temp.edit');
+        Route::post('settings/temp_update/{id}', 'email_temp_update')->name('temp.update');
 
     });
 

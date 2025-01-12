@@ -88,7 +88,7 @@ class ServerSideDataController extends Controller
                 return $project?->code;
             })
             ->addColumn('client', function ($project) {
-                return $project->user->name;
+                return $project->user?->name;
             })
             ->addColumn('staff', function ($project) {
                 $staffs     = $project->staffs ? json_decode($project->staffs, true) : [];
@@ -96,7 +96,7 @@ class ServerSideDataController extends Controller
                 foreach ($staffs as $staff) {
                     $user = get_user($staff);
                     if ($user) {
-                        $staffNames[] = $user->name;
+                        $staffNames[] = $user?->name;
                     }
                 }
                 return implode(', ', $staffNames);
@@ -960,6 +960,12 @@ class ServerSideDataController extends Controller
             ->addColumn('time', function ($invoice) {
                 return date('d-M-y h:i A', strtotime($invoice->timestamp_start));
             })
+            ->addColumn('due_date', function ($invoice) {
+                if($invoice->due_date) {
+                    return date('d-M-y h:i A', strtotime($invoice?->due_date));
+                }
+                return '';
+            })
             ->addColumn('payment_status', function ($invoice) {
                 $statusLabel = '';
 
@@ -983,7 +989,7 @@ class ServerSideDataController extends Controller
                 // Generate routes dynamically
                 $editRoute    = route(get_current_user_role() . '.invoice.edit', $invoice->id);
                 $deleteRoute  = route(get_current_user_role() . '.invoice.delete', $invoice->id);
-                $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $invoiceRoute = route(get_current_user_role() . '.invoice.view', $invoice->id);
                 $payoutRoute  = route(get_current_user_role() . '.invoice.payout', $invoice->id);
 
                 // $payoutRoute = '';
@@ -1015,7 +1021,7 @@ class ServerSideDataController extends Controller
             ->addColumn('context_menu', function ($invoice) {
                 $editRoute    = route(get_current_user_role() . '.invoice.edit', $invoice->id);
                 $deleteRoute  = route(get_current_user_role() . '.invoice.delete', $invoice->id);
-                $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+                $invoiceRoute = route(get_current_user_role() . '.invoice.view', $invoice->id);
                 // Generate the context menu
                 $contextMenu = [
                     'Invoice' => [
@@ -1041,7 +1047,7 @@ class ServerSideDataController extends Controller
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id", "title", "payment", "time", "payment_status", "options"])
+            ->rawColumns(["id", "title", "payment", "time", "due_date", "payment_status", "options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -1176,43 +1182,16 @@ class ServerSideDataController extends Controller
 
     public function client_report_server_side($string, $project, $paymentMethod, $status, $minAmount, $maxAmount)
     {
-        // $query = Payment::query();
-        // $query = $query->select('*')->groupBy('user_id');
+
         $query = Invoice::query();
-        $query = $query->select('user_id', DB::raw('SUM(amount) as total_amount'))
+        $query = $query->select('user_id', DB::raw('SUM(payment) as total_amount'))
             ->groupBy('user_id');
 
-        // if (!empty($string)) {
-        //     $query->where(function ($q) use ($string) {
-        //         $q->where('id', 'like', "%{$string}%")
-        //             ->orWhereHas('project', function ($projectQuery) use ($string) {
-        //                 $projectQuery->where('title', 'like', "%{$string}%");
-        //             });
-        //     });
-        // }
-
-        // if ($project != 'all') {
-        //     $query->where('project_id', $project);
-        // }
-
-        // if ($paymentMethod != 'all') {
-        //     $query->where('payment_method', $paymentMethod);
-        // }
-
-        // if ($status != 'all') {
-        //     $query->where('status', $status);
-        // }
-
-        // $minAmount = (int) $minAmount;
-        // $maxAmount = (int) $maxAmount;
-        // if ($minAmount > 0 && $maxAmount > 0 && is_numeric($minAmount) && is_numeric($maxAmount)) {
-        //     $query->whereBetween('payment', [$minAmount, $maxAmount]);
-        // }
-
-        // Get distinct client ids for mapping
-        // $clients = Project::distinct('client_id')->pluck('client_id')->mapWithKeys(function ($id) {
-        //     return [$id => get_user($id)->name ?? '-'];
-        // });
+        if (!empty($string)) {
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%");
+            });
+        }
 
         return datatables()
             ->eloquent($query)
@@ -1227,7 +1206,7 @@ class ServerSideDataController extends Controller
             ->addColumn('date', function ($invoice) {
                 return date('Y-m-d', strtotime($invoice->timestamp_start));
             })
-            ->addColumn('user_id', function ($invoice) {
+            ->addColumn('client', function ($invoice) {
                 return $invoices->user_id ?? '-';
             })
             ->addColumn('amount', function ($invoice) {
@@ -1248,7 +1227,7 @@ class ServerSideDataController extends Controller
                 }
                 return $statusLabel;
             })
-            ->rawColumns(['id', 'timestamp_start', 'user_id', 'payment', 'payment_method', 'status'])
+            ->rawColumns(["id","date", "client", "amount","payment_method","status"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -1258,25 +1237,6 @@ class ServerSideDataController extends Controller
     public function role_server_side($string, $role)
     {
         $query = Role::query();
-
-        // General string search
-        // if (!empty($string)) {
-        //     $query->where(function ($q) use ($string) {
-        //         $q->where('name', 'like', "%{$string}%")
-        //             ->orWhere('email', 'like', "%{$string}%")
-        //             ->orWhere('id', 'like', "%{$string}%");
-        //     });
-        // }
-
-        // // Filter by name if provided
-        // if (!empty($name)) {
-        //     $query->where('name', 'like', "%{$name}%");
-        // }
-
-        // // Filter by email if provided
-        // if (!empty($email)) {
-        //     $query->where('email', 'like', "%{$email}%");
-        // }
 
         return datatables()
             ->eloquent($query)
@@ -1335,25 +1295,6 @@ class ServerSideDataController extends Controller
         $query->whereHas('role', function ($q) use ($role) {
             $q->where('title', $role);
         });
-
-        // General string search
-        // if (!empty($string)) {
-        //     $query->where(function ($q) use ($string) {
-        //         $q->where('name', 'like', "%{$string}%")
-        //             ->orWhere('email', 'like', "%{$string}%")
-        //             ->orWhere('id', 'like', "%{$string}%");
-        //     });
-        // }
-
-        // // Filter by name if provided
-        // if (!empty($name)) {
-        //     $query->where('name', 'like', "%{$name}%");
-        // }
-
-        // // Filter by email if provided
-        // if (!empty($email)) {
-        //     $query->where('email', 'like', "%{$email}%");
-        // }
 
         return datatables()
             ->eloquent($query)

@@ -121,7 +121,7 @@
 
                                 <div class="mb-3">
                                     <label for="email" class="form-label ol2-form-label mb-3 d-none">{{ get_phrase('Email') }}</label>
-                                    <input type="email" class="form-control ol2-form-control password-field d-none" id="email" name="email" value="{{ old('email', $request->email) }}" placeholder="{{ get_phrase('Enter Your Password') }}">
+                                    <input type="email" class="form-control ol2-form-control password-field d-none" id="email" name="email" value="{{urldecode($request->email)}}" placeholder="{{ get_phrase('Enter Your Password') }}">
                                 </div>
 
                                 <div class="mb-3">

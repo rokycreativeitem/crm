@@ -2,123 +2,160 @@
 @php
     $tasks = App\Models\Task::where('project_id', project_id_by_code(request()->route()->parameter('code')))->get();
 @endphp
+<style>
+    g rect[height="60"] {
+        fill: #ffffff;
+    }
 
-<div id="chart_div"></div>
+    g rect[height="40"] {
+        fill: #0000000f;
+    }
+
+    g text {
+        fill: #6D718C;
+        font-weight: 600;
+        padding: 10px !important;
+    }
+
+    /* Disable hover effect on task bars */
+</style>
+<div id="chart_div" class="mt-3"></div>
+
+<div id="empty_chart" class="d-none">
+    <div class="d-flex justify-content-center flex-column align-items-center p-5">
+        <img src="{{ asset('assets/images/task-not-found.png') }}" class="mt-5 mb-3" alt="No tasks available"
+            width="200px">
+        <p class="pb-5">{{ get_phrase('No Task Available') }}</p>
+    </div>
+</div>
 
 @push('js')
-
     <script type="text/javascript">
         "use strict";
+
         google.charts.load('current', {
-            'packages': ['gantt']
+            packages: ['gantt']
         });
         google.charts.setOnLoadCallback(drawChart);
-    
+
         function drawChart() {
-    var data = new google.visualization.DataTable();
+            var tasks = @json($tasks); // Pass PHP tasks data to JS
 
-    // Define columns for the Gantt chart
-    data.addColumn('string', 'Task ID');
-    data.addColumn('string', 'Task Name');
-    data.addColumn('string', 'Resource');
-    data.addColumn('date', 'Start Date');
-    data.addColumn('date', 'End Date');
-    data.addColumn('number', 'Duration');
-    data.addColumn('number', 'Percent Complete');
-    data.addColumn('string', 'Dependencies');
-    data.addColumn({ type: 'string', role: 'tooltip', p: { html: true } }); // Tooltip column with HTML support
+            // Handle empty tasks
+            if (tasks.length === 0) {
+                var html = document.getElementById('empty_chart').innerHTML;
+                document.getElementById('chart_div').innerHTML = html;
+                return;
+            }
 
-    // Add rows dynamically
-    data.addRows([
-        @foreach ($tasks as $task)
-            [
-                'Task{{ $task->id }}',
-                '{{ addslashes($task->title) }}',
-                null,
-                new Date(
-                    {{ (int) date('Y', $task->start_date) }},
-                    {{ (int) date('m', $task->start_date) - 1 }}, // Month is 0-indexed
-                    {{ (int) date('d', $task->start_date) }}
-                ),
-                new Date(
-                    {{ (int) date('Y', $task->end_date) }},
-                    {{ (int) date('m', $task->end_date) - 1 }},
-                    {{ (int) date('d', $task->end_date) }}
-                ),
-                null,
-                {{ $task->percent_complete ?? 0 }},
-                null,
-                `<div style="padding: 10px; text-align: center;">
-                    <img src="{{ $task->image_url }}" alt="Staff" style="width: 50px; height: 50px; border-radius: 50%;"><br>
-                    <strong>{{ addslashes($task->staff_name) }}</strong>
-                </div>`
-            ]
-            @if (!$loop->last)
-                ,
-            @endif
-        @endforeach
-    ]);
+            var data = new google.visualization.DataTable();
 
-    // Chart options
-    var options = {
-        height: 500,
-        backgroundColor: '#f0f4f8',
-        gantt: {
-            trackHeight: 40,
-            barHeight: 30,
-            palette: [
-                {
-                    color: '#42a5f5', // Light blue for task bars
-                    dark: '#1e88e5', // Dark blue for critical paths
-                    light: '#bbdefb' // Lighter blue for non-critical tasks
+            // Define Gantt chart columns
+            data.addColumn('string', 'Task ID');
+            data.addColumn('string', 'Task Name');
+            data.addColumn('string', 'Resource');
+            data.addColumn('date', 'Start Date');
+            data.addColumn('date', 'End Date');
+            data.addColumn('number', 'Duration');
+            data.addColumn('number', 'Percent Complete');
+            data.addColumn('string', 'Dependencies');
+
+            // Populate Gantt chart rows
+            data.addRows([
+                @foreach ($tasks as $task)
+                    [
+                        'Task{{ $task->id }}', // Task ID
+                        '{{ addslashes($task->title) }}', // Task Name
+                        null, // Resource
+                        new Date(
+                            {{ (int) date('Y', $task->start_date) }},
+                            {{ (int) date('m', $task->start_date) - 1 }},
+                            {{ (int) date('d', $task->start_date) }}
+                        ), // Start Date
+                        new Date(
+                            {{ (int) date('Y', $task->end_date) }},
+                            {{ (int) date('m', $task->end_date) - 1 }},
+                            {{ (int) date('d', $task->end_date) }}
+                        ), // End Date
+                        null, // Duration
+                        {{ $task->progress ?? 0 }}, // Progress
+                        null, // Dependencies
+                    ]
+                    @if (!$loop->last)
+                        ,
+                    @endif
+                @endforeach
+            ]);
+
+            // Chart options
+            var options = {
+                height: 500,
+                backgroundColor: '#f0f4f8',
+                gantt: {
+                    trackHeight: 60,
+                    barHeight: 40,
+                    palette: [{
+                            color: '#42a5f5',
+                            dark: '#1e88e5',
+                            light: '#bbdefb'
+                        },
+                        {
+                            color: '#ef5350',
+                            dark: '#e53935',
+                            light: '#ffcdd2'
+                        }
+                    ],
+                    criticalPathEnabled: true,
+                    criticalPathStyle: {
+                        stroke: '#ff7043',
+                        strokeWidth: 6
+                    },
+                    arrow: {
+                        angle: 45,
+                        width: 2,
+                        color: '#ff5722',
+                        radius: 0
+                    },
+                    labelStyle: {
+                        fontName: 'Arial',
+                        fontSize: 13,
+                        color: '#333'
+                    }
                 },
-                {
-                    color: '#ef5350', // Red for another task group
-                    dark: '#e53935',
-                    light: '#ffcdd2'
+                hAxis: {
+                    textStyle: {
+                        color: '#333',
+                        fontName: 'Arial',
+                        fontSize: 12
+                    }
+                },
+                vAxis: {
+                    textStyle: {
+                        color: '#333',
+                        fontName: 'Arial',
+                        fontSize: 12
+                    }
+                },
+                tooltip: {
+                    isHtml: true
                 }
-            ],
-            criticalPathEnabled: true,
-            criticalPathStyle: {
-                stroke: '#ff7043',
-                strokeWidth: 6
-            },
-            arrow: {
-                angle: 45,
-                width: 2,
-                color: '#ff5722',
-                radius: 0
-            },
-            labelStyle: {
-                fontName: 'Arial',
-                fontSize: 13,
-                color: '#333'
-            }
-        },
-        hAxis: {
-            textStyle: {
-                color: '#333',
-                fontName: 'Arial',
-                fontSize: 12
-            }
-        },
-        vAxis: {
-            textStyle: {
-                color: '#333',
-                fontName: 'Arial',
-                fontSize: 12
-            }
-        },
-        tooltip: {
-            isHtml: true // Enable HTML tooltips
+            };
+
+            // Render Gantt chart
+            var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+            // Add event listener to modify lines
+            google.visualization.events.addListener(chart, 'ready', function() {
+                // Make lines dashed
+                document.querySelectorAll('line').forEach(function(line) {
+                    if (line.getAttribute('stroke') === '#e0e0e0') { // Match color
+                        line.setAttribute('stroke-dasharray', '5,5'); // Dashed style
+                    }
+                });
+            });
+
+            chart.draw(data, options);
         }
-    };
-
-    // Draw the chart
-    var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
-    chart.draw(data, options);
-}
-
     </script>
-    
+
 @endpush

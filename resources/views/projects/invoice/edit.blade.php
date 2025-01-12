@@ -7,11 +7,15 @@
                     <input type="hidden" name="project_id" value="{{ $invoice->project_id }}" />
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="title">{{ get_phrase('Title') }}</label>
-                        <input class="form-control ol-form-control" type="text" id="title" name="title" value="{{ $invoice->title }}">
+                        <input class="form-control ol-form-control" type="text" id="title" name="title" value="{{ $invoice->title }}" required>
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="payment">{{ get_phrase('Payment') }}</label>
-                        <input class="form-control ol-form-control" type="number" id="payment" name="payment" value="{{ $invoice->payment }}">
+                        <input class="form-control ol-form-control" type="number" id="payment" name="payment" value="{{ $invoice->payment }}" required>
+                    </div>
+                    <div class="fpb7 mb-2">
+                        <label class="form-label ol-form-label" for="due_date">{{ get_phrase('Due Date') }}</label>
+                        <input class="form-control ol-form-control" type="datetime-local" id="due_date" value="{{$invoice->due_date}}" name="due_date" required>
                     </div>
                     <div class="fpb7 mb-2">
                         <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Submit') }}</button>

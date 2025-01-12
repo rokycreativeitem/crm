@@ -46,6 +46,8 @@ class AppServiceProvider extends ServiceProvider
                         $viewNamespace = basename($addon);
                         $this->loadViewsFrom($viewsPath, $viewNamespace);
                     }
+
+                    // echo $viewNamespace;
     
                     if (File::isDirectory($viewsPath)) {
                         $viewNamespace = basename($addon);
