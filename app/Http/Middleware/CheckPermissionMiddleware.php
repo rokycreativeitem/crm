@@ -32,18 +32,33 @@ class CheckPermissionMiddleware
         $permission_ids = RolePermission::where('role_id', $user->role_id)->pluck('permission_id')->toArray();
         $permissions    = Permission::whereIn('id', $permission_ids)->pluck('route')->toArray();
 
+        $current_route = Route::currentRouteName();
+
+        if (str_contains($current_route, 'update')) {
+            $edit_route = str_replace('update', 'edit', $current_route);
+            $edit_route = str_replace(get_current_user_role() . '.', '', $edit_route);
+
+            if (in_array($edit_route, $permissions)) {
+                $update        = str_replace('edit', 'update', $edit_route);
+                $permissions[] = $update;
+            }
+        }
+
         $role = Role::where('id', $user->role_id)->value('title');
 
         $prefixedRoutes = array_map(function ($route) use ($role) {
             return "{$role}.{$route}";
         }, $permissions);
+
         $dashboardRoute = "{$role}.dashboard";
         array_push($prefixedRoutes, $dashboardRoute);
+
         $route = Route::currentRouteName();
 
         if (!in_array($route, $prefixedRoutes)) {
             return redirect()->route($dashboardRoute)->with('error', 'You do not have permission to access this page.');
         }
+
         return $next($request);
     }
 }

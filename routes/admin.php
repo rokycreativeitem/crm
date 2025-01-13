@@ -34,7 +34,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('project/store', 'store')->name('project.store');
         Route::get('project/delete/{code}', 'delete')->name('project.delete');
         Route::get('project/edit/{code}', 'edit')->name('project.edit');
-        Route::post('project/edit/{code}', 'update')->name('project.edit');
+        Route::post('project/update/{code}', 'update')->name('project.update');
         Route::get('project/{code}/{tab?}', 'show')->name('project.details');
         Route::post('project/multi-delete', 'multiDelete')->name('project.multi-delete');
 
@@ -93,7 +93,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('user/store', 'store')->name('user.store');
         Route::get('user/delete/{id}', 'delete')->name('user.delete');
         Route::get('user/edit/{id}', 'edit')->name('user.edit');
-        Route::post('user/edit/{id}', 'update')->name('user.edit');
+        Route::post('user/update/{id}', 'update')->name('user.update');
         Route::post('user/multi-delete', 'multiDelete')->name('user.multi-delete');
 
         Route::get('manage_profile', 'manage_profile')->name('manage_profile');

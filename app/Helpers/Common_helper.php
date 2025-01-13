@@ -93,6 +93,20 @@ if (!function_exists('has_permission')) {
         if (get_current_user_role() == 'admin') {
             return true;
         } elseif ($route) {
+            $explode = explode('.', $route);
+            if (isset($explode[1]) && $explode[1] == 'edit') {
+                $route = $explode[0] . '.update';
+            }
+            // dd($route);
+            // if (str_ends_with($route, '.edit')) {
+            //     $update_route  = str_replace('.edit', '.update', $route);
+            //     $permission_id = Permission::where('route', $update_route)->value('id');
+            //     $role_id       = Role::where('id', Auth::user()->role_id)->value('id');
+            //     $permission    = RolePermission::where('role_id', $role_id)->where('permission_id', $permission_id)->first();
+            //     if ($permission) {
+            //         return true;
+            //     }
+            // }
             $permission_id = Permission::where('route', $route)->value('id');
             $role_id       = Role::where('id', Auth::user()->role_id)->value('id');
             $permission    = RolePermission::where('role_id', $role_id)->where('permission_id', $permission_id)->first();
