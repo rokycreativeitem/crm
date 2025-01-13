@@ -1,5 +1,6 @@
 @push('title', get_phrase('File'))
 @php
+    print_r(has_permission('file.update'));
     $staffs = App\Models\User::where('role_id', 3)->get();
 @endphp
 <div class="row">

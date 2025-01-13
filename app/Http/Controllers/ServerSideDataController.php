@@ -143,7 +143,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -294,7 +294,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit Category\')" href="#">' . get_phrase('Edit') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit Category\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -403,7 +403,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -557,7 +557,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -667,7 +667,6 @@ class ServerSideDataController extends Controller
                 </a>';
             })
             ->addColumn('options', function ($file) {
-                // Generate routes dynamically .milestone.edit', $milestone->id
                 $editRoute   = route(get_current_user_role() . '.file.edit', $file->id);
                 $deleteRoute = route(get_current_user_role() . '.file.delete', $file->id);
 
@@ -678,7 +677,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -775,7 +774,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -885,7 +884,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="#">' . get_phrase('Edit') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -1006,7 +1005,7 @@ class ServerSideDataController extends Controller
                             <a class="dropdown-item" href="' . $invoiceRoute . '">' . get_phrase('Invoice') . '</a>
                         </li>
                         <li>
-                        <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit invoice\')" href="#">' . get_phrase('Edit') . '</a>
+                        <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit invoice\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
                         </li>
                         <li>
                         <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -1095,7 +1094,7 @@ class ServerSideDataController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Update Addon\')" href="#">' . get_phrase('Update') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Update Addon\')" href="javascript:void(0)">' . get_phrase('Update') . '</a>
                         </li>
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
@@ -1392,7 +1391,7 @@ class ServerSideDataController extends Controller
                     $invoiceLinks = '';
                     foreach ($invoices as $invoice) {
                         $invoiceLinks .= '<p class="sub-title text-12px">
-                                        <a href="#" class="text-muted me-3">' . $invoice->title . '</a>
+                                        <a href="javascript:void(0)" class="text-muted me-3">' . $invoice->title . '</a>
                                      </p>';
                     }
                     return $invoiceLinks;
@@ -1433,7 +1432,7 @@ class ServerSideDataController extends Controller
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="' . $downloadRoute . '">' . get_phrase('Download') . '</a></li>
                             <li><a class="dropdown-item" href="' . $acceptRoute . '">' . get_phrase('Accept') . '</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a></li>
+                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a></li>
                         </ul>
                     </div>';
             })
@@ -1479,7 +1478,7 @@ class ServerSideDataController extends Controller
                     $invoiceLinks = '';
                     foreach ($invoices as $invoice) {
                         $invoiceLinks .= '<p class="sub-title text-12px">
-                                        <a href="#" class="text-muted me-3">' . $invoice->title . '</a>
+                                        <a href="javascript:void(0)" class="text-muted me-3">' . $invoice->title . '</a>
                                      </p>';
                     }
                     return $invoiceLinks;
@@ -1530,7 +1529,7 @@ class ServerSideDataController extends Controller
                             <a class="dropdown-item" href="' . $acceptRoute . '">' . get_phrase('Accept') . '</a>
                             </li>
                             <li>
-                            <a class="dropdown-item" href="#" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a>
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a>
                             </li>
                         </ul>
                     </div>';
