@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 @push('title', get_phrase('Multi language setting'))
 @section('content')
+
 @if(request()->is('admin/settings/email_temp'))
     <style>
         .offcanvas.global {
@@ -8,6 +9,7 @@
         }
     </style>
 @endif
+
 @php
     $notify_settings = App\Models\NotificationSetting::get();
 @endphp

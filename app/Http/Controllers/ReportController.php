@@ -80,7 +80,7 @@ class ReportController extends Controller
         $data  = [];
         foreach ($users as $user) {
             $data[] = [
-                'client' => get_user($user)->name,
+                'client' => get_user($user)?->name,
                 'amount' => Invoice::where('user_id', $user)->sum('payment'),
             ];
         }

@@ -92,6 +92,7 @@ class OfflinePaymentController extends Controller
 
     public function accept_payment($id)
     {
+        $session_payment_details = session('payment_details');
         // validate id
         if (empty($id)) {
             Session::flash('error', get_phrase('Data not found.'));
@@ -104,13 +105,15 @@ class OfflinePaymentController extends Controller
             Session::flash('error', get_phrase('Data not found.'));
             return redirect()->back();
         }
-
+        
         $payment_details = $query->first();
-
+        
         $payment['user_id']         = $payment_details['user_id'];
         $payment['payment_type']    = 'offline';
         $payment['payment_purpose'] = $payment_details['payment_purpose'];
-
+        $payment['project_code'] = $session_payment_details['items'][0]['project_code'];
+        $payment['date_added'] = time();
+        
         if ($payment_details->item_type == 'invoice') {
             $items = json_decode($payment_details->items);
             foreach ($items as $item) {
@@ -118,14 +121,14 @@ class OfflinePaymentController extends Controller
                     $invoice               = Invoice::where('id', $item)->first();
                     $payment['invoice_id'] = $invoice->id;
                     $payment['amount']     = $invoice->payment;
-
+                    
                     Payment_history::insert($payment);
                 }
             }
         }
-
+        
         OfflinePayment::where('id', $id)->update(['status' => 1]);
-
+        
         // go back
         Session::flash('success', 'Payment has been accepted.');
         return redirect()->route('admin.offline.payments');

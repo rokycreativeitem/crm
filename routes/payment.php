@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(PaymentController::class)->middleware('auth')->group(function () {
     Route::get('payment', 'index')->name('payment');
     Route::get('payment/show_payment_gateway_by_ajax/{identifier}', 'show_payment_gateway_by_ajax')->name('payment.show_payment_gateway_by_ajax');
-    Route::post('payment/success/{identifier?}', 'payment_success')->name('payment.success');
+    Route::get('payment/success/{identifier?}', 'payment_success')->name('payment.success');
     Route::get('payment/create/{identifier}', 'payment_create')->name('payment.create');
 
     // razor pay
