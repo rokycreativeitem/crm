@@ -26,6 +26,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/global/summernote/summernote-lite.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/global/tagify-master/dist/tagify.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/global/select2/select2.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/global/nice-select/nice-select.css') }}" />
+
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/daterangepicker/daterangepicker.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/global/datatable/datatables.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/jquery.contextMenu.min.css') }}" />
@@ -51,8 +53,6 @@
         </div>
     </div>
 
-    @include('modal')
-
     <!-- jQuery -->
     <script type="text/javascript" src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
 
@@ -69,6 +69,7 @@
 
     <!-- Select2 JS -->
     <script type="text/javascript" src="{{ asset('assets/global/select2/select2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/global/nice-select/nice-select.min.js') }}"></script>
 
     <!-- Additional Libraries -->
     <script type="text/javascript" src="{{ asset('assets/global/summernote/summernote-lite.min.js') }}"></script>
@@ -91,9 +92,11 @@
     {{-- <script type="text/javascript" src="{{ asset('assets/js/chart.js') }}"></script> --}}
 
 
-    {{-- @include('init_js')
+    @include('modal')
+    @include('init_js')
     @include('toastr')
-    @include('script') --}}
+    @include('script')
+
 
     @stack('js')
 </body>

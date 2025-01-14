@@ -147,9 +147,9 @@
             <span class="fi-rr-cross"></span>
         </button>
     </div>
-    <h3 class="sidebar-title fs-12px px-30px pb-20px mt-4 text-uppercase">{{ get_phrase('Main Menu') }}</h3>
     <div class="sidebar-nav-area">
         <nav class="sidebar-nav">
+            <h3 class="sidebar-title fs-12px px-30px pb-20px mt-4 text-uppercase">{{ get_phrase('Main Menu') }}</h3>
             <ul class="px-14px pb-24px">
                 <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.dashboard') active showMenu @endif">
                     <a href="{{ route(get_current_user_role() . '.dashboard') }}">

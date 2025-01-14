@@ -1,7 +1,7 @@
 <script type="text/javascript">
     "use strict";
     $(document).ready(function() {
-        // select2
+        select2
         if ($('select.ol-select2:not(.inited)').length) {
             $('select.ol-select2:not(.inited)').select2();
             $('select.ol-select2:not(.inited)').addClass('inited');
