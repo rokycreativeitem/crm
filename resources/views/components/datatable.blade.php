@@ -6,9 +6,9 @@
 
 <div id="table-data-not-found" class="d-none">
     <div class="no-data py-5">
-        <img src="{{asset('assets/images/no-data.png')}}" alt="No Data" style="max-width: 150px;">
-        <h3 class="py-3">{{get_phrase('No Result Found')}}</h3>
-        <p class="pb-4">{{get_phrase('A few questions to keep you make sure you’ve listened to the past ')}}</p>
+        <img src="{{ asset('assets/images/no-data.png') }}" alt="No Data" style="max-width: 150px;">
+        <h3 class="py-3">{{ get_phrase('No Result Found') }}</h3>
+        <p class="pb-4">{{ get_phrase('A few questions to keep you make sure you’ve listened to the past ') }}</p>
     </div>
 </div>
 <script>
@@ -65,7 +65,7 @@
         });
 
         table.on('xhr', function(e, settings, json) {
-            console.log(json.filter_count);
+            // console.log(json.filter_count);
             if (json.filter_count > 0) {
                 $('#filter-count-display').text(json.filter_count).removeClass('d-none');
                 $('#filter-reset').removeClass('d-none');
@@ -161,7 +161,7 @@
             };
         });
 
-        console.log("Initializing context menu with:", contextMenuItems);
+        // console.log("Initializing context menu with:", contextMenuItems);
         $.contextMenu({
             selector: '.category-context-menu',
             autoHide: false,

@@ -960,7 +960,7 @@ class ServerSideDataController extends Controller
                 return date('d-M-y h:i A', strtotime($invoice->timestamp_start));
             })
             ->addColumn('due_date', function ($invoice) {
-                if($invoice->due_date) {
+                if ($invoice->due_date) {
                     return date('d-M-y h:i A', strtotime($invoice?->due_date));
                 }
                 return '';
@@ -1226,7 +1226,7 @@ class ServerSideDataController extends Controller
                 }
                 return $statusLabel;
             })
-            ->rawColumns(["id","date", "client", "amount","payment_method","status"])
+            ->rawColumns(["id", "date", "client", "amount", "payment_method", "status"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
