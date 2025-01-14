@@ -49,7 +49,6 @@
     }
 </script>
 
-
 <!-- setup offcanvas -->
 <div class="global offcanvas p-1" data-bs-scroll="true" tabindex="-1" id="Id1" aria-labelledby="backdrop">
     <div class="offcanvas-header pb-0">
@@ -224,7 +223,7 @@
 
 <script>
 "use strict";
-    function rightCanvas(url, title, position = '') {
+    function rightCanvas(url, title, class, position = '') {
         let spinner = $('.placeholder-spinner').html();
         let offcanvasBody = $('.global .offcanvas-body').empty().append(spinner);
         let canvasPosition = position == 'right' ? 'offcanvas-end' : 'offcanvas-start';

@@ -114,7 +114,7 @@ class InvoiceController extends Controller
             'id'           => $invoice->id,
             'title'        => $invoice->title,
             'price'        => $invoice->payment,
-            'project_code' => Project::where('id', $invoice->project_id)->value('code'),
+            'project_code' => $project_code,
         ];
 
         $payment_details = [
