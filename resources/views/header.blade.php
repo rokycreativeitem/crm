@@ -14,7 +14,7 @@
 
         <div class="main-header-title">
             <h1 class="page-title fs-18px d-flex align-items-center gap-3">
-                {{ config('app.name') }}
+                {{ get_settings('system_name') }}
             </h1>
             <span class="text-12px d-none d-md-inline-block"></span>
         </div>

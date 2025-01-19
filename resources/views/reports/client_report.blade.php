@@ -153,7 +153,15 @@
         <div class="col-12">
             <div class="ol-card">
                 <div class="ol-card-body  p-3">
+                    @if(count($payments) > 0)
                     <div id="donut"></div>
+                    @else
+                    <div class="no-data py-5">
+                        <img src="{{asset('assets/images/no-data.png')}}" alt="No Data" style="max-width: 150px;">
+                        <h3 class="py-3">{{get_phrase('No Result Found')}}</h3>
+                        <p class="pb-4">{{get_phrase('A few questions to keep you make sure you’ve listened to the past ')}}</p>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

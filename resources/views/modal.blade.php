@@ -223,7 +223,7 @@
 
 <script>
 "use strict";
-    function rightCanvas(url, title, class, position = '') {
+    function rightCanvas(url, title, position = '') {
         let spinner = $('.placeholder-spinner').html();
         let offcanvasBody = $('.global .offcanvas-body').empty().append(spinner);
         let canvasPosition = position == 'right' ? 'offcanvas-end' : 'offcanvas-start';

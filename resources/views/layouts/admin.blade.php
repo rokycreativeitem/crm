@@ -2,7 +2,7 @@
 <html lang="en" class="default">
 
 <head>
-    <title>@stack('title') | {{ config('app.name') }}</title>
+    <title>@stack('title') | {{ get_settings('system_name') }}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="" />

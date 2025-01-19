@@ -1,3 +1,4 @@
+@push('title', get_phrase('Dashboard'))
 @php
     $project_id = project_id_by_code(request()->route()->parameter('code'));
     $timesheets = App\Models\Timesheet::where('project_id', $project_id)->get();
@@ -14,11 +15,11 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div id="donut"></div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-sm-3">
 
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-sm-6">
                     <div id="bar-chart"></div>

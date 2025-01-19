@@ -113,7 +113,7 @@ class ProjectController extends Controller
         $status         = collect($project_status)->map(function ($status) {
             return [
                 'title'  => $status,
-                'amount' => Project::where('status', $status)->count(),
+                'amount' => Task::where('status', $status)->count(),
             ];
         });
         $page_data['project_status'] = $status;

@@ -171,7 +171,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
 
     Route::controller(ReportController::class)->group(function () {
 
-        Route::get('project_report', 'project_report')->name('project_report');
+        Route::get('projects_report', 'project_report')->name('project_report');
         Route::get('client_report', 'client_report')->name('client_report');
 
     });
