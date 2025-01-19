@@ -1,6 +1,5 @@
 @push('title', get_phrase('File'))
 @php
-    print_r(has_permission('file.update'));
     $staffs = App\Models\User::where('role_id', 3)->get();
 @endphp
 <div class="row">
@@ -104,8 +103,7 @@
                                         <!-- Uploaded by -->
                                         <div class="mb-3">
                                             <label for="uploaded_by" class="form-label">{{ get_phrase('Uploaded by') }}</label>
-                                            <select class="form-control px-14px ol-form-control ol-select2" name="uploaded_by" id="uploaded_by">
-                                                <option value="all">{{ get_phrase('Select client') }}</option>
+                                            <select class="px-14px form-select avalynx-select" name="uploaded_by" id="uploaded_by">
                                                 @foreach ($staffs as $staff)
                                                     <option value="{{ $staff->id }}">{{ $staff->name }}</option>
                                                 @endforeach
@@ -113,7 +111,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="size" class="form-label">{{ get_phrase('File Size') }}</label>
-                                            <select class="form-control px-14px ol-form-control ol-select2" name="size" id="size">
+                                            <select class="form-control px-14px ol2-form-control" name="size" id="size">
                                                 <option value="all">{{ get_phrase('Select file Size') }}</option>
                                                 <option value="0.001|1">{{ get_phrase('1KB - 1MB') }}</option>
                                                 <option value="1.001|5">{{ get_phrase('1MB - 5MB') }}</option>

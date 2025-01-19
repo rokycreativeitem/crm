@@ -211,7 +211,6 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::get('about', 'about')->name('about');
         Route::any('save_valid_purchase_code/{action_type?}', 'save_valid_purchase_code')->name('save_valid_purchase_code');
 
-
         Route::get('settings/email_temp', 'email_temp')->name('email.temp');
         Route::get('settings/email_temp/edit/{id}', 'email_temp_edit')->name('email.temp.edit');
         Route::post('settings/temp_update/{id}', 'email_temp_update')->name('temp.update');
@@ -223,6 +222,11 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::get('offline-payment/doc/{id}', 'download_doc')->name('offline.payment.doc');
         Route::get('offline-payment/accept/{id}', 'accept_payment')->name('offline.payment.accept');
         Route::get('offline-payment/decline/{id}', 'decline_payment')->name('offline.payment.decline');
+        Route::get('confirm_email', 'confirm_email')->name('confirm_email');
+        Route::get('verify_email', 'verify_email')->name('verify_email');
+        Route::get('success_login', 'success_login')->name('success_login');
+        Route::get('payment', 'payment')->name('payment');
+        Route::get('invoice', 'invoice')->name('invoice');
     });
 
     Route::post('payment/offline/store', [OfflinePaymentController::class, 'store'])->name('payment.offline.store');

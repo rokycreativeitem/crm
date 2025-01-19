@@ -4,8 +4,7 @@
             @csrf
             <div class="fpb-7 mb-3">
                 <label class="form-label ol-form-label">{{ get_phrase('Select Client') }}</label>
-                <select class="form-control ol-form-control ol-select2" data-toggle="select2" name="receiver_id" required>
-                    <option value="">{{ get_phrase('Select a client') }}</option>
+                <select class="form-select avalynx-select" data-toggle="select2" name="receiver_id" required>
                     @foreach (App\Models\User::where('id', '!=', auth()->user()->id)->get() as $user)
                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                     @endforeach

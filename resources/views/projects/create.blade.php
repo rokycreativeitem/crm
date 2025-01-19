@@ -9,7 +9,7 @@
                     </div>
                     <div class="fpb-7 mb-3">
                         <label class="form-label ol-form-label">{{ get_phrase('Select Client') }}</label>
-                        <select class="form-control ol-form-control ol-select2" name="client_id" required>
+                        <select class="form-select avalynx-select" name="client_id" required>
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">{{ $client->name }}</option>
                             @endforeach
@@ -25,8 +25,7 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="category_id">{{ get_phrase('Category') }}</label>
-                        <select class="form-control ol-form-control ol-select2" name="category_id" required>
-                            <option value=""> {{ get_phrase('select category') }} </option>
+                        <select class="form-select avalynx-select" name="category_id" required>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
