@@ -105,15 +105,15 @@ class OfflinePaymentController extends Controller
             Session::flash('error', get_phrase('Data not found.'));
             return redirect()->back();
         }
-        
+
         $payment_details = $query->first();
-        
+
         $payment['user_id']         = $payment_details['user_id'];
         $payment['payment_type']    = 'offline';
         $payment['payment_purpose'] = $payment_details['payment_purpose'];
-        $payment['project_code'] = $session_payment_details['items'][0]['project_code'];
-        $payment['date_added'] = time();
-        
+        $payment['project_code']    = $session_payment_details['items'][0]['project_code'];
+        $payment['date_added']      = time();
+
         if ($payment_details->item_type == 'invoice') {
             $items = json_decode($payment_details->items);
             foreach ($items as $item) {
@@ -121,14 +121,14 @@ class OfflinePaymentController extends Controller
                     $invoice               = Invoice::where('id', $item)->first();
                     $payment['invoice_id'] = $invoice->id;
                     $payment['amount']     = $invoice->payment;
-                    
+
                     Payment_history::insert($payment);
                 }
             }
         }
-        
+
         OfflinePayment::where('id', $id)->update(['status' => 1]);
-        
+
         // go back
         Session::flash('success', 'Payment has been accepted.');
         return redirect()->route('admin.offline.payments');
@@ -141,5 +141,26 @@ class OfflinePaymentController extends Controller
 
         Session::flash('success', 'Payment has been suspended');
         return redirect()->route('admin.offline.payments');
+    }
+
+    public function success_login()
+    {
+        return view('smtp.success_login');
+    }
+    public function payment()
+    {
+        return view('smtp.payment');
+    }
+    public function invoice()
+    {
+        return view('smtp.invoice');
+    }
+    public function confirm_email()
+    {
+        return view('smtp.confirm_email');
+    }
+    public function verify_email()
+    {
+        return view('smtp.verify_email');
     }
 }

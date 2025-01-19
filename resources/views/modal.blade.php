@@ -1,4 +1,4 @@
-<script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script> --}}
 
 <div class="placeholder-content d-none">
     <div class="d-flex justify-content-center align-items-center">
@@ -139,6 +139,7 @@
             $('#confirmModal .confirm-btn').removeAttr('onclick');
         }
     }
+
     function processServerResponse(response) {
         if (response.success) {
             success(response.success)
@@ -222,7 +223,8 @@
 </div>
 
 <script>
-"use strict";
+    "use strict";
+
     function rightCanvas(url, title, position = '') {
         let spinner = $('.placeholder-spinner').html();
         let offcanvasBody = $('.global .offcanvas-body').empty().append(spinner);
@@ -238,11 +240,32 @@
             success: function(response) {
                 if (response) {
                     $('.global.offcanvas .offcanvas-body').empty().html(response);
+
+                    if ($('select.ol-select2').length) {
+                        $('select.ol-select2').each(function() {
+                            $(this).select2();
+                        });
+                    }
+                    // Initialize AvalynxSelect if found
+                    if ($('select.ol-avalynx-select:not(.inited)').length) {
+                        $('select.ol-avalynx-select:not(.inited)').each(function() {
+                            new AvalynxSelect(this, {
+                                liveSearch: true,
+                                caseSensitive: false,
+                                showAll: true,
+                                scrollList: true,
+                                scrollItems: 8
+                            }, {
+                                searchPlaceholder: 'Search...',
+                                selectPlaceholder: 'Please select...'
+                            });
+
+                            $(this).addClass('inited');
+                        });
+                    }
                 }
             }
         });
     }
 </script>
 @include('toastr')
-
-

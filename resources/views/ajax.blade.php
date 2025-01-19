@@ -1,7 +1,8 @@
-<script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script> --}}
 <script type="text/javascript" src="{{ asset('assets/vendors/bootstrap/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/datatable/dataTables.js') }}"></script>
 <script src="{{ asset('assets/datatable/dataTables.bootstrap5.js') }}"></script>
+
 <script>
     // "use strict";
     // $(document).ready(function() {
@@ -157,4 +158,5 @@
         }
     });
 </script>
+
 @include('toastr')

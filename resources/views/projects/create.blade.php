@@ -5,12 +5,11 @@
                 <div class="col-12">
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="title">{{ get_phrase('Title') }}</label>
-                        <input class="form-control ol-form-control" type="text" id="title" name="title"
-                            required>
+                        <input class="form-control ol-form-control" type="text" id="title" name="title" required>
                     </div>
                     <div class="fpb-7 mb-3">
                         <label class="form-label ol-form-label">{{ get_phrase('Select Client') }}</label>
-                        <select class="form-control ol-form-control ol-select2" name="client_id" required>
+                        <select class="form-select avalynx-select" name="client_id" required>
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">{{ $client->name }}</option>
                             @endforeach
@@ -18,18 +17,15 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="code">{{ get_phrase('Code') }}</label>
-                        <input class="form-control ol-form-control" type="text" id="code" name="code"
-                            required>
+                        <input class="form-control ol-form-control" type="text" id="code" name="code" required>
                     </div>
                     <div class="fpb7 mb-2">
-                        <label class="form-label ol-form-label"
-                            for="description">{{ get_phrase('Description') }}</label>
+                        <label class="form-label ol-form-label" for="description">{{ get_phrase('Description') }}</label>
                         <textarea class="form-control ol-form-control" id="description" name="description" required></textarea>
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="category_id">{{ get_phrase('Category') }}</label>
-                        <select class="form-control ol-form-control ol-select2" name="category_id" required>
-                            <option value=""> {{ get_phrase('select category') }} </option>
+                        <select class="form-select avalynx-select" name="category_id" required>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
@@ -40,8 +36,7 @@
                         <div class="d-flex flex-wrap">
                             @foreach ($staffs as $staff)
                                 <div class="form-check me-2">
-                                    <input type="checkbox" class="form-check-input" id="staffs_{{ $staff->id }}"
-                                        name="staffs[]" value="{{ $staff->id }}">
+                                    <input type="checkbox" class="form-check-input" id="staffs_{{ $staff->id }}" name="staffs[]" value="{{ $staff->id }}">
                                     <label class="form-check-label" for="staffs_{{ $staff->id }}">
                                         {{ $staff->name }}
                                     </label>
@@ -51,15 +46,12 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="budget">{{ get_phrase('Budget') }}</label>
-                        <input class="form-control ol-form-control" type="number" id="budget" name="budget"
-                            required>
+                        <input class="form-control ol-form-control" type="number" id="budget" name="budget" required>
                     </div>
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="status">{{ get_phrase('Status') }}</label>
-                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="status"
-                            name="status" required>
-                            <option value="">{{ get_phrase('Select') }}</option>
+                        <select class="form-control ol-form-control ol-select2" id="status" name="status" required>
                             <option value="in_progress">{{ get_phrase('In Progress') }}</option>
                             <option value="not_started">{{ get_phrase('Not Started') }}</option>
                             <option value="completed">{{ get_phrase('Completed') }}</option>
@@ -77,8 +69,7 @@
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="privacy">{{ get_phrase('Privacy') }}</label>
-                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="privacy"
-                            name="privacy" required>
+                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="privacy" name="privacy" required>
                             <option value="">{{ get_phrase('Select Privacy') }}</option>
                             <option value="public">{{ get_phrase('Public') }}</option>
                             <option value="private">{{ get_phrase('Private') }}</option>
