@@ -173,6 +173,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
 
         Route::get('project_report', 'project_report')->name('project_report');
         Route::get('client_report', 'client_report')->name('client_report');
+        Route::get('payment_history', 'payment_history')->name('payment_history');
 
     });
     Route::controller(AddonController::class)->group(function () {
@@ -222,11 +223,6 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::get('offline-payment/doc/{id}', 'download_doc')->name('offline.payment.doc');
         Route::get('offline-payment/accept/{id}', 'accept_payment')->name('offline.payment.accept');
         Route::get('offline-payment/decline/{id}', 'decline_payment')->name('offline.payment.decline');
-        Route::get('confirm_email', 'confirm_email')->name('confirm_email');
-        Route::get('verify_email', 'verify_email')->name('verify_email');
-        Route::get('success_login', 'success_login')->name('success_login');
-        Route::get('payment', 'payment')->name('payment');
-        Route::get('invoice', 'invoice')->name('invoice');
     });
 
     Route::post('payment/offline/store', [OfflinePaymentController::class, 'store'])->name('payment.offline.store');

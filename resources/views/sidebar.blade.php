@@ -329,8 +329,8 @@
                     </li>
                 @endif
 
-                @if (has_permission('project_report', 'client_report'))
-                    <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.project_report' || $current_route == get_current_user_role() . '.client_report' || $current_route == get_current_user_role() . '.offline.payments') active showMenu @endif">
+                @if (has_permission('project_report', 'client_report', 'offline.payments', 'payment_history'))
+                    <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.project_report' || $current_route == get_current_user_role() . '.client_report' || $current_route == get_current_user_role() . '.offline.payments' || $current_route == get_current_user_role() . '.payment_history') active showMenu @endif">
                         <a href="javascript:void(0);">
                             <span>
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -362,6 +362,9 @@
                             </li>
                             <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.offline.payments') active showMenu @endif">
                                 <a href="{{ route(get_current_user_role() . '.offline.payments') }}">{{ get_phrase('Offline payment') }}</a>
+                            </li>
+                            <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.payment_history') active showMenu @endif">
+                                <a href="{{ route(get_current_user_role() . '.payment_history') }}">{{ get_phrase('Payment history') }}</a>
                             </li>
                         </ul>
                     </li>

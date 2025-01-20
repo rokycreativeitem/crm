@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\Payment_history;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -33,7 +34,7 @@ class ReportController extends Controller
         }
 
         $payments = Project::distinct('title')->pluck('title')->toArray();
-        
+
         $data = [];
         foreach ($payments as $payment) {
             $data[] = [
@@ -88,6 +89,20 @@ class ReportController extends Controller
         $page_data['payments'] = $data;
 
         return view('reports.client_report', $page_data);
+    }
+
+    public function payment_history(Request $request)
+    {
+
+        if ($request->ajax()) {
+            return app(ServerSideDataController::class)->payments_report_server_side(
+                $request->custom_search_box,
+
+            );
+        }
+        $page_data['payment_history'] = Payment_history::get();
+
+        return view('reports.payment_history', $page_data);
     }
 
 }
