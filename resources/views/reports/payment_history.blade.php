@@ -1,19 +1,17 @@
 @extends('layouts.admin')
-@push('title', get_phrase('Update Center'))
-@section('content')
-    @push('title', get_phrase('Addon list'))
+@push('title', get_phrase('Payments History'))
 
+@section('content')
     <div class="row">
         <div class="col-12">
             <div class="ol-card">
-                <div class="ol-card-body p-3 position-relative" id="filters-container">
-
+                <div class="ol-card-body p-3 mb-10 position-relative">
                     <div class="ol-card radius-8px print-d-none">
                         <div class="ol-card-body px-2">
                             <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
                                 <h4 class="title fs-16px">
                                     <i class="fi-rr-settings-sliders me-2"></i>
-                                    {{ get_phrase('Manage Addons') }}
+                                    {{ get_phrase('Payments History') }}
                                 </h4>
                                 <div class="top-bar d-flex align-items-center">
                                     <div class="input-group dt-custom-search">
@@ -27,9 +25,8 @@
                                                     fill="#99A1B7" stroke="#99A1B7" stroke-width="0.2" />
                                             </svg>
                                         </span>
-                                        <input type="text" class="form-control" name="customSearch" id="custom-search-box" placeholder="Search">
+                                        <input type="text" class="form-control" id="custom-search-box" name="customSearch" placeholder="Search">
                                     </div>
-
                                     <div class="custom-dropdown" id="export-btn1">
                                         <button class="dropdown-header btn ol-btn-light">
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -45,7 +42,7 @@
                                         </button>
                                         <ul class="dropdown-list dropdown-export">
                                             <li class="mb-1">
-                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'Timesheet-list')"><i class="fi-rr-file-pdf"></i>
+                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server_side_datatable', 'payments-list')"><i class="fi-rr-file-pdf"></i>
                                                     {{ get_phrase('PDF') }}</a>
                                             </li>
                                             <li>
@@ -53,37 +50,36 @@
                                                     {{ get_phrase('Print') }}</a>
                                             </li>
                                         </ul>
-
                                     </div>
 
-                                    @if (has_permission('addon.add'))
-                                        <button onclick="rightCanvas('{{ route(get_current_user_role() . '.addon.add') }}', 'Addon Upload')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
-                                            <span class="fi-rr-plus"></span>
-                                            <span>{{ get_phrase('Add new') }}</span>
-                                        </button>
-                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- DataTable -->
-                    <table class="table server-side-datatable" id="project_list">
-                        <thead>
-                            <tr class="context-menu-header">
-                                <th scope="col"> # </th>
-                                <th scope="col">{{ get_phrase('Name') }}</th>
-                                <th scope="col">{{ get_phrase('Version') }}</th>
-                                <th scope="col">{{ get_phrase('status') }}</th>
-                                <th scope="col" class="d-flex justify-content-center print-d-none">
-                                    {{ get_phrase('Options') }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- DataTable will populate this -->
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table server-side-datatable" id="offline_payment_list">
+                            <thead>
+                                <tr class="context-menu-header">
+                                    <th scope="col" class="d-flex align-items-center">
+                                        <input type="checkbox" id="select-all" class="me-2 table-checkbox">
+                                        <span>#</span>
+                                    </th>
+                                    <th scope="col">{{ get_phrase('Payment Type') }}</th>
+                                    <th scope="col">{{ get_phrase('Invoice') }}</th>
+                                    <th scope="col">{{ get_phrase('Amount') }}</th>
+                                    <th scope="col">{{ get_phrase('Last Modified') }}</th>
+                                    <th scope="col">{{ get_phrase('Transaction') }}</th>
+                                    <th scope="col">{{ get_phrase('Payment Purpose') }}</th>
+                                    <th scope="col">{{ get_phrase('Time') }}</th>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
                         <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
                         <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
@@ -92,36 +88,28 @@
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        <label for="page-length-select" class="ps-2 w-100">
-                            {{ get_phrase('of') . ' ' . count($addons) }}</label>
+                        <label for="page-length-select" class="ps-2 w-100"> of {{ count($payment_history) }}</label>
                     </div>
 
-                    <input type="hidden" value="timesheet" id="datatable_type">
-                    <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
+                    <input type="hidden" value="user" id="datatable_type">
+                    {{-- <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
                         <i class="fi fi-rr-trash"></i>
                         {{ get_phrase('Delete') }}
-                    </button>
-
+                    </button> --}}
                 </div>
             </div>
         </div>
     </div>
-
-    <div id="testId"></div>
-
     @include('components.datatable')
 @endsection
+
 @push('js')
     <script>
+        "use strict";
         setTimeout(function() {
-            server_side_datatable('["id","name","version","status","options"]',
-                "{{ route(get_current_user_role() . '.addons') }}");
+            server_side_datatable(
+                '["id","payment_type","invoice_id","amount","last_modified","transaction_id","payment_purpose", "created_at"]',
+                "{{ route(get_current_user_role() . '.payment_history') }}");
         }, 500);
-
-        $('.confirm-btn').on('click', function() {
-            setTimeout(function() {
-                location.reload();
-            }, 500);
-        })
     </script>
 @endpush

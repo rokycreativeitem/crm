@@ -9,10 +9,12 @@
                     <i class="fi-rr-settings-sliders me-2"></i>
                     {{ get_phrase('Events') }}
                 </h4>
-                <button onclick="rightCanvas('{{ route(get_current_user_role() . '.event.create') }}', 'Create event')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
-                    <span class="fi-rr-plus"></span>
-                    <span>{{ get_phrase('Add new') }}</span>
-                </button>
+                @if (has_permission('event.create'))
+                    <button onclick="rightCanvas('{{ route(get_current_user_role() . '.event.create') }}', 'Create event')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
+                        <span class="fi-rr-plus"></span>
+                        <span>{{ get_phrase('Add new') }}</span>
+                    </button>
+                @endif
             </div>
         </div>
     </div>
@@ -86,7 +88,7 @@
 
             calendar.render();
 
-            
+
         });
     </script>
 @endpush

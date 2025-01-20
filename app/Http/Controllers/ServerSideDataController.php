@@ -9,6 +9,7 @@ use App\Models\Invoice;
 use App\Models\Meeting;
 use App\Models\Milestone;
 use App\Models\offlinePayment;
+use App\Models\Payment_history;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\RolePermission;
@@ -136,25 +137,42 @@ class ServerSideDataController extends Controller
                 $deleteRoute = route(get_current_user_role() . '.project.delete', $project->code);
                 $viewRoute   = route(get_current_user_role() . '.project.details', $project->code);
 
-                return '
-                <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
-                    <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="fi-rr-menu-dots-vertical"></span>
-                    </button>
-                    <ul class="dropdown-menu">
+                $options = '';
+                if (has_permission('project.edit')) {
+                    $options .= '
                         <li>
                             <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
                         </li>
+                    ';
+                }
+                if (has_permission('project.delete')) {
+                    $options .= '
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
                         </li>
+                    ';
+                }
+                if (has_permission('project.details')) {
+                    $options .= '
                         <li>
                             <a class="dropdown-item" href="' . $viewRoute . '">' . get_phrase('View Project') . '</a>
                         </li>
-                    </ul>
-                </div>
-            ';
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
+
+                return '
+                    <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
+                        <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="fi-rr-menu-dots-vertical"></span>
+                        </button>
+                        <ul class="dropdown-menu">' . $options . '</ul>
+                    </div>
+                ';
             })
+
             ->addColumn('context_menu', function ($project) {
                 $editRoute      = route(get_current_user_role() . '.project.edit', $project->code);
                 $deleteRoute    = route(get_current_user_role() . '.project.delete', $project->code);
@@ -167,70 +185,84 @@ class ServerSideDataController extends Controller
                 $invoiceRoute   = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'invoice']);
                 $ganttRoute     = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'gantt_chart']);
                 $timesheetRoute = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'timesheet']);
-                // Generate the context menu
-                $contextMenu = [
-                    'Edit'      => [
+                $contextMenu    = [];
+
+                if (has_permission('project.edit')) {
+                    $contextMenu['Edit'] = [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editRoute,
                         'title'       => 'Edit project',
-                    ],
-                    'Delete'    => [
+                    ];
+                }
+                if (has_permission('project.delete')) {
+                    $contextMenu['Delete'] = [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteRoute,
                         'title'       => 'Delete project',
-                    ],
-                    'Dashboard' => [
+                    ];
+                }
+                if (has_permission('project.details')) {
+                    $contextMenu['Dashboard'] = [
                         'type'        => 'ajax',
                         'name'        => 'Dashboard',
                         'action_link' => $dashboardRoute,
                         'title'       => 'Dashboard',
-                    ],
-                    'Milestone' => [
+                    ];
+                    $contextMenu['Milestone'] = [
                         'type'        => 'ajax',
                         'name'        => 'Milestone',
                         'action_link' => $milestoneRoute,
                         'title'       => 'Milestone',
-                    ],
-                    'Task'      => [
+                    ];
+                    $contextMenu['Task'] = [
                         'type'        => 'ajax',
                         'name'        => 'Task',
                         'action_link' => $taskRoute,
                         'title'       => 'Task',
-                    ],
-                    'File'      => [
+                    ];
+                    $contextMenu['File'] = [
                         'type'        => 'ajax',
                         'name'        => 'File',
                         'action_link' => $fileRoute,
                         'title'       => 'File',
-                    ],
-                    'Meeting'   => [
+                    ];
+                    $contextMenu['Meeting'] = [
                         'type'        => 'ajax',
                         'name'        => 'Meeting',
                         'action_link' => $meetingRoute,
                         'title'       => 'Meeting',
-                    ],
-                    'Invoice'   => [
+                    ];
+                    $contextMenu['Invoice'] = [
                         'type'        => 'ajax',
                         'name'        => 'Invoice',
                         'action_link' => $invoiceRoute,
                         'title'       => 'Invoice',
-                    ],
-                    'Timesheet' => [
+                    ];
+                    $contextMenu['Timesheet'] = [
                         'type'        => 'ajax',
                         'name'        => 'Timesheet',
                         'action_link' => $timesheetRoute,
                         'title'       => 'Timesheet',
-                    ],
-                    'Gantt'     => [
+                    ];
+                    $contextMenu['Gantt'] = [
                         'type'        => 'ajax',
                         'name'        => 'Gantt Chart',
                         'action_link' => $ganttRoute,
                         'title'       => 'Gantt Chart',
-                    ],
-                ];
-
+                    ];
+                }
+                // Fallback for empty context menu
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -287,19 +319,31 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.project.category.edit', $category->id);
                 $deleteRoute = route(get_current_user_role() . '.project.category.delete', $category->id);
 
+                $options = '';
+                if (has_permission('project.category.edit')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit category\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
+                        </li>
+
+                    ';
+                }
+                if (has_permission('project.category.delete')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit Category\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
-                        </li>
-                    </ul>
+                    <ul class="dropdown-menu">' . $options . '</ul>
                 </div>
             ';
             })
@@ -307,21 +351,33 @@ class ServerSideDataController extends Controller
                 $editUrl   = route(get_current_user_role() . '.project.category.edit', $category->id);
                 $deleteUrl = route(get_current_user_role() . '.project.category.delete', $category->id);
                 // Generate the context menu
-                $contextMenu = [
-                    'Edit'   => [
+                $contextMenu = [];
+                if (has_permission('project.category.edit')) {
+                    $contextMenu['Edit'] = [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editUrl,
                         'title'       => 'Edit category',
-                    ],
-                    'Delete' => [
+                    ];
+                }
+                if (has_permission('project.category.delete')) {
+                    $contextMenu['Delete'] = [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteUrl,
                         'title'       => 'Delete category',
-                    ],
-                ];
-
+                    ];
+                }
+                // Fallback for empty context menu
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -396,19 +452,30 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.milestone.edit', $milestone->id);
                 $deleteRoute = route(get_current_user_role() . '.milestone.delete', $milestone->id);
 
+                $options = '';
+                if (has_permission('milestone.edit')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit milestone\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('milestone.delete')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
-                        </li>
-                    </ul>
+                    <ul class="dropdown-menu">' . $options . '</ul>
                 </div>
             ';
             })
@@ -416,21 +483,32 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.milestone.edit', $milestone->id);
                 $deleteRoute = route(get_current_user_role() . '.milestone.delete', $milestone->id);
                 // Generate the context menu
-                $contextMenu = [
-                    'Edit'   => [
+                $contextMenu = [];
+                if (has_permission('milestone.edit')) {
+                    $contextMenu['Edit'] = [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editRoute,
                         'title'       => 'Edit milestone',
-                    ],
-                    'Delete' => [
+                    ];
+                }
+                if (has_permission('milestone.delete')) {
+                    $contextMenu['Delete'] = [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteRoute,
                         'title'       => 'Delete milestone',
-                    ],
-                ];
-
+                    ];
+                }
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -550,41 +628,63 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.task.edit', $task->id);
                 $deleteRoute = route(get_current_user_role() . '.task.delete', $task->id);
 
-                return '
-                <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
-                    <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="fi-rr-menu-dots-vertical"></span>
-                    </button>
-                    <ul class="dropdown-menu">
+                $options = '';
+                if (has_permission('task.edit')) {
+                    $options .= '
                         <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit task\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
                         </li>
+                    ';
+                }
+                if (has_permission('task.delete')) {
+                    $options .= '
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
                         </li>
-                    </ul>
-                </div>
-            ';
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
+                return '
+                    <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
+                        <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="fi-rr-menu-dots-vertical"></span>
+                        </button>
+                        <ul class="dropdown-menu">' . $options . '</ul>
+                    </div>
+                ';
             })
             ->addColumn('context_menu', function ($task) {
                 $editRoute   = route(get_current_user_role() . '.task.edit', $task->id);
                 $deleteRoute = route(get_current_user_role() . '.task.delete', $task->id);
                 // Generate the context menu
-                $contextMenu = [
-                    'Edit'   => [
+                $contextMenu = [];
+                if (has_permission('task.edit')) {
+                    $contextMenu['Edit'] = [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editRoute,
                         'title'       => 'Edit task',
-                    ],
-                    'Delete' => [
+                    ];
+                }
+                if (has_permission('task.delete')) {
+                    $contextMenu['Delete'] = [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteRoute,
                         'title'       => 'Delete task',
-                    ],
-                ];
-
+                    ];
+                }
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -670,19 +770,30 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.file.edit', $file->id);
                 $deleteRoute = route(get_current_user_role() . '.file.delete', $file->id);
 
+                $options = '';
+                if (has_permission('file.edit')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit file\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('file.delete')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
-                        </li>
-                    </ul>
+                    <ul class="dropdown-menu">' . $options . '</ul>
                 </div>
             ';
             })
@@ -690,21 +801,32 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.file.edit', $file->id);
                 $deleteRoute = route(get_current_user_role() . '.file.delete', $file->id);
                 // Generate the context menu
-                $contextMenu = [
-                    'Edit'   => [
+                $contextMenu = [];
+                if (has_permission('file.edit')) {
+                    $contextMenu['Edit'] = [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editRoute,
                         'title'       => 'Edit file',
-                    ],
-                    'Delete' => [
+                    ];
+                }
+                if (has_permission('file.delete')) {
+                    $contextMenu['Delete'] = [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteRoute,
                         'title'       => 'Delete file',
-                    ],
-                ];
-
+                    ];
+                }
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -767,19 +889,30 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.meeting.edit', $meeting->id);
                 $deleteRoute = route(get_current_user_role() . '.meeting.delete', $meeting->id);
 
+                $options = '';
+                if (has_permission('meeting.edit')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit meeting\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('meeting.delete')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
-                        </li>
-                    </ul>
+                    <ul class="dropdown-menu">' . $options . '</ul>
                 </div>
             ';
             })
@@ -787,21 +920,32 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.meeting.edit', $meeting->id);
                 $deleteRoute = route(get_current_user_role() . '.meeting.delete', $meeting->id);
                 // Generate the context menu
-                $contextMenu = [
-                    'Edit'   => [
+                $contextMenu = [];
+                if (has_permission('meeting.edit')) {
+                    $contextMenu['Edit'] = [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editRoute,
                         'title'       => 'Edit meeting',
-                    ],
-                    'Delete' => [
+                    ];
+                }
+                if (has_permission('meeting.delete')) {
+                    $contextMenu['Delete'] = [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteRoute,
                         'title'       => 'Delete meeting',
-                    ],
-                ];
-
+                    ];
+                }
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -877,19 +1021,30 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.timesheet.edit', $time->id);
                 $deleteRoute = route(get_current_user_role() . '.timesheet.delete', $time->id);
 
+                $options = '';
+                if (has_permission('timesheet.edit')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('timesheet.delete')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit project\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
-                        </li>
-                    </ul>
+                    <ul class="dropdown-menu">' . $options . '</ul>
                 </div>
             ';
             })
@@ -897,21 +1052,32 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.timesheet.edit', $time->id);
                 $deleteRoute = route(get_current_user_role() . '.timesheet.delete', $time->id);
                 // Generate the context menu
-                $contextMenu = [
-                    'Edit'   => [
+                $contextMenu = [];
+                if (has_permission('timesheet.edit')) {
+                    $contextMenu['Edit'] = [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editRoute,
-                        'title'       => 'Edit meeting',
-                    ],
-                    'Delete' => [
+                        'title'       => 'Edit timesheet',
+                    ];
+                }
+                if (has_permission('timesheet.delete')) {
+                    $contextMenu['Delete'] = [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteRoute,
-                        'title'       => 'Delete meeting',
-                    ],
-                ];
-
+                        'title'       => 'Delete timesheet',
+                    ];
+                }
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -994,26 +1160,44 @@ class ServerSideDataController extends Controller
                 // $payoutRoute = '';
                 // if (get_current_user_role() == 'client') {
                 // }
-
+                $options = '';
+                if (has_permission('invoice.edit')) {
+                    $options .= '
+                            <li>
+                                <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit invoice\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
+                            </li>
+                        ';
+                }
+                if (has_permission('invoice.delete')) {
+                    $options .= '
+                            <li>
+                                <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                            </li>
+                        ';
+                }
+                if (has_permission('invoice.view')) {
+                    $options .= '
+                            <li>
+                                <a class="dropdown-item" href="' . $invoiceRoute . '">' . get_phrase('Invoice') . '</a>
+                            </li>
+                        ';
+                }
+                if (has_permission('invoice.payout')) {
+                    $options .= '
+                            <li>
+                                <a class="dropdown-item" href="' . $payoutRoute . '">' . get_phrase('Payout') . '</a>
+                            </li>
+                        ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="' . $invoiceRoute . '">' . get_phrase('Invoice') . '</a>
-                        </li>
-                        <li>
-                        <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit invoice\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
-                        </li>
-                        <li>
-                        <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="' . $payoutRoute . '">' . get_phrase('Payout') . '</a>
-                        </li>
-                    </ul>
+                    <ul class="dropdown-menu">' . $options . '</ul>
                 </div>
                 ';
             })
@@ -1022,27 +1206,48 @@ class ServerSideDataController extends Controller
                 $deleteRoute  = route(get_current_user_role() . '.invoice.delete', $invoice->id);
                 $invoiceRoute = route(get_current_user_role() . '.invoice.view', $invoice->id);
                 // Generate the context menu
-                $contextMenu = [
-                    'Invoice' => [
-                        'type'        => 'url',
-                        'name'        => 'Invoice',
-                        'action_link' => $invoiceRoute,
-                        'title'       => 'View Invoice',
-                    ],
-                    'Edit'    => [
+                $contextMenu = [];
+                if (has_permission('invoice.edit')) {
+                    $contextMenu['Edit'] = [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editRoute,
                         'title'       => 'Edit meeting',
-                    ],
-                    'Delete'  => [
+                    ];
+                }
+                if (has_permission('invoice.delete')) {
+                    $contextMenu['Delete'] = [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteRoute,
                         'title'       => 'Delete meeting',
-                    ],
-                ];
-
+                    ];
+                }
+                if (has_permission('invoice.view')) {
+                    $contextMenu['Invoice'] = [
+                        'type'        => 'ajax',
+                        'name'        => 'Invoice',
+                        'action_link' => $invoiceRoute,
+                        'title'       => 'View invoice',
+                    ];
+                }
+                if (has_permission('invoice.payout')) {
+                    $contextMenu['Payout'] = [
+                        'type'        => 'ajax',
+                        'name'        => 'Payout',
+                        'action_link' => $invoiceRoute,
+                        'title'       => 'Payout invoice',
+                    ];
+                }
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -1087,42 +1292,64 @@ class ServerSideDataController extends Controller
                 // Generate routes dynamically .milestone.edit', $milestone->id
                 $editRoute   = route(get_current_user_role() . '.addon.edit', $addon->id);
                 $deleteRoute = route(get_current_user_role() . '.addon.delete', $addon->id);
+
+                $options = '';
+                if (has_permission('addon.edit')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit addon\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('addon.delete')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Update Addon\')" href="javascript:void(0)">' . get_phrase('Update') . '</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
-                        </li>
-                    </ul>
+                    <ul class="dropdown-menu">' . $options . '</ul>
                 </div>
             ';
             })
-            ->addColumn('context_menu', function ($invoice) {
-                $editRoute    = route(get_current_user_role() . '.invoice.edit', $invoice->id);
-                $deleteRoute  = route(get_current_user_role() . '.invoice.delete', $invoice->id);
-                $invoiceRoute = route(get_current_user_role() . '.invoice.edit', $invoice->id);
+            ->addColumn('context_menu', function ($addon) {
+                $editRoute   = route(get_current_user_role() . '.addon.edit', $addon->id);
+                $deleteRoute = route(get_current_user_role() . '.addon.delete', $addon->id);
                 // Generate the context menu
-                $contextMenu = [
-                    'Edit'   => [
+                $contextMenu = [];
+                if (has_permission('addon.edit')) {
+                    $contextMenu['Edit'] = [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editRoute,
-                        'title'       => 'Edit meeting',
-                    ],
-                    'Delete' => [
+                        'title'       => 'Edit addon',
+                    ];
+                }
+                if (has_permission('addon.delete')) {
+                    $contextMenu['Delete'] = [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteRoute,
-                        'title'       => 'Delete meeting',
-                    ],
-                ];
-
+                        'title'       => 'Delete addon',
+                    ];
+                }
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -1254,30 +1481,48 @@ class ServerSideDataController extends Controller
             ->addColumn('options', function ($role) {
                 $permissionRoute = route(get_current_user_role() . '.role.permission', ['role' => $role->id]);
 
+                $options = '';
+                if (has_permission('role.permission')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="modal(\'Permission\',\'' . $permissionRoute . '\', \'modal-xl\')">' . get_phrase('Permissions') . '</a>
+                        </li>
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
                 return '
             <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                 <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="fi-rr-menu-dots-vertical"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li>
-                        <a class="dropdown-item" onclick="modal(\'Permission\',\'' . $permissionRoute . '\', \'modal-xl\')">' . get_phrase('Permissions') . '</a>
-                    </li>
+                    ' . $options . '
                 </ul>
             </div>';
             })
             ->addColumn('context_menu', function ($role) {
                 $permissionRoute = route(get_current_user_role() . '.role.permission', $role->title);
                 // Generate the context menu
-                $contextMenu = [
-                    'Permission' => [
+                $contextMenu = [];
+                if (has_permission('role.permission')) {
+                    $contextMenu['Permissions'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Permission',
+                        'name'        => 'Permissions',
                         'action_link' => $permissionRoute,
-                        'title'       => 'Role permission',
-                    ],
-                ];
-
+                        'title'       => 'Edit permissions',
+                    ];
+                }
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this role.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -1316,40 +1561,62 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.user.edit', $user->id);
                 $deleteRoute = route(get_current_user_role() . '.user.delete', $user->id);
 
+                $options = '';
+                if (has_permission('user.edit')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit user\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('user.delete')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                        </li>
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
                 return '
             <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                 <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="fi-rr-menu-dots-vertical"></span>
                 </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit user\')">' . get_phrase('Edit') . '</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
-                    </li>
-                </ul>
+                <ul class="dropdown-menu">' . $options . '</ul>
             </div>';
             })
             ->addColumn('context_menu', function ($user) {
                 $editRoute   = route(get_current_user_role() . '.user.edit', $user->id);
                 $deleteRoute = route(get_current_user_role() . '.user.delete', $user->id);
                 // Generate the context menu
-                $contextMenu = [
-                    'Edit'   => [
+                $contextMenu = [];
+                if (has_permission('user.edit')) {
+                    $contextMenu['Edit'] = [
                         'type'        => 'ajax',
                         'name'        => 'Edit',
                         'action_link' => $editRoute,
                         'title'       => 'Edit user',
-                    ],
-                    'Delete' => [
+                    ];
+                }
+                if (has_permission('user.delete')) {
+                    $contextMenu['Delete'] = [
                         'type'        => 'ajax',
                         'name'        => 'Delete',
                         'action_link' => $deleteRoute,
                         'title'       => 'Delete user',
-                    ],
-                ];
-
+                    ];
+                }
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
@@ -1360,85 +1627,106 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function renderPaymentsTable($payments)
-    {
-        $query = OfflinePayment::query();
+    // public function renderPaymentsTable($payments)
+    // {
+    //     $query = OfflinePayment::query();
 
-        return datatables()
-            ->eloquent($query)
-            ->addColumn('id', function ($payment) {
-                static $key = 1;
-                return '
-            <div class="d-flex align-items-center">
-                <input type="checkbox" class="checkbox-item me-2 table-checkbox">
-                <p class="row-number fs-12px">' . $key++ . '</p>
-                <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
-            </div>';
-            })
-            ->addColumn('user_info', function ($payment) {
-                $user = get_user_info($payment->user_id);
-                return '<div class="dAdmin_profile d-flex align-items-center min-w-200px">
-                        <div class="dAdmin_profile_name">
-                            <h4 class="title fs-14px">' . $user->name . '</h4>
-                            <p class="sub-title text-12px">' . $user->email . '</p>
-                            <p class="sub-title text-12px">' . get_phrase('Phone') . ': ' . $user->phone . '</p>
-                        </div>
-                    </div>';
-            })
-            ->addColumn('item_type', function ($payment) {
-                if ($payment->item_type === 'invoice') {
-                    $invoices     = Invoice::whereIn('id', json_decode($payment->items, true))->get();
-                    $invoiceLinks = '';
-                    foreach ($invoices as $invoice) {
-                        $invoiceLinks .= '<p class="sub-title text-12px">
-                                        <a href="javascript:void(0)" class="text-muted me-3">' . $invoice->title . '</a>
-                                     </p>';
-                    }
-                    return $invoiceLinks;
-                }
-                return '';
-            })
-            ->addColumn('total_amount', function ($payment) {
-                return '<div class="sub-title2 text-12px">' . $payment->total_amount . '</div>';
-            })
-            ->addColumn('date', function ($payment) {
-                return '<div class="sub-title2 text-12px">
-                        <p>' . date('d-M-y', strtotime($payment->created_at)) . '</p>
-                    </div>';
-            })
-            ->addColumn('download', function ($payment) {
-                $route = route('admin.offline.payment.doc', $payment->id);
-                return '<a class="dropdown-item btn ol-btn-primary px-2 py-1" href="' . $route . '">
-                        <i class="fi-rr-cloud-download"></i> ' . get_phrase('Download') . '
-                    </a>';
-            })
-            ->addColumn('status', function ($payment) {
-                $statuses = [
-                    1 => '<span class="badge bg-success">' . get_phrase('Accepted') . '</span>',
-                    2 => '<span class="badge bg-danger">' . get_phrase('Suspended') . '</span>',
-                    0 => '<span class="badge bg-warning">' . get_phrase('Pending') . '</span>',
-                ];
-                return $statuses[$payment->status] ?? '<span class="badge bg-secondary">Unknown</span>';
-            })
-            ->addColumn('options', function ($payment) {
-                $downloadRoute = route('admin.offline.payment.doc', $payment->id);
-                $acceptRoute   = route('admin.offline.payment.accept', $payment->id);
-                $declineRoute  = route('admin.offline.payment.decline', $payment->id);
+    //     return datatables()
+    //         ->eloquent($query)
+    //         ->addColumn('id', function ($payment) {
+    //             static $key = 1;
+    //             return '
+    //         <div class="d-flex align-items-center">
+    //             <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+    //             <p class="row-number fs-12px">' . $key++ . '</p>
+    //             <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
+    //         </div>';
+    //         })
+    //         ->addColumn('user_info', function ($payment) {
+    //             $user = get_user_info($payment->user_id);
+    //             return '<div class="dAdmin_profile d-flex align-items-center min-w-200px">
+    //                     <div class="dAdmin_profile_name">
+    //                         <h4 class="title fs-14px">' . $user->name . '</h4>
+    //                         <p class="sub-title text-12px">' . $user->email . '</p>
+    //                         <p class="sub-title text-12px">' . get_phrase('Phone') . ': ' . $user->phone . '</p>
+    //                     </div>
+    //                 </div>';
+    //         })
+    //         ->addColumn('item_type', function ($payment) {
+    //             if ($payment->item_type === 'invoice') {
+    //                 $invoices     = Invoice::whereIn('id', json_decode($payment->items, true))->get();
+    //                 $invoiceLinks = '';
+    //                 foreach ($invoices as $invoice) {
+    //                     $invoiceLinks .= '<p class="sub-title text-12px">
+    //                                     <a href="javascript:void(0)" class="text-muted me-3">' . $invoice->title . '</a>
+    //                                  </p>';
+    //                 }
+    //                 return $invoiceLinks;
+    //             }
+    //             return '';
+    //         })
+    //         ->addColumn('total_amount', function ($payment) {
+    //             return '<div class="sub-title2 text-12px">' . $payment->total_amount . '</div>';
+    //         })
+    //         ->addColumn('date', function ($payment) {
+    //             return '<div class="sub-title2 text-12px">
+    //                     <p>' . date('d-M-y', strtotime($payment->created_at)) . '</p>
+    //                 </div>';
+    //         })
+    //         ->addColumn('download', function ($payment) {
+    //             $route = route('admin.offline.payment.doc', $payment->id);
+    //             return '<a class="dropdown-item btn ol-btn-primary px-2 py-1" href="' . $route . '">
+    //                     <i class="fi-rr-cloud-download"></i> ' . get_phrase('Download') . '
+    //                 </a>';
+    //         })
+    //         ->addColumn('status', function ($payment) {
+    //             $statuses = [
+    //                 1 => '<span class="badge bg-success">' . get_phrase('Accepted') . '</span>',
+    //                 2 => '<span class="badge bg-danger">' . get_phrase('Suspended') . '</span>',
+    //                 0 => '<span class="badge bg-warning">' . get_phrase('Pending') . '</span>',
+    //             ];
+    //             return $statuses[$payment->status] ?? '<span class="badge bg-secondary">Unknown</span>';
+    //         })
+    //         ->addColumn('options', function ($payment) {
+    //             $downloadRoute = route('admin.offline.payment.doc', $payment->id);
+    //             $acceptRoute   = route('admin.offline.payment.accept', $payment->id);
+    //             $declineRoute  = route('admin.offline.payment.decline', $payment->id);
 
-                return '<div class="dropdown ol-icon-dropdown ol-icon-dropdown-transparent">
-                        <button class="btn ol-btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="fi-rr-menu-dots-vertical"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="' . $downloadRoute . '">' . get_phrase('Download') . '</a></li>
-                            <li><a class="dropdown-item" href="' . $acceptRoute . '">' . get_phrase('Accept') . '</a></li>
-                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a></li>
-                        </ul>
-                    </div>';
-            })
-            ->rawColumns(['id', 'user_info', 'item_type', 'total_amount', 'date', 'download', 'status', 'options'])
-            ->make(true);
-    }
+    //             $options = '';
+    //             if (has_permission('offline.payment.doc')) {
+    //                 $options .= '
+    //                     <li>
+    //                         <a class="dropdown-item" href="' . $downloadRoute . '">' . get_phrase('Download') . '</a>
+    //                     </li>
+    //                 ';
+    //             }
+    //             if (has_permission('offline.payment.accept')) {
+    //                 $options .= '
+    //                     <li>
+    //                         <a class="dropdown-item" href="' . $acceptRoute . '">' . get_phrase('Accept') . '</a>
+    //                     </li>
+    //                 ';
+    //             }
+    //             if (has_permission('offline.payment.decline')) {
+    //                 $options .= '
+    //                     <li>
+    //                         <a class="dropdown-item" href="javascript:void(0)" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a>
+    //                     </li>
+    //                 ';
+    //             }
+    //             if (empty($options)) {
+    //                 $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+    //             }
+    //             return '<div class="dropdown ol-icon-dropdown ol-icon-dropdown-transparent">
+    //                     <button class="btn ol-btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    //                         <span class="fi-rr-menu-dots-vertical"></span>
+    //                     </button>
+    //                     <ul class="dropdown-menu">' . $options . '</ul>
+    //                 </div>';
+    //         })
+    //         ->rawColumns(['id', 'user_info', 'item_type', 'total_amount', 'date', 'download', 'status', 'options'])
+    //         ->make(true);
+    // }
 
     public function offline_payments_server_side($string)
     {
@@ -1512,30 +1800,142 @@ class ServerSideDataController extends Controller
                 return $statuses[$payment->status] ?? '<span class="badge bg-secondary">Unknown</span>';
             })
             ->addColumn('options', function ($payment) {
-                $downloadRoute = route('admin.offline.payment.doc', $payment->id);
-                $acceptRoute   = route('admin.offline.payment.accept', $payment->id);
-                $declineRoute  = route('admin.offline.payment.decline', $payment->id);
+                $downloadRoute = route(get_current_user_role() . '.offline.payment.doc', $payment->id);
+                $acceptRoute   = route(get_current_user_role() . '.offline.payment.accept', $payment->id);
+                $declineRoute  = route(get_current_user_role() . '.offline.payment.decline', $payment->id);
 
+                $options = '';
+                if (has_permission('offline.payment.doc')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="' . $downloadRoute . '">' . get_phrase('Download') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('offline.payment.accept')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="' . $acceptRoute . '">' . get_phrase('Accept') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('offline.payment.decline')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a>
+                        </li>
+                    ';
+                }
+                if (empty($options)) {
+                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                         <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="fi-rr-menu-dots-vertical"></span>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                            <a class="dropdown-item" href="' . $downloadRoute . '">' . get_phrase('Download') . '</a>
-                            </li>
-                            <li>
-                            <a class="dropdown-item" href="' . $acceptRoute . '">' . get_phrase('Accept') . '</a>
-                            </li>
-                            <li>
-                            <a class="dropdown-item" href="javascript:void(0)" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a>
-                            </li>
-                        </ul>
+                        <ul class="dropdown-menu">' . $options . '</ul>
                     </div>';
+            })
+            ->addColumn('comtext_menu', function ($payment) {
+                $downloadRoute = route(get_current_user_role() . '.offline.payment.doc', $payment->id);
+                $acceptRoute   = route(get_current_user_role() . '.offline.payment.accept', $payment->id);
+                $declineRoute  = route(get_current_user_role() . '.offline.payment.decline', $payment->id);
+                // Generate the context menu
+                $contextMenu = [];
+                if (has_permission('offline.payment.doc')) {
+                    $contextMenu['Download'] = [
+                        'type'        => 'ajax',
+                        'name'        => 'Download',
+                        'action_link' => $downloadRoute,
+                        'title'       => 'Download payment document',
+                    ];
+                }
+                if (has_permission('offline.payment.accept')) {
+                    $contextMenu['Accept'] = [
+                        'type'        => 'ajax',
+                        'name'        => 'Accept',
+                        'action_link' => $acceptRoute,
+                        'title'       => 'Accept payment',
+                    ];
+                }
+                if (has_permission('offline.payment.decline')) {
+                    $contextMenu['Decline'] = [
+                        'type'        => 'ajax',
+                        'name'        => 'Decline',
+                        'action_link' => $declineRoute,
+                        'title'       => 'Decline payment',
+                    ];
+                }
+                if (empty($contextMenu)) {
+                    $contextMenu = [
+                        'NoActions' => [
+                            'type'  => 'info',
+                            'name'  => 'No actions available',
+                            'title' => 'No actions are permitted for this project.',
+                        ],
+                    ];
+                }
+                // JSON encode with unescaped slashes for cleaner URLs
+                return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
             ->rawColumns(['id', 'user_info', 'item_type', 'total_amount', 'date', 'download', 'status', 'options'])
             ->make(true);
+    }
+    public function payments_report_server_side($string)
+    {
+
+        $query = Payment_history::query();
+        if (!empty($string)) {
+            $query->where(function ($q) use ($string) {
+                $q->where('payment_type', 'like', "%{$string}%");
+            });
+        }
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('id', function ($payment_history) {
+                static $key = 1;
+                return '
+                <div class="d-flex align-items-center">
+                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                    <p class="row-number fs-12px">' . $key++ . '</p>
+                    <input type="hidden" class="datatable-row-id" value="' . $payment_history->id . '">
+                </div>
+            ';
+            })
+            ->addColumn('payment_type', function ($payment_history) {
+                return $payment_history?->payment_type;
+            })
+            ->addColumn('invoice_id', function ($payment_history) {
+                return $payment_history->invoice_id;
+            })
+            ->addColumn('amount', function ($payment_history) {
+                return $payment_history->amount;
+            })
+            ->addColumn('last_modified', function ($payment_history) {
+                return $payment_history->last_modified;
+            })
+
+            ->addColumn('transaction_id', function ($payment_history) {
+                $decodedTransactionId = json_decode($payment_history->transaction_id, true);
+                return $decodedTransactionId['reference'] ?? 'No transaction ID';
+            })
+
+            ->addColumn('payment_purpose', function ($payment_history) {
+                return $payment_history->payment_purpose;
+            })
+            ->addColumn('created_at', function ($payment_history) {
+                return '<div class="sub-title2 text-12px">
+                        <p>' . date('d-M-y', strtotime($payment_history->created_at)) . '</p>
+                    </div>';
+            })
+
+            ->rawColumns(["id", "payment_type", "invoice_id", "amount", "last_modified", "transaction_id", "payment_purpose", "created_at"])
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
+            ->make(true);
+
     }
 
 }

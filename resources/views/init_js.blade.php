@@ -7,24 +7,10 @@
             $('select.ol-select2:not(.inited)').addClass('inited');
         }
 
-        // Initialize AvalynxSelect
-        if ($('select.ol-avalynx-select:not(.inited)').length) {
-            $('select.ol-avalynx-select:not(.inited)').each(function() {
-                new AvalynxSelect(this, {
-                    liveSearch: true, // Enables live search
-                    caseSensitive: false, // Case-insensitive search
-                    showAll: true, // Show all options when input is empty
-                    scrollList: true, // Enable scrolling for long lists
-                    scrollItems: 8 // Show 8 items before scrolling
-                }, {
-                    searchPlaceholder: 'Search...', // Placeholder for the search input
-                    selectPlaceholder: 'Please select...' // Placeholder for the dropdown
-                });
-
-                // Mark as initialized
-                $(this).addClass('inited');
-            });
-        }
+        const avalynxSelect1 = new AvalynxSelect('.avalynx-select', {
+            scrollItems: 5,
+            liveSearch: true
+        });
 
         // datatable
         if (!$.fn.dataTable.isDataTable('#datatable')) {

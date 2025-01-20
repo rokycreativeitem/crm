@@ -98,10 +98,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button onclick="rightCanvas('{{ route(get_current_user_role() . '.meeting.create', ['code' => request()->route()->parameter('code')]) }}', 'Create meeting')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
-                                    <span class="fi-rr-plus"></span>
-                                    <span>{{ get_phrase('Add new') }}</span>
-                                </button>
+                                @if (has_permission('meeting.create'))
+                                    <button onclick="rightCanvas('{{ route(get_current_user_role() . '.meeting.create', ['code' => request()->route()->parameter('code')]) }}', 'Create meeting')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
+                                        <span class="fi-rr-plus"></span>
+                                        <span>{{ get_phrase('Add new') }}</span>
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>

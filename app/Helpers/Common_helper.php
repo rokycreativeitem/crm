@@ -82,7 +82,7 @@ if (!function_exists('get_user_role')) {
 if (!function_exists('get_current_user_role')) {
     function get_current_user_role()
     {
-       
+
         $role = Role::where('id', auth()->user()->role_id)->value('title');
         return $role;
     }
@@ -98,16 +98,7 @@ if (!function_exists('has_permission')) {
             if (isset($explode[1]) && $explode[1] == 'edit') {
                 $route = $explode[0] . '.update';
             }
-            // dd($route);
-            // if (str_ends_with($route, '.edit')) {
-            //     $update_route  = str_replace('.edit', '.update', $route);
-            //     $permission_id = Permission::where('route', $update_route)->value('id');
-            //     $role_id       = Role::where('id', Auth::user()->role_id)->value('id');
-            //     $permission    = RolePermission::where('role_id', $role_id)->where('permission_id', $permission_id)->first();
-            //     if ($permission) {
-            //         return true;
-            //     }
-            // }
+
             $permission_id = Permission::where('route', $route)->value('id');
             $role_id       = Role::where('id', Auth::user()->role_id)->value('id');
             $permission    = RolePermission::where('role_id', $role_id)->where('permission_id', $permission_id)->first();
