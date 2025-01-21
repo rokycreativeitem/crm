@@ -1,16 +1,18 @@
 <script type="text/javascript">
     "use strict";
     $(document).ready(function() {
-        //select2
-        if ($('select.ol-select2:not(.inited)').length) {
-            $('select.ol-select2:not(.inited)').select2();
-            $('select.ol-select2:not(.inited)').addClass('inited');
+        //avalynx-select
+        if ($('.avalynx-select').length > 0) {
+            const avalynxSelect1 = new AvalynxSelect('.avalynx-select', {
+                scrollItems: 5,
+                liveSearch: true
+            });
+        }
+        //niceSelect
+        if ($('.ol-niceSelect').length > 0) {
+            $('.ol-niceSelect').niceSelect();
         }
 
-        const avalynxSelect1 = new AvalynxSelect('.avalynx-select', {
-            scrollItems: 5,
-            liveSearch: true
-        });
 
         // datatable
         if (!$.fn.dataTable.isDataTable('#datatable')) {

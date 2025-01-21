@@ -1539,6 +1539,14 @@ class ServerSideDataController extends Controller
         $query->whereHas('role', function ($q) use ($role) {
             $q->where('title', $role);
         });
+        $filter_count = [];
+        if (!empty($string)) {
+            $filter_count[] = $string;
+            $query->where(function ($q) use ($string) {
+                $q->where('name', 'like', "%{$string}%");
+                $q->orWhere('email', 'like', "%{$string}%");
+            });
+        }
 
         return datatables()
             ->eloquent($query)
