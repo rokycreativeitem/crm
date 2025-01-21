@@ -1360,46 +1360,47 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function project_report_server_side($string, $project, $paymentMethod, $status, $minAmount, $maxAmount)
+    public function project_report_server_side($string)
     {
-        $query = Invoice::query();
+        // $query = Payment_history::groupBy('project_code')->query();
+        $query = Payment_history::select('project_code', DB::raw('MAX(date_added) as date_added'), DB::raw('SUM(amount) as total_amount'))
+            ->groupBy('project_code');
+        // $query = Payment_history::select('project_code', DB::raw('SUM(amount) as total_amount'))
+        //     ->groupBy('project_code');
 
         return datatables()
             ->eloquent($query)
-            ->addColumn('id', function ($invoice) {
+            ->addColumn('id', function ($report) {
                 static $key = 1;
                 return '
-            <div class="d-flex align-items-center">
-                <input type="checkbox" class="checkbox-item me-2 table-checkbox">
-                <p class="row-number fs-12px">' . $key++ . '</p>
-                <input type="hidden" class="datatable-row-id" value="' . $invoice->id . '">
-            </div>';
+                <div class="d-flex align-items-center">
+                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                    <p class="row-number fs-12px">' . $key++ . '</p>
+                    <input type="hidden" class="datatable-row-id" value="' . $report->id . '">
+                </div>';
             })
-            ->addColumn('date', function ($invoice) {
-                return date('Y-m-d', strtotime($invoice->timestamp_start));
+            ->addColumn('date', function ($report) {
+                return $report->date_added;
             })
-            ->addColumn('project', function ($invoice) {
-                return $invoice->project->title ?? '-';
+            ->addColumn('project', function ($report) {
+                return $report->project_code;
             })
-            ->addColumn('amount', function ($invoice) {
-                return currency($invoice->payment);
+            ->addColumn('amount', function ($report) {
+                return $report->total_amount; // Use the aggregated value
             })
-            ->addColumn('payment_method', function ($invoice) {
-                return $invoice->payment_method;
+            ->rawColumns(["id", "date", "project", "amount"])
+            ->addColumn('context_menu', function ($role) {
+                $permissionRoute = route(get_current_user_role() . '.role.permission', $role->title);
+                $contextMenu = [
+                    'Permission' => [
+                        'type' => 'ajax',
+                        'name' => 'Permission',
+                        'action_link' => $permissionRoute,
+                        'title' => 'Role permission',
+                    ],
+                ];
+                return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->addColumn('status', function ($invoice) {
-                $status      = $invoice->status;
-                $statusLabel = '';
-                if ($status == 'completed') {
-                    $statusLabel = '<span class="badge bg-success">' . get_phrase('Completed') . '</span>';
-                } elseif ($status == 'pending') {
-                    $statusLabel = '<span class="badge bg-warning">' . get_phrase('Pending') . '</span>';
-                } elseif ($status == 'failed') {
-                    $statusLabel = '<span class="badge bg-danger">' . get_phrase('Failed') . '</span>';
-                }
-                return $statusLabel;
-            })
-            ->rawColumns(['id', 'timestamp_start', 'project', 'payment', 'payment_method', 'status'])
             ->setRowClass(function () {
                 return 'context-menu';
             })

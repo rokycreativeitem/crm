@@ -137,8 +137,6 @@
                                     <th scope="col">{{ get_phrase('Date') }}</th>
                                     <th scope="col">{{ get_phrase('Project') }}</th>
                                     <th scope="col">{{ get_phrase('Amount') }}</th>
-                                    <th scope="col">{{ get_phrase('Payment Method') }}</th>
-                                    <th scope="col">{{ get_phrase('Status') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -195,7 +193,7 @@
 @push('js')
     <script>
         setTimeout(function() {
-            server_side_datatable('["id","timestamp_start","project","payment","payment_method","status"]', "{{ route(get_current_user_role() . '.project_report') }}");
+            server_side_datatable('["id","date","project","amount"]', "{{ route(get_current_user_role() . '.project_report') }}");
         }, 500);
     </script>
     <script>
