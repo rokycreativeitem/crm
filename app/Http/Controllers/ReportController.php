@@ -13,14 +13,7 @@ class ReportController extends Controller
     {
 
         if ($request->ajax()) {
-            return app(ServerSideDataController::class)->project_report_server_side(
-                $request->custom_search_box,
-                $request->project,
-                $request->payment_method,
-                $request->status,
-                $request->min_payment,
-                $request->max_payment
-            );
+            return app(ServerSideDataController::class)->project_report_server_side($request->custom_search_box);
         }
 
         $query = Invoice::query();
