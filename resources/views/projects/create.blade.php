@@ -51,7 +51,7 @@
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="status">{{ get_phrase('Status') }}</label>
-                        <select class="form-control ol-form-control ol-select2" id="status" name="status" required>
+                        <select class="form-control ol-form-control ol-niceSelect" id="status" name="status" required>
                             <option value="in_progress">{{ get_phrase('In Progress') }}</option>
                             <option value="not_started">{{ get_phrase('Not Started') }}</option>
                             <option value="completed">{{ get_phrase('Completed') }}</option>
@@ -69,7 +69,7 @@
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="privacy">{{ get_phrase('Privacy') }}</label>
-                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="privacy" name="privacy" required>
+                        <select class="form-control ol-form-control ol-niceSelect" data-toggle="select2" id="privacy" name="privacy" required>
                             <option value="">{{ get_phrase('Select Privacy') }}</option>
                             <option value="public">{{ get_phrase('Public') }}</option>
                             <option value="private">{{ get_phrase('Private') }}</option>

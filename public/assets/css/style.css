@@ -6749,7 +6749,6 @@ hr {
     background: #f7f7f9;
     padding: 10px 35px 10px 15px;
     color: #818195;
-    font-family: "Inter";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -6765,7 +6764,7 @@ hr {
     content: "";
     height: 20px;
     width: 20px;
-    background-image: url(angle-down-gray-20.svg);
+    background-image: url(../images/icons/angle-small-down-gray.svg);
     background-repeat: no-repeat;
     background-size: 20px;
     transform-origin: 10px 0;
@@ -6834,4 +6833,67 @@ hr {
 }
 .avalynx-select-livesearch .avalynx-select-input::placeholder {
     color: #818195;
+}
+
+/* Nice Select */
+.ol-niceSelect {
+    background: #f7f7f9;
+    height: auto;
+    width: 100%;
+    line-height: inherit;
+    padding: 10px 35px 10px 15px;
+    color: #818195;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(129, 129, 149, 0.2);
+    float: none;
+}
+.ol-niceSelect:hover,
+.ol-niceSelect:active,
+.ol-niceSelect.open,
+.ol-niceSelect:focus {
+    border-color: #86b7f9;
+}
+.ol-niceSelect:after {
+    border: none;
+    height: 20px;
+    width: 20px;
+    background-image: url(../images/icons/angle-small-down-gray.svg);
+    background-repeat: no-repeat;
+    background-size: 20px;
+    transform-origin: 10px 0;
+    top: 50%;
+    transform: rotate(0deg) translateY(-50%);
+    margin: 0;
+    right: 12px;
+}
+.ol-niceSelect.open:after {
+    transform: rotate(180deg) translateY(-50%);
+}
+.ol-niceSelect .list {
+    border: none;
+    box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    border-radius: 4px;
+    z-index: 2;
+    width: calc(100% + 2px);
+    left: -1px;
+}
+.ol-niceSelect .option {
+    min-height: auto;
+    line-height: inherit;
+    padding: 6px 8px;
+    border-radius: 4px;
+}
+.ol-niceSelect .option.selected {
+    font-weight: inherit;
+}
+.ol-niceSelect .option:hover,
+.ol-niceSelect .option.focus,
+.ol-niceSelect .option.selected.focus {
+    background-color: #f8f9fa;
+    color: #0d6efd;
 }

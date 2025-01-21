@@ -240,29 +240,6 @@
             success: function(response) {
                 if (response) {
                     $('.global.offcanvas .offcanvas-body').empty().html(response);
-
-                    if ($('select.ol-select2').length) {
-                        $('select.ol-select2').each(function() {
-                            $(this).select2();
-                        });
-                    }
-                    // Initialize AvalynxSelect if found
-                    if ($('select.ol-avalynx-select:not(.inited)').length) {
-                        $('select.ol-avalynx-select:not(.inited)').each(function() {
-                            new AvalynxSelect(this, {
-                                liveSearch: true,
-                                caseSensitive: false,
-                                showAll: true,
-                                scrollList: true,
-                                scrollItems: 8
-                            }, {
-                                searchPlaceholder: 'Search...',
-                                selectPlaceholder: 'Please select...'
-                            });
-
-                            $(this).addClass('inited');
-                        });
-                    }
                 }
             }
         });
