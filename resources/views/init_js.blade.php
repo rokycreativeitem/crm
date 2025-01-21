@@ -12,7 +12,11 @@
         if ($('.ol-niceSelect').length > 0) {
             $('.ol-niceSelect').niceSelect();
         }
-
+        //select2
+        if ($('select.ol-select2:not(.inited)').length) {
+            $('select.ol-select2:not(.inited)').select2();
+            $('select.ol-select2:not(.inited)').addClass('inited');
+        }
 
         // datatable
         if (!$.fn.dataTable.isDataTable('#datatable')) {
