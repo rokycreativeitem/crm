@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12">
             <div class="ol-card">
-                <div class="ol-card-body p-3 mb-10 position-relative">
+                <div class="ol-card-body p-3 mb-10 position-relative" id="filters-container">
                     <div class="ol-card radius-8px print-d-none">
                         <div class="ol-card-body px-2">
                             <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
@@ -25,7 +25,7 @@
                                                     fill="#99A1B7" stroke="#99A1B7" stroke-width="0.2" />
                                             </svg>
                                         </span>
-                                        <input type="text" class="form-control" id="custom-search-box" name="custom_search_box" placeholder="Search">
+                                        <input type="text" class="form-control" id="custom-search-box" name="customSearch" placeholder="Search">
                                     </div>
                                     <div class="custom-dropdown" id="export-btn1">
                                         <button class="dropdown-header btn ol-btn-light">

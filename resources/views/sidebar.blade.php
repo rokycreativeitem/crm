@@ -430,7 +430,7 @@
                     </li>
                 @endif
 
-                @if (has_permission('dd'))
+                @if (has_permission(''))
                     <li class="sidebar-first-li {{ $current_route == 'admin.manage_profile' ? 'active' : '' }}">
                         <a href="{{ route('admin.manage_profile') }}">
                             <span>

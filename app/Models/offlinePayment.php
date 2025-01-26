@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class offlinePayment extends Model
 {
     use HasFactory;
-
+    protected $table    = 'offline_payments';
     protected $fillable = [
         'user_id',
         'item_type',

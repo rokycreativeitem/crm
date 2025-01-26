@@ -10,12 +10,14 @@ use App\Models\Meeting;
 use App\Models\Milestone;
 use App\Models\offlinePayment;
 use App\Models\Payment_history;
+use App\Models\Payment_purpose;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\RolePermission;
 use App\Models\Task;
 use App\Models\Timesheet;
 use App\Models\User;
+use Faker\Provider\ar_EG\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -1157,9 +1159,6 @@ class ServerSideDataController extends Controller
                 $invoiceRoute = route(get_current_user_role() . '.invoice.view', $invoice->id);
                 $payoutRoute  = route(get_current_user_role() . '.invoice.payout', $invoice->id);
 
-                // $payoutRoute = '';
-                // if (get_current_user_role() == 'client') {
-                // }
                 $options = '';
                 if (has_permission('invoice.edit')) {
                     $options .= '
@@ -1360,13 +1359,28 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function project_report_server_side($string)
+    public function project_report_server_side($string, $start_date, $end_date)
     {
-        // $query = Payment_history::groupBy('project_code')->query();
-        $query = Payment_history::select('project_code', DB::raw('MAX(date_added) as date_added'), DB::raw('SUM(amount) as total_amount'))
-            ->groupBy('project_code');
-        // $query = Payment_history::select('project_code', DB::raw('SUM(amount) as total_amount'))
-        //     ->groupBy('project_code');
+        $query = Payment_history::query();
+
+        $query = $query->select('project_code', DB::raw('MAX(date_added) as date_added'), DB::raw('SUM(amount) as total_amount'), DB::raw('GROUP_CONCAT(DISTINCT payment_type SEPARATOR ", ") as payment_types')
+        )->groupBy('project_code');
+
+        if (!empty($string)) {
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%");
+            });
+        }
+        $filter_count = [];
+        if ($start_date && $end_date) {
+            $filter_count[] = $start_date;
+            $start_date     = date('Y-m-d H:i:s', strtotime($start_date));
+            $end_date       = date('Y-m-d H:i:s', strtotime($end_date));
+            $query->where(function ($q) use ($start_date, $end_date) {
+                $q->where('created_at', '>=', $start_date);
+                $q->where('updated_at', '<=', $end_date);
+            });
+        }
 
         return datatables()
             ->eloquent($query)
@@ -1380,43 +1394,43 @@ class ServerSideDataController extends Controller
                 </div>';
             })
             ->addColumn('date', function ($report) {
-                return $report->date_added;
+                return date('d-M-y h:i A', strtotime($report?->date_added));
             })
+
             ->addColumn('project', function ($report) {
-                return $report->project_code;
+                return Project::where('code', $report->project_code)->first()->title;
             })
             ->addColumn('amount', function ($report) {
-                return $report->total_amount; // Use the aggregated value
+                return $report->total_amount;
             })
-            ->rawColumns(["id", "date", "project", "amount"])
-            ->addColumn('context_menu', function ($role) {
-                $permissionRoute = route(get_current_user_role() . '.role.permission', $role->title);
-                $contextMenu = [
-                    'Permission' => [
-                        'type' => 'ajax',
-                        'name' => 'Permission',
-                        'action_link' => $permissionRoute,
-                        'title' => 'Role permission',
-                    ],
-                ];
-                return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            ->addColumn('payment_types', function ($report) {
+                return $report->payment_types;
             })
-            ->setRowClass(function () {
-                return 'context-menu';
-            })
+            ->rawColumns(["id", "date", "project", "amount", "payment_types"])
+            ->with('filter_count', count($filter_count))
             ->make(true);
     }
 
-    public function client_report_server_side($string, $project, $paymentMethod, $status, $minAmount, $maxAmount)
+    public function client_report_server_side($string, $start_date, $end_date)
     {
 
-        $query = Invoice::query();
+        $query = Payment_history::query();
         $query = $query->select('user_id', DB::raw('SUM(payment) as total_amount'))
             ->groupBy('user_id');
 
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
                 $q->where('title', 'like', "%{$string}%");
+            });
+        }
+        $filter_count = [];
+        if ($start_date && $end_date) {
+            $filter_count[] = $start_date;
+            $start_date     = date('Y-m-d H:i:s', strtotime($start_date));
+            $end_date       = date('Y-m-d H:i:s', strtotime($end_date));
+            $query->where(function ($q) use ($start_date, $end_date) {
+                $q->where('created_at', '>=', $start_date);
+                $q->where('updated_at', '<=', $end_date);
             });
         }
 
@@ -1434,30 +1448,16 @@ class ServerSideDataController extends Controller
                 return date('Y-m-d', strtotime($invoice->timestamp_start));
             })
             ->addColumn('client', function ($invoice) {
-                return $invoices->user_id ?? '-';
+                return User::where('id', $invoice->user_id)->first()->name;
             })
             ->addColumn('amount', function ($invoice) {
                 return currency($invoice->payment);
             })
-            ->addColumn('payment_method', function ($invoice) {
-                return $invoice->payment_method;
+            ->addColumn('payment_types', function ($invoice) {
+                return $invoice->payment_types;
             })
-            ->addColumn('status', function ($invoice) {
-                $status      = $invoice->status;
-                $statusLabel = '';
-                if ($status == 'completed') {
-                    $statusLabel = '<span class="badge bg-success">' . get_phrase('Completed') . '</span>';
-                } elseif ($status == 'pending') {
-                    $statusLabel = '<span class="badge bg-warning">' . get_phrase('Pending') . '</span>';
-                } elseif ($status == 'failed') {
-                    $statusLabel = '<span class="badge bg-danger">' . get_phrase('Failed') . '</span>';
-                }
-                return $statusLabel;
-            })
-            ->rawColumns(["id", "date", "client", "amount", "payment_method", "status"])
-            ->setRowClass(function () {
-                return 'context-menu';
-            })
+            ->rawColumns(["id", "date", "client", "amount", "payment_types"])
+            ->with('filter_count', count($filter_count))
             ->make(true);
     }
 
@@ -1533,19 +1533,18 @@ class ServerSideDataController extends Controller
             })
             ->make(true);
     }
-    public function user_server_side($string, $name, $email)
+    public function user_server_side($string)
     {
         $role  = request()->route()->parameter('type');
         $query = User::query();
         $query->whereHas('role', function ($q) use ($role) {
             $q->where('title', $role);
         });
-        $filter_count = [];
+
         if (!empty($string)) {
-            $filter_count[] = $string;
             $query->where(function ($q) use ($string) {
-                $q->where('name', 'like', "%{$string}%");
-                $q->orWhere('email', 'like', "%{$string}%");
+                $q->where('name', 'like', "%{$string}%")
+                    ->orWhere('email', 'like', "%{$string}%");
             });
         }
 
@@ -1636,117 +1635,41 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    // public function renderPaymentsTable($payments)
-    // {
-    //     $query = OfflinePayment::query();
-
-    //     return datatables()
-    //         ->eloquent($query)
-    //         ->addColumn('id', function ($payment) {
-    //             static $key = 1;
-    //             return '
-    //         <div class="d-flex align-items-center">
-    //             <input type="checkbox" class="checkbox-item me-2 table-checkbox">
-    //             <p class="row-number fs-12px">' . $key++ . '</p>
-    //             <input type="hidden" class="datatable-row-id" value="' . $payment->id . '">
-    //         </div>';
-    //         })
-    //         ->addColumn('user_info', function ($payment) {
-    //             $user = get_user_info($payment->user_id);
-    //             return '<div class="dAdmin_profile d-flex align-items-center min-w-200px">
-    //                     <div class="dAdmin_profile_name">
-    //                         <h4 class="title fs-14px">' . $user->name . '</h4>
-    //                         <p class="sub-title text-12px">' . $user->email . '</p>
-    //                         <p class="sub-title text-12px">' . get_phrase('Phone') . ': ' . $user->phone . '</p>
-    //                     </div>
-    //                 </div>';
-    //         })
-    //         ->addColumn('item_type', function ($payment) {
-    //             if ($payment->item_type === 'invoice') {
-    //                 $invoices     = Invoice::whereIn('id', json_decode($payment->items, true))->get();
-    //                 $invoiceLinks = '';
-    //                 foreach ($invoices as $invoice) {
-    //                     $invoiceLinks .= '<p class="sub-title text-12px">
-    //                                     <a href="javascript:void(0)" class="text-muted me-3">' . $invoice->title . '</a>
-    //                                  </p>';
-    //                 }
-    //                 return $invoiceLinks;
-    //             }
-    //             return '';
-    //         })
-    //         ->addColumn('total_amount', function ($payment) {
-    //             return '<div class="sub-title2 text-12px">' . $payment->total_amount . '</div>';
-    //         })
-    //         ->addColumn('date', function ($payment) {
-    //             return '<div class="sub-title2 text-12px">
-    //                     <p>' . date('d-M-y', strtotime($payment->created_at)) . '</p>
-    //                 </div>';
-    //         })
-    //         ->addColumn('download', function ($payment) {
-    //             $route = route('admin.offline.payment.doc', $payment->id);
-    //             return '<a class="dropdown-item btn ol-btn-primary px-2 py-1" href="' . $route . '">
-    //                     <i class="fi-rr-cloud-download"></i> ' . get_phrase('Download') . '
-    //                 </a>';
-    //         })
-    //         ->addColumn('status', function ($payment) {
-    //             $statuses = [
-    //                 1 => '<span class="badge bg-success">' . get_phrase('Accepted') . '</span>',
-    //                 2 => '<span class="badge bg-danger">' . get_phrase('Suspended') . '</span>',
-    //                 0 => '<span class="badge bg-warning">' . get_phrase('Pending') . '</span>',
-    //             ];
-    //             return $statuses[$payment->status] ?? '<span class="badge bg-secondary">Unknown</span>';
-    //         })
-    //         ->addColumn('options', function ($payment) {
-    //             $downloadRoute = route('admin.offline.payment.doc', $payment->id);
-    //             $acceptRoute   = route('admin.offline.payment.accept', $payment->id);
-    //             $declineRoute  = route('admin.offline.payment.decline', $payment->id);
-
-    //             $options = '';
-    //             if (has_permission('offline.payment.doc')) {
-    //                 $options .= '
-    //                     <li>
-    //                         <a class="dropdown-item" href="' . $downloadRoute . '">' . get_phrase('Download') . '</a>
-    //                     </li>
-    //                 ';
-    //             }
-    //             if (has_permission('offline.payment.accept')) {
-    //                 $options .= '
-    //                     <li>
-    //                         <a class="dropdown-item" href="' . $acceptRoute . '">' . get_phrase('Accept') . '</a>
-    //                     </li>
-    //                 ';
-    //             }
-    //             if (has_permission('offline.payment.decline')) {
-    //                 $options .= '
-    //                     <li>
-    //                         <a class="dropdown-item" href="javascript:void(0)" onclick="confirmModal(\'' . $declineRoute . '\')">' . get_phrase('Decline') . '</a>
-    //                     </li>
-    //                 ';
-    //             }
-    //             if (empty($options)) {
-    //                 $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
-    //             }
-    //             return '<div class="dropdown ol-icon-dropdown ol-icon-dropdown-transparent">
-    //                     <button class="btn ol-btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    //                         <span class="fi-rr-menu-dots-vertical"></span>
-    //                     </button>
-    //                     <ul class="dropdown-menu">' . $options . '</ul>
-    //                 </div>';
-    //         })
-    //         ->rawColumns(['id', 'user_info', 'item_type', 'total_amount', 'date', 'download', 'status', 'options'])
-    //         ->make(true);
-    // }
-
-    public function offline_payments_server_side($string)
+    public function offline_payments_server_side($string, $user, $status, $date, $minPrice, $maxPrice)
     {
         $query = OfflinePayment::query();
-
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
                 $q->where('name', 'like', "%{$string}%")
                     ->orWhere('email', 'like', "%{$string}%")
                     ->orWhere('id', 'like', "%{$string}%");
             });
+        }
+
+        $filter_count = [];
+        if ($user != 'all') {
+            $filter_count[] = $user;
+            $query->where(function ($q) use ($user) {
+                $q->where('user_id', $user);
+            });
+        }
+        if ($status != 'all') {
+            $filter_count[] = $status;
+            $query->where(function ($q) use ($status) {
+                $q->where('status', $status);
+            });
+        }
+        if ($date) {
+            $filter_count[] = $date;
+            $issue_date     = date('Y-m-d', strtotime($date));
+            $query->whereDate('created_at', $issue_date);
+        }
+
+        $maxPrice = (int) $maxPrice;
+        $minPrice = (int) $minPrice;
+        if ($minPrice > 0 && is_numeric($minPrice) && is_numeric($maxPrice)) {
+            $filter_count[] = $minPrice ?? $maxPrice;
+            $query->whereBetween('budget', [$minPrice, $maxPrice]);
         }
 
         return datatables()
@@ -1846,7 +1769,7 @@ class ServerSideDataController extends Controller
                         <ul class="dropdown-menu">' . $options . '</ul>
                     </div>';
             })
-            ->addColumn('comtext_menu', function ($payment) {
+            ->addColumn('context_menu', function ($payment) {
                 $downloadRoute = route(get_current_user_role() . '.offline.payment.doc', $payment->id);
                 $acceptRoute   = route(get_current_user_role() . '.offline.payment.accept', $payment->id);
                 $declineRoute  = route(get_current_user_role() . '.offline.payment.decline', $payment->id);
@@ -1889,6 +1812,7 @@ class ServerSideDataController extends Controller
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
             ->rawColumns(['id', 'user_info', 'item_type', 'total_amount', 'date', 'download', 'status', 'options'])
+            ->with('filter_count', count($filter_count))
             ->make(true);
     }
     public function payments_report_server_side($string)
@@ -1916,30 +1840,25 @@ class ServerSideDataController extends Controller
                 return $payment_history?->payment_type;
             })
             ->addColumn('invoice_id', function ($payment_history) {
-                return $payment_history->invoice_id;
+                return Invoice::where('id', $payment_history->invoice_id)->first()->title;
             })
             ->addColumn('amount', function ($payment_history) {
                 return $payment_history->amount;
             })
-            ->addColumn('last_modified', function ($payment_history) {
-                return $payment_history->last_modified;
-            })
-
             ->addColumn('transaction_id', function ($payment_history) {
                 $decodedTransactionId = json_decode($payment_history->transaction_id, true);
                 return $decodedTransactionId['reference'] ?? 'No transaction ID';
             })
 
             ->addColumn('payment_purpose', function ($payment_history) {
-                return $payment_history->payment_purpose;
+                return Payment_purpose::where('id', $payment_history->payment_purpose)->first()->title;
             })
+            // return User::where('id', $file->user_id)->first()->name;
             ->addColumn('created_at', function ($payment_history) {
-                return '<div class="sub-title2 text-12px">
-                        <p>' . date('d-M-y', strtotime($payment_history->created_at)) . '</p>
-                    </div>';
+                return date('d-M-y h:i A', strtotime($payment_history->created_at));
             })
 
-            ->rawColumns(["id", "payment_type", "invoice_id", "amount", "last_modified", "transaction_id", "payment_purpose", "created_at"])
+            ->rawColumns(["id", "payment_type", "invoice_id", "amount", "transaction_id", "payment_purpose", "created_at"])
             ->setRowClass(function () {
                 return 'context-menu';
             })

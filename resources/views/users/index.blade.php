@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12">
             <div class="ol-card">
-                <div class="ol-card-body p-3 mb-10 position-relative">
+                <div class="ol-card-body p-3 mb-10 position-relative" id="filters-container">
                     <div class="ol-card radius-8px print-d-none">
                         <div class="ol-card-body px-2">
                             <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
@@ -25,7 +25,7 @@
                                                     fill="#99A1B7" stroke="#99A1B7" stroke-width="0.2" />
                                             </svg>
                                         </span>
-                                        <input type="text" class="form-control" id="custom-search-box" name="custom_search_box" placeholder="Search">
+                                        <input type="text" class="form-control" id="custom-search-box" name="customSearch" placeholder="Search">
                                     </div>
                                     <div class="custom-dropdown" id="export-btn1">
                                         <button class="dropdown-header btn ol-btn-light">
@@ -102,8 +102,8 @@
             </div>
         </div>
     </div>
-    @include('components.datatable')
 @endsection
+@include('components.datatable')
 
 
 @push('js')
@@ -113,26 +113,4 @@
             server_side_datatable('["id","name","email","options"]', "{{ route(get_current_user_role() . '.users', request()->route()->parameter('type')) }}");
         }, 500);
     </script>
-@endpush
-@push('js')
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('smtp_file').addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                const preview = document.getElementById('preview');
-
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    preview.src = '';
-                    preview.style.display = 'none';
-                }
-            });
-        });
-    </script> --}}
 @endpush

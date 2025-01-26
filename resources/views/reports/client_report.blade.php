@@ -1,11 +1,6 @@
 @extends('layouts.admin')
 @push('title', get_phrase('Client Report'))
 
-@php
-    $start_date = strtotime('first day of this month');
-    $end_date = strtotime('last day of this month');
-@endphp
-
 @section('content')
     <!-- Start Admin area -->
     <div class="row">
@@ -14,12 +9,12 @@
                 <div class="ol-card-body p-3 mb-10 position-relative">
                     <div class="ol-card radius-8px print-d-none">
                         <div class="ol-card-body px-2">
-                            <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
+                            <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-lg-nowrap">
                                 <h4 class="title fs-16px">
                                     <i class="fi-rr-settings-sliders me-2"></i>
                                     {{ get_phrase('Client Report') }}
                                 </h4>
-                                <div class="top-bar d-flex align-items-center">
+                                <div class="top-bar flex-wrap d-flex align-items-center">
                                     <div class="input-group dt-custom-search">
                                         <span class="input-group-text">
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,7 +26,7 @@
                                                     fill="#99A1B7" stroke="#99A1B7" stroke-width="0.2" />
                                             </svg>
                                         </span>
-                                        <input type="text" class="form-control" id="custom-search-box" name="custom_search_box" placeholder="Search">
+                                        <input type="text" class="form-control" name="customSearch" id="custom-search-box" placeholder="Search">
                                     </div>
                                     <div class="custom-dropdown" id="export-btn1">
                                         <button class="dropdown-header btn ol-btn-light">
@@ -48,7 +43,7 @@
                                         </button>
                                         <ul class="dropdown-list dropdown-export">
                                             <li class="mb-1">
-                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'Project-list')"><i class="fi-rr-file-pdf"></i>
+                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'ClientReport-list')"><i class="fi-rr-file-pdf"></i>
                                                     {{ get_phrase('PDF') }}</a>
                                             </li>
                                             <li>
@@ -59,8 +54,8 @@
 
                                     </div>
 
-                                    <div class="custom-dropdown dropdown filter-dropdown" id="export-btn">
-                                        <button class="dropdown-header btn ol-btn-light" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div class="custom-dropdown dropdown filter-dropdown btn-group" id="export-btn">
+                                        <button class="dropdown-header btn ol-btn-light dropdown-toggle-split" type="button" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M7.29327 15.1C6.97327 15.1 6.65993 15.02 6.3666 14.86C5.77993 14.5333 5.4266 13.94 5.4266 13.2733V9.73999C5.4266 9.40666 5.2066 8.90666 4.99993 8.65333L2.5066 6.01333C2.0866 5.59333 1.7666 4.87333 1.7666 4.33333V2.79999C1.7666 1.73333 2.57327 0.899994 3.59993 0.899994H12.3999C13.4133 0.899994 14.2333 1.71999 14.2333 2.73333V4.19999C14.2333 4.89999 13.8133 5.69333 13.4199 6.08666L10.5333 8.63999C10.2533 8.87333 10.0333 9.38666 10.0333 9.79999V12.6667C10.0333 13.26 9.65993 13.9467 9.19327 14.2267L8.27327 14.82C7.97327 15.0067 7.63327 15.1 7.29327 15.1ZM3.59993 1.89999C3.13327 1.89999 2.7666 2.29333 2.7666 2.79999V4.33333C2.7666 4.57999 2.9666 5.05999 3.21993 5.31333L5.75994 7.98666C6.09994 8.40666 6.43327 9.10666 6.43327 9.73333V13.2667C6.43327 13.7 6.73327 13.9133 6.85993 13.98C7.13994 14.1333 7.47993 14.1333 7.73993 13.9733L8.6666 13.38C8.85327 13.2667 9.03994 12.9067 9.03994 12.6667V9.79999C9.03994 9.08666 9.3866 8.29999 9.8866 7.87999L12.7399 5.35333C12.9666 5.12666 13.2399 4.58666 13.2399 4.19333V2.73333C13.2399 2.27333 12.8666 1.89999 12.4066 1.89999H3.59993Z"
@@ -72,24 +67,43 @@
                                             {{ get_phrase('Filter') }}
                                             <span class="filter-count-display d-none" id="filter-count-display"></span>
                                         </button>
+
+                                        <a href="javascript:void(0)" class="border-0 filter-reset d-none d-flex align-items-center" id="filter-reset">
+                                            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M7 6.99927L1.00141 1.00068" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
+                                                <path d="M1 6.99936L6.99859 1.00077" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
+                                            </svg>
+
+                                            <span>|</span>
+                                        </a>
+
+                                        <!-- Dropdown Menu -->
                                         <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
-                                            <!-- Payment Method -->
+                                            <!-- Category -->
+
+                                            <!-- Price -->
                                             <div class="mb-3">
-                                                <label for="name" class="form-label">{{ get_phrase('Name') }}</label>
+                                                <label for="budget" class="form-label">{{ get_phrase('Budget') }}</label>
 
+                                                <div class="accordion-item-range">
+                                                    <div id="budget-slider"></div>
+                                                    <div class="accordion-range-value d-flex align-items-center mt-4">
+                                                        <div class="d-flex align-items-center">
+                                                            <label for="min-price" class="me-2"> {{ get_phrase('From') }} </label>
+                                                            <input type="text" class="value minPrice" disabled id="min-price" name="minPrice">
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <label for="max-price" class="mx-2"> {{ get_phrase('To') }} </label>
+                                                            <input type="text" class="value" disabled id="max-price" name="maxPrice">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-
                                             <!-- Apply Button -->
                                             <div class="text-end">
                                                 <button type="button" id="filter" class="btn btn-apply px-14px">{{ get_phrase('Apply') }}</button>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <form action="{{ route(get_current_user_role() . '.client_report') }}" method="get">
-                                            <input type="text" class="form-control ol-form-control daterangepicker" name="eDateRange"
-                                                value="{{ request()->query('start_date') && request()->query('end_date') ? date('m/d/Y', strtotime(request()->query('start_date'))) . ' - ' . date('m/d/Y', strtotime(request()->query('end_date'))) : '' }}">
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +123,6 @@
                                     <th scope="col">{{ get_phrase('Client') }}</th>
                                     <th scope="col">{{ get_phrase('Amount') }}</th>
                                     <th scope="col">{{ get_phrase('Payment Method') }}</th>
-                                    <th scope="col">{{ get_phrase('Status') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -153,14 +166,14 @@
         <div class="col-12">
             <div class="ol-card">
                 <div class="ol-card-body  p-3">
-                    @if(count($payments) > 0)
-                    <div id="donut"></div>
+                    @if (count($payments) > 0)
+                        <div id="donut"></div>
                     @else
-                    <div class="no-data py-5">
-                        <img src="{{asset('assets/images/no-data.png')}}" alt="No Data" style="max-width: 150px;">
-                        <h3 class="py-3">{{get_phrase('No Result Found')}}</h3>
-                        <p class="pb-4">{{get_phrase('A few questions to keep you make sure you’ve listened to the past ')}}</p>
-                    </div>
+                        <div class="no-data py-5">
+                            <img src="{{ asset('assets/images/no-data.png') }}" alt="No Data" style="max-width: 150px;">
+                            <h3 class="py-3">{{ get_phrase('No Result Found') }}</h3>
+                            <p class="pb-4">{{ get_phrase('A few questions to keep you make sure you’ve listened to the past ') }}</p>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -172,10 +185,10 @@
 @push('js')
     <script>
         setTimeout(function() {
-            server_side_datatable('["id","date", "client", "amount","payment_method","status"]', "{{ route(get_current_user_role() . '.client_report') }}");
+            server_side_datatable('["id","date", "client", "amount","payment_types"]', "{{ route(get_current_user_role() . '.client_report') }}");
         }, 500);
     </script>
-    
+
     <script>
         "use strict";
         document.addEventListener('DOMContentLoaded', function() {

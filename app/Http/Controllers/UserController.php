@@ -14,10 +14,11 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $page_data['users'] = User::get();
         if ($request->ajax()) {
-            return app(ServerSideDataController::class)->user_server_side($request->customSearch, $request->name, $request->email);
+            return app(ServerSideDataController::class)->user_server_side($request->customSearch);
         }
+
+        $page_data['users'] = User::get();
 
         return view('users.index', $page_data);
     }
@@ -99,7 +100,7 @@ class UserController extends Controller
                 'error' => 'User record not found.',
             ], 404);
         }
-        if($file_record->photo) {
+        if ($file_record->photo) {
             $filePath = public_path($file_record->photo);
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -136,12 +137,12 @@ class UserController extends Controller
             $profile['email']     = $request->email;
             $profile['facebook']  = $request->facebook;
             $profile['linkedin']  = $request->linkedin;
-            $profile['twitter']  = $request->twitter;
+            $profile['twitter']   = $request->twitter;
             $profile['about']     = $request->about;
             $profile['skills']    = $request->skills;
             $profile['biography'] = $request->biography;
 
-            $user = User::find(auth()->user()->id);
+            $user = User::find(Auth::user()->id);
 
             if ($request->hasFile('photo')) {
                 $file = $request->file('photo');
@@ -158,7 +159,7 @@ class UserController extends Controller
 
             $user->update($profile);
         } else {
-            $old_pass_check = Auth::attempt(['email' => auth()->user()->email, 'password' => $request->current_password]);
+            $old_pass_check = Auth::attempt(['email' => Auth::user()->email, 'password' => $request->current_password]);
 
             if (!$old_pass_check) {
                 return redirect()->back()->with('error', get_phrase('Current password wrong.'));
@@ -169,7 +170,7 @@ class UserController extends Controller
             }
 
             $password = Hash::make($request->new_password);
-            User::where('id', auth()->user()->id)->update(['password' => $password]);
+            User::where('id', Auth::user()->id)->update(['password' => $password]);
         }
         return redirect()->back()->with('success', get_phrase('Your changes has been saved.'));
 

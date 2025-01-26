@@ -59,7 +59,8 @@
                     </div>
                     <div class="fpb7 mb-3">
                         <label class="form-label ol-form-label" for="progress">{{ get_phrase('Progress') }}</label>
-                        <input type="number" id="progress" name="progress" class="form-control ol-form-control" required>
+                        <div id="progress-slider"></div>
+                        <input type="number" id="progress-input" name="progress" class="form-control ol-form-control" required>
                     </div>
 
                     <div class="fpb7 mb-2">
@@ -86,3 +87,4 @@
 
 @include('ajax')
 @include('init_js')
+@include('projects.budget_range')

@@ -6,6 +6,7 @@ use App\Models\FileUploader;
 use App\Models\Invoice;
 use App\Models\OfflinePayment;
 use App\Models\Payment_history;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -55,19 +56,11 @@ class OfflinePaymentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return app(ServerSideDataController::class)->offline_payments_server_side($request->customSearch);
-        }
-        $payments = OfflinePayment::orderBY('id', 'DESC');
-
-        if ($request->status == 'approved') {
-            $payments->where('status', 1);
-        } elseif ($request->status == 'suspended') {
-            $payments->where('status', 2);
-        } elseif ($request->status == 'pending') {
-            $payments->where('status', 0)->orWhere('status', null);
+            return app(ServerSideDataController::class)->offline_payments_server_side($request->customSearch, $request->user, $request->status, $request->date, str_replace('$', '', $request->minPrice), str_replace('$', '', $request->maxPrice));
         }
 
-        $page_data['payments'] = $payments->paginate(10);
+        $page_data['users']    = User::get();
+        $page_data['payments'] = OfflinePayment::get();
         return view('offline_payments.index', $page_data);
     }
 

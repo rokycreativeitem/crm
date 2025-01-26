@@ -12,9 +12,8 @@ class MilestoneController extends Controller
 {
     public function index(Request $request)
     {
-        if($request->ajax()){
-            // return $request->start_date;
-            return app(ServerSideDataController::class)->milestone_server_side($request->project_id, $request->customSearch, $request->task, $request->start_date, $request->end_date);                
+        if ($request->ajax()) {
+            return app(ServerSideDataController::class)->milestone_server_side($request->project_id, $request->customSearch, $request->task, $request->start_date, $request->end_date);
         }
 
         $page_data['milestones'] = Milestone::get();

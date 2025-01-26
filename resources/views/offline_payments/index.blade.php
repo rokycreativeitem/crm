@@ -5,15 +5,16 @@
     <div class="row">
         <div class="col-12">
             <div class="ol-card">
-                <div class="ol-card-body p-3 mb-10 position-relative">
+                <div class="ol-card-body p-3 position-relative" id="filters-container">
+
                     <div class="ol-card radius-8px print-d-none">
                         <div class="ol-card-body px-2">
-                            <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
+                            <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-lg-nowrap">
                                 <h4 class="title fs-16px">
                                     <i class="fi-rr-settings-sliders me-2"></i>
-                                    {{ get_phrase('Offline payments') }}
+                                    {{ get_phrase('Offline payment') }}
                                 </h4>
-                                <div class="top-bar d-flex align-items-center">
+                                <div class="top-bar flex-wrap d-flex align-items-center">
                                     <div class="input-group dt-custom-search">
                                         <span class="input-group-text">
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,7 +26,7 @@
                                                     fill="#99A1B7" stroke="#99A1B7" stroke-width="0.2" />
                                             </svg>
                                         </span>
-                                        <input type="text" class="form-control" id="custom-search-box" name="custom_search_box" placeholder="Search">
+                                        <input type="text" class="form-control" name="customSearch" id="custom-search-box" placeholder="Search">
                                     </div>
                                     <div class="custom-dropdown" id="export-btn1">
                                         <button class="dropdown-header btn ol-btn-light">
@@ -42,7 +43,7 @@
                                         </button>
                                         <ul class="dropdown-list dropdown-export">
                                             <li class="mb-1">
-                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'Milestone-list')"><i class="fi-rr-file-pdf"></i>
+                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'OfflinePayment-list')"><i class="fi-rr-file-pdf"></i>
                                                     {{ get_phrase('PDF') }}</a>
                                             </li>
                                             <li>
@@ -50,9 +51,11 @@
                                                     {{ get_phrase('Print') }}</a>
                                             </li>
                                         </ul>
+
                                     </div>
-                                    <div class="custom-dropdown dropdown filter-dropdown" id="export-btn">
-                                        <button class="dropdown-header btn ol-btn-light" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+
+                                    <div class="custom-dropdown dropdown filter-dropdown btn-group" id="export-btn">
+                                        <button class="dropdown-header btn ol-btn-light dropdown-toggle-split" type="button" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M7.29327 15.1C6.97327 15.1 6.65993 15.02 6.3666 14.86C5.77993 14.5333 5.4266 13.94 5.4266 13.2733V9.73999C5.4266 9.40666 5.2066 8.90666 4.99993 8.65333L2.5066 6.01333C2.0866 5.59333 1.7666 4.87333 1.7666 4.33333V2.79999C1.7666 1.73333 2.57327 0.899994 3.59993 0.899994H12.3999C13.4133 0.899994 14.2333 1.71999 14.2333 2.73333V4.19999C14.2333 4.89999 13.8133 5.69333 13.4199 6.08666L10.5333 8.63999C10.2533 8.87333 10.0333 9.38666 10.0333 9.79999V12.6667C10.0333 13.26 9.65993 13.9467 9.19327 14.2267L8.27327 14.82C7.97327 15.0067 7.63327 15.1 7.29327 15.1ZM3.59993 1.89999C3.13327 1.89999 2.7666 2.29333 2.7666 2.79999V4.33333C2.7666 4.57999 2.9666 5.05999 3.21993 5.31333L5.75994 7.98666C6.09994 8.40666 6.43327 9.10666 6.43327 9.73333V13.2667C6.43327 13.7 6.73327 13.9133 6.85993 13.98C7.13994 14.1333 7.47993 14.1333 7.73993 13.9733L8.6666 13.38C8.85327 13.2667 9.03994 12.9067 9.03994 12.6667V9.79999C9.03994 9.08666 9.3866 8.29999 9.8866 7.87999L12.7399 5.35333C12.9666 5.12666 13.2399 4.58666 13.2399 4.19333V2.73333C13.2399 2.27333 12.8666 1.89999 12.4066 1.89999H3.59993Z"
@@ -64,41 +67,98 @@
                                             {{ get_phrase('Filter') }}
                                             <span class="filter-count-display d-none" id="filter-count-display"></span>
                                         </button>
-                                        {{-- <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
 
+                                        <a href="javascript:void(0)" class="border-0 filter-reset d-none d-flex align-items-center" id="filter-reset">
+                                            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M7 6.99927L1.00141 1.00068" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
+                                                <path d="M1 6.99936L6.99859 1.00077" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
+                                            </svg>
+
+                                            <span>|</span>
+                                        </a>
+
+                                        <!-- Dropdown Menu -->
+                                        <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
+                                            <!-- Category -->
+                                            <div class="mb-3">
+                                                <label for="user" class="form-label">{{ get_phrase('User') }}</label>
+                                                <select class="form-control px-14px ol-form-control ol-select2" name="user" id="user">
+                                                    <option value="all">{{ get_phrase('Select user') }}</option>
+                                                    @foreach ($users as $user)
+                                                        <option value="{{ $user->id }}"> {{ $user->name }} </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="status" class="form-label">{{ get_phrase('Status') }}</label>
+                                                <select class="form-control px-14px ol-form-control " name="status" id="status">
+                                                    <option value="all">{{ get_phrase('Status') }}</option>
+                                                    <option value="1">{{ get_phrase('Accepted') }}</option>
+                                                    <option value="2">{{ get_phrase('Suspended') }}</option>
+                                                    <option value="0">{{ get_phrase('Pending') }}</option>
+                                                </select>
+                                            </div>
+                                            <!-- Date Filter -->
+                                            <div class="mb-3">
+                                                <label for="date" class="form-label">{{ get_phrase('Date') }}</label>
+                                                <input type="date" class="form-control" id="date" name="date">
+                                            </div>
+                                            <!-- Amount Filter -->
+                                            <div class="mb-3">
+                                                <label for="budget" class="form-label">{{ get_phrase('Budget') }}</label>
+
+                                                <div class="accordion-item-range">
+                                                    <div id="budget-slider"></div>
+                                                    <div class="accordion-range-value d-flex align-items-center mt-4">
+                                                        <div class="d-flex align-items-center">
+                                                            <label for="min-price" class="me-2"> {{ get_phrase('From') }} </label>
+                                                            <input type="text" class="value minPrice" disabled id="min-price" name="minPrice">
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <label for="max-price" class="mx-2"> {{ get_phrase('To') }} </label>
+                                                            <input type="text" class="value" disabled id="max-price" name="maxPrice">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
                                             <!-- Apply Button -->
                                             <div class="text-end">
                                                 <button type="button" id="filter" class="btn btn-apply px-14px">{{ get_phrase('Apply') }}</button>
                                             </div>
-                                        </div> --}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="table-responsive">
-                        <table class="table server-side-datatable" id="offline_payment_list">
-                            <thead>
-                                <tr class="context-menu-header">
-                                    <th scope="col" class="d-flex align-items-center">
-                                        <input type="checkbox" id="select-all" class="me-2 table-checkbox">
-                                        <span>#</span>
-                                    </th>
-                                    <th scope="col">{{ get_phrase('User') }}</th>
-                                    <th scope="col">{{ get_phrase('Item') }}</th>
-                                    <th scope="col">{{ get_phrase('Total') }}</th>
-                                    <th scope="col">{{ get_phrase('Issue date') }}</th>
-                                    <th scope="col">{{ get_phrase('Payment info') }}</th>
-                                    <th scope="col">{{ get_phrase('Status') }}</th>
-                                    <th scope="col" class="d-flex justify-content-center">{{ get_phrase('Options') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>
+                <!-- DataTable -->
+                <div class="table-responsive">
+                    <table class="table server-side-datatable" id="table_list">
+                        <thead>
+                            <tr class="context-menu-header">
+                                <th scope="col" class="d-flex align-items-center">
+                                    <input type="checkbox" id="select-all" class="me-2 table-checkbox">
+                                    <span> # </span>
+                                </th>
+                                <th scope="col">{{ get_phrase('User') }}</th>
+                                <th scope="col">{{ get_phrase('Item') }}</th>
+                                <th scope="col">{{ get_phrase('Total') }}</th>
+                                <th scope="col">{{ get_phrase('Issue date') }}</th>
+                                <th scope="col">{{ get_phrase('Payment info') }}</th>
+                                <th scope="col">{{ get_phrase('Status') }}</th>
+                                <th scope="col" class="d-flex justify-content-center">{{ get_phrase('Options') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- DataTable will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-none d-lg-block">
                     <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
                         <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
                         <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
@@ -109,19 +169,21 @@
                         </select>
                         <label for="page-length-select" class="ps-2 w-100"> of {{ count($payments) }}</label>
                     </div>
-
-                    <input type="hidden" value="offline_payment" id="datatable_type">
-                    <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
-                        <i class="fi fi-rr-trash"></i>
-                        {{ get_phrase('Delete') }}
-                    </button>
                 </div>
+
+
+                <input type="hidden" value="project" id="datatable_type">
+                <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
+                    <i class="fi fi-rr-trash"></i>
+                    {{ get_phrase('Delete') }}
+                </button>
             </div>
         </div>
     </div>
-    @include('components.datatable')
+    </div>
 @endsection
-
+@include('components.datatable')
+@include('projects.budget_range')
 @push('js')
     <script>
         "use strict";

@@ -8,6 +8,7 @@
                 liveSearch: true
             });
         }
+
         //niceSelect
         if ($('.ol-niceSelect').length > 0) {
             $('.ol-niceSelect').niceSelect();
@@ -17,6 +18,7 @@
             $('select.ol-select2:not(.inited)').select2();
             $('select.ol-select2:not(.inited)').addClass('inited');
         }
+
 
         // datatable
         if (!$.fn.dataTable.isDataTable('#datatable')) {

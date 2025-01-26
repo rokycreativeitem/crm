@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\Payment_gateway;
 use App\Models\Payment_history;
 use App\Models\Project;
 use Illuminate\Http\Request;
@@ -14,17 +15,10 @@ class ReportController extends Controller
     {
 
         if ($request->ajax()) {
-            return app(ServerSideDataController::class)->project_report_server_side($request->custom_search_box);
+            return app(ServerSideDataController::class)->project_report_server_side($request->custom_search_box, $request->start_date, $request->end_date);
         }
 
-        $query = Invoice::query();
-
-        if (request()->has('start_date') && request()->has('end_date')) {
-            $start_date = request()->query('start_date');
-            $end_date   = request()->query('end_date');
-
-            $query = $query->whereBetween('timestamp_start', [$start_date, $end_date]);
-        }
+        $query = Payment_history::query();
 
         $payments = Project::distinct('title')->pluck('title')->toArray();
 
@@ -43,7 +37,8 @@ class ReportController extends Controller
             ];
         });
 
-        $page_data['payments'] = $payments;
+        $page_data['payments']         = $payments;
+        $page_data['payment_gateways'] = Payment_gateway::get();
 
         return view('reports.project_report', $page_data);
     }
@@ -51,35 +46,19 @@ class ReportController extends Controller
     public function client_report(Request $request)
     {
         if ($request->ajax()) {
-            return app(ServerSideDataController::class)->client_report_server_side(
-                $request->custom_search_box,
-                $request->client,
-                $request->payment_method,
-                $request->status,
-                $request->min_payment,
-                $request->max_payment
-            );
+            return app(ServerSideDataController::class)->client_report_server_side($request->custom_search_box, $request->start_date, $request->end_date);
         }
 
-        $query = Invoice::query();
+        // $users = Project::distinct('user_id')->pluck('client_id')->toArray();
+        // $data  = [];
+        // foreach ($users as $user) {
+        //     $data[] = [
+        //         'client' => get_user($user)?->name,
+        //         'amount' => Invoice::where('user_id', $user)->sum('payment'),
+        //     ];
+        // }
 
-        if (request()->has('start_date') && request()->has('end_date')) {
-            $start_date = request()->query('start_date');
-            $end_date   = request()->query('end_date');
-
-            $query = $query->whereBetween('timestamp_start', [$start_date, $end_date]);
-        }
-
-        $users = Project::distinct('user_id')->pluck('client_id')->toArray();
-        $data  = [];
-        foreach ($users as $user) {
-            $data[] = [
-                'client' => get_user($user)?->name,
-                'amount' => Invoice::where('user_id', $user)->sum('payment'),
-            ];
-        }
-
-        $page_data['payments'] = $data;
+        $page_data['payment_history'] = Payment_history::get();
 
         return view('reports.client_report', $page_data);
     }
@@ -93,7 +72,8 @@ class ReportController extends Controller
 
             );
         }
-        $page_data['payment_history'] = Payment_history::get();
+        $page_data['payment_history']  = Payment_history::get();
+        $page_data['payment_gateways'] = Payment_gateway::get();
 
         return view('reports.payment_history', $page_data);
     }

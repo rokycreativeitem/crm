@@ -457,6 +457,15 @@ span[class="fi-rr-"]:before {
     padding: 6px;
     font-size: 12px;
 }
+.pending {
+    display: inline-block;
+    background: #fffcf1;
+    color: #f6c000;
+    border: 1px solid #fff6d8;
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 12px;
+}
 .not_started {
     display: inline-block;
     background-color: #ffe1e4;
@@ -467,6 +476,15 @@ span[class="fi-rr-"]:before {
     font-size: 12px;
 }
 .unpaid {
+    display: inline-block;
+    background-color: #ffe1e4;
+    color: #f8285a;
+    border: 1px solid #ffe1e8;
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 12px;
+}
+.decline {
     display: inline-block;
     background-color: #ffe1e4;
     color: #f8285a;
