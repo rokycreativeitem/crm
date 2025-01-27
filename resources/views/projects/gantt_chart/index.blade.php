@@ -1,24 +1,8 @@
+@if(has_permission('gantt.chart'))
 @push('title', get_phrase('Gantt Chart'))
 @php
     $tasks = App\Models\Task::where('project_id', project_id_by_code(request()->route()->parameter('code')))->get();
 @endphp
-<style>
-    g rect[height="60"] {
-        fill: #ffffff;
-    }
-
-    g rect[height="40"] {
-        fill: #0000000f;
-    }
-
-    g text {
-        fill: #6D718C;
-        font-weight: 600;
-        padding: 10px !important;
-    }
-
-    /* Disable hover effect on task bars */
-</style>
 <div id="chart_div" class="mt-3"></div>
 
 <div id="empty_chart" class="d-none">
@@ -159,3 +143,4 @@
     </script>
 
 @endpush
+@endif

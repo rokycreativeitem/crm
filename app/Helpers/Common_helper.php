@@ -89,29 +89,37 @@ if (!function_exists('get_current_user_role')) {
 }
 
 if (!function_exists('has_permission')) {
-    function has_permission($route)
+    function has_permission($routes)
     {
+        // Admins have all permissions
         if (get_current_user_role() == 'admin') {
             return true;
-        } elseif ($route) {
-            $explode = explode('.', $route);
-            if (isset($explode[1]) && $explode[1] == 'edit') {
-                $route = $explode[0] . '.update';
-            }
-
-            $permission_id = Permission::where('route', $route)->value('id');
-            $role_id       = Role::where('id', Auth::user()->role_id)->value('id');
-            $permission    = RolePermission::where('role_id', $role_id)->where('permission_id', $permission_id)->first();
-
-            if ($permission) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
+        }
+        if (!$routes) {
             return false;
         }
+        $permission_has = [];
+        $routes = is_array($routes) ? $routes : [$routes];
+        $role_id = Auth::user()->role_id;
+        foreach ($routes as $route) {
+            if (str_contains($route, '.edit')) {
+                $route = str_replace('.edit', '.update', $route);
+            }
+            $permission_id = Permission::where('route', $route)->value('id');
+            if ($permission_id) {
+                $permission = RolePermission::where('role_id', $role_id)
+                    ->where('permission_id', $permission_id)
+                    ->exists();
+    
+                if ($permission) {
+                    $permission_has[] = $route;
+                }
+            }
+        }
+        // Return true if any matching permission is found
+        return !empty($permission_has);
     }
+    
 }
 
 if (!function_exists('get_user')) {

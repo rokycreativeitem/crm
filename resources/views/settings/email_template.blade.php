@@ -21,7 +21,6 @@
                     <th scope="col">#</th>
                     <th scope="col">{{ get_phrase('Email type') }}</th>
                     <th scope="col">{{ get_phrase('Email subject') }}</th>
-                    <th scope="col">{{ get_phrase('Email template') }}</th>
                     <th scope="col">{{ get_phrase('Action') }}</th>
                 </tr>
             </thead>
@@ -39,12 +38,7 @@
                             @endforeach
                             <p></p>
                         </td>
-                        <td>
-                            @foreach (json_decode($notification_row->template, true) as $user_type => $template)
-                                <p><strong>{{ get_phrase('To ' . (($user_type != 0) ? $user_type : '')) }}</strong>: {!! $template !!}
-                                </p>
-                            @endforeach
-                        </td>
+                  
                         <td>
                             <a class="btn ol-btn-primary btn-rounded" href="javascript:void(0)" onclick="rightCanvas('{{ route(get_current_user_role() . '.email.temp.edit',['id'=>$notification_row->id]) }}', 'Create project')" data-toggle="tooltip" data-placement="top" title="{{ get_phrase('Edit email template') }}" style="min-width: 40px;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

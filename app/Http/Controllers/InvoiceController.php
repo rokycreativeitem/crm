@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -109,12 +110,14 @@ class InvoiceController extends Controller
     {
         $invoice         = Invoice::where('id', $id)->first();
         $payment_purpose = DB::table('payment_purposes')->where('title', 'invoice')->first();
-        $project_code    = Project::where('id', $invoice->project_id)->value('code');
+        $project   = Project::where('id', $invoice->project_id)->first();
+        $user_email    = User::where('id', $project->client_id)->value('email');
         $items[]         = [
             'id'           => $invoice->id,
             'title'        => $invoice->title,
             'price'        => $invoice->payment,
-            'project_code' => $project_code,
+            'project_code' => $project->code,
+            'user_email' => $user_email,
         ];
 
         $payment_details = [
@@ -134,7 +137,7 @@ class InvoiceController extends Controller
 
             'payable_amount'  => $invoice->payment,
             'payment_purpose' => $payment_purpose->id,
-            'cancel_url'      => route(get_current_user_role() . '.project.details', [$project_code, 'invoice']),
+            'cancel_url'      => route(get_current_user_role() . '.project.details', [$project->code, 'invoice']),
             'success_url'     => route('payment.success', ''),
         ];
 

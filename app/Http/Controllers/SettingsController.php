@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FileUploader;
 use App\Models\Language;
 use App\Models\Language_phrase;
 use App\Models\NotificationSetting;
@@ -543,10 +544,70 @@ class SettingsController extends Controller
     public function email_temp_update(Request $request, $id) {
         // NotificationSetting::where('id',$id)->udpate(['template'=>json_encode($request->template)]);
         $data = [
-            'template' => json_encode($request->template)
+            'template' => json_encode($request->template),
+            'subject' => json_encode($request->subject),
+            'setting_title' => $request->setting_title,
+            'setting_sub_title' => $request->setting_sub_title
         ];
         NotificationSetting::where('id',$id)->update($data);
         return redirect()->back()->with('success', 'Templated updated successfully!');
+    }
+
+    public function system_logo_update(Request $request){
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+        
+            // Check and delete old logo if it exists
+            if (get_settings('logo')) {
+                $oldFilePath = public_path(get_settings('logo'));
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath);
+                }
+            }
+        
+            // Upload new logo
+            $logo = FileUploader::upload($file, 'setting');
+        
+            // Check if a 'logo' record exists, update or insert accordingly
+            $logoSetting = Setting::where('type', 'logo')->first();
+            if ($logoSetting) {
+                $logoSetting->update(['description' => $logo]);
+            } else {
+                Setting::create([
+                    'type' => 'logo',
+                    'description' => $logo,
+                ]);
+            }
+        }
+        
+        if ($request->hasFile('favicon')) {
+            $file = $request->file('favicon');
+        
+            // Check and delete old favicon if it exists
+            if (get_settings('favicon')) {
+                $oldFilePath = public_path(get_settings('favicon'));
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath);
+                }
+            }
+        
+            // Upload new favicon
+            $favicon = FileUploader::upload($file, 'setting');
+        
+            // Check if a 'favicon' record exists, update or insert accordingly
+            $faviconSetting = Setting::where('type', 'favicon')->first();
+            if ($faviconSetting) {
+                $faviconSetting->update(['description' => $favicon]);
+            } else {
+                Setting::create([
+                    'type' => 'favicon',
+                    'description' => $favicon,
+                ]);
+            }
+        }
+        
+
+        return redirect()->back()->with('success', 'File updated successfully!');
     }
 
 

@@ -33,7 +33,7 @@ class CheckPermissionMiddleware
         $permissions    = Permission::whereIn('id', $permission_ids)->pluck('route')->toArray();
 
         $current_route = Route::currentRouteName();
-
+// dd($current_route);
         if (str_contains($current_route, 'update')) {
             $edit_route = str_replace('update', 'edit', $current_route);
             $edit_route = str_replace(get_current_user_role() . '.', '', $edit_route);
@@ -50,10 +50,27 @@ class CheckPermissionMiddleware
             return "{$role}.{$route}";
         }, $permissions);
 
+        
         $dashboardRoute = "{$role}.dashboard";
-        array_push($prefixedRoutes, $dashboardRoute);
 
-        $route = Route::currentRouteName();
+        if (str_contains($current_route, '.store')) {
+            $route = str_replace('.store', '.create', $current_route);
+            if (!in_array($route, $prefixedRoutes)){
+                array_push($prefixedRoutes, $route);
+            }
+        }
+        if (str_contains($current_route, '.edit')) {
+            $route = str_replace('.edit', '.update', $current_route);
+            if (!in_array($route, $prefixedRoutes)){
+                array_push($prefixedRoutes, $route);
+            }
+        }
+        
+        array_push($prefixedRoutes, $dashboardRoute);
+        
+        if(!isset($route)) {
+            $route = Route::currentRouteName();
+        }
 
         if (!in_array($route, $prefixedRoutes)) {
             return redirect()->route($dashboardRoute)->with('error', 'You do not have permission to access this page.');

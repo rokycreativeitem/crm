@@ -91,8 +91,8 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::post('user/update/{id}', 'update')->name('user.update');
         Route::post('user/multi-delete', 'multiDelete')->name('user.multi-delete');
 
-        Route::get('manage_profile', 'manage_profile')->name('manage_profile');
-        Route::post('manage_profile/update', 'manage_profile_update')->name('manage_profile.update');
+        Route::get('manage_profile', 'manage_profile')->name('manage.profile');
+        Route::post('manage_profile/update', 'manage_profile_update')->name('manage.profile.update');
 
     });
 

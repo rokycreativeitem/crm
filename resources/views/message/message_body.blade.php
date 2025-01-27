@@ -57,12 +57,12 @@
                     <li>
                         <div class="single-message recipient-user">
                             <div class="user-wrap mb-3 d-flex align-items-center">
-                                <div class="profile">
-                                    <img src="{{ get_image($my_data->photo) }}" alt="">
-                                </div>
-                                <div class="name-time d-flex align-items-center flex-wrap">
+                                <div class="name-time d-flex flex-wrap flex-column">
                                     <h6 class="name">{{ $my_data->name }}</h6>
                                     <p class="time">{{ timeAgo($message->created_at) }}</p>
+                                </div>
+                                <div class="profile">
+                                    <img src="{{ get_image($my_data->photo) }}" alt="">
                                 </div>
                             </div>
                             <p class="message">{{ $message->message }}</p>
@@ -75,7 +75,7 @@
                                 <div class="profile">
                                     <img src="{{ get_image($thread_details->user->photo) }}" alt="">
                                 </div>
-                                <div class="name-time d-flex align-items-center flex-wrap">
+                                <div class="name-time d-flex flex-wrap flex-column">
                                     <h6 class="name">{{ $thread_details->user->name }}</h6>
                                     <p class="time">{{ timeAgo($message->created_at) }}</p>
                                 </div>
@@ -97,28 +97,7 @@
 
             <div class="messenger-footer-inner d-flex align-items-center">
                 <input type="search" name="message" class="form-control form-control-message" placeholder="Type your message here...">
-                <a href="#" class="voice-message">
-                    <span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 15.5C14.21 15.5 16 13.71 16 11.5V6C16 3.79 14.21 2 12 2C9.79 2 8 3.79 8 6V11.5C8 13.71 9.79 15.5 12 15.5Z" stroke="#6D718C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M4.35156 9.6499V11.3499C4.35156 15.5699 7.78156 18.9999 12.0016 18.9999C16.2216 18.9999 19.6516 15.5699 19.6516 11.3499V9.6499" stroke="#6D718C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M10.6094 6.43012C11.5094 6.10012 12.4894 6.10012 13.3894 6.43012" stroke="#6D718C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M11.1992 8.55007C11.7292 8.41007 12.2792 8.41007 12.8092 8.55007" stroke="#6D718C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12 19V22" stroke="#6D718C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </span>
-                </a>
-                <label for="formFile" class="form-label form-label-fileinput">
-                    <span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="#6D718C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M9 10C10.1046 10 11 9.10457 11 8C11 6.89543 10.1046 6 9 6C7.89543 6 7 6.89543 7 8C7 9.10457 7.89543 10 9 10Z" stroke="#6D718C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M2.67188 18.9501L7.60187 15.6401C8.39187 15.1101 9.53187 15.1701 10.2419 15.7801L10.5719 16.0701C11.3519 16.7401 12.6119 16.7401 13.3919 16.0701L17.5519 12.5001C18.3319 11.8301 19.5919 11.8301 20.3719 12.5001L22.0019 13.9001" stroke="#6D718C" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </span>
-                    <input class="form-control" type="file" id="formFile" hidden>
-                </label>
+                
                 <button type="submit" class="btn ol-btn-primary d-flex align-items-center cg-10px">
                     <span>
                         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">

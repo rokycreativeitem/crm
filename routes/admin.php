@@ -96,8 +96,8 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('user/update/{id}', 'update')->name('user.update');
         Route::post('user/multi-delete', 'multiDelete')->name('user.multi-delete');
 
-        Route::get('manage_profile', 'manage_profile')->name('manage_profile');
-        Route::post('manage_profile/update', 'manage_profile_update')->name('manage_profile.update');
+        Route::get('manage_profile', 'manage_profile')->name('manage.profile');
+        Route::post('manage_profile/update', 'manage_profile_update')->name('manage.profile.update');
 
     });
 
@@ -192,6 +192,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
     Route::controller(SettingsController::class)->group(function () {
         Route::get('system_settings', 'system_settings')->name('system_settings');
         Route::post('system_settings/update', 'system_settings_update')->name('system_settings.update');
+        Route::post('system_settings/logo', 'system_logo_update')->name('setting.logo');
 
         Route::get('payment_settings', 'payment_settings')->name('payment_settings');
         Route::post('payment_settings/update', 'payment_settings_update')->name('payment_settings.update');
@@ -224,7 +225,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::get('offline-payment/accept/{id}', 'accept_payment')->name('offline.payment.accept');
         Route::get('offline-payment/decline/{id}', 'decline_payment')->name('offline.payment.decline');
         
-        // Route::get('confirm_email', 'confirm_email')->name('confirm_email');
+        Route::get('confirm_email', 'confirm_email')->name('confirm_email');
         // Route::get('verify_email', 'verify_email')->name('verify_email');
         // Route::get('success_login', 'success_login')->name('success_login');
         // Route::get('payment', 'payment')->name('payment');

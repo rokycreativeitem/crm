@@ -38,7 +38,7 @@
                                     <a class="nav-link @if ($tab == 'meeting') active @endif" href="{{ route(get_current_user_role() . '.project.details', [$project_code, 'meeting']) }}">{{ get_phrase('Meeting') }}</a>
                                 </li>
                             @endif
-                            @if (has_permission('gantt_chart'))
+                            @if (has_permission('gantt.chart'))
                                 <li class="nav-item">
                                     <a class="nav-link @if ($tab == 'gantt_chart') active @endif" href="{{ route(get_current_user_role() . '.project.details', [$project_code, 'gantt_chart']) }}">{{ get_phrase('Gantt Chart') }}
                                     </a>

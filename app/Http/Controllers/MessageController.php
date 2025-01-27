@@ -51,7 +51,7 @@ class MessageController extends Controller
         $message_thread = MessageThread::find($request->thread_id)->code;
 
         Session::flash('success', get_phrase('Your message successfully has been sent'));
-        return redirect(route('admin.message', ['message_thread' => $message_thread]));
+        return redirect(route(get_current_user_role().'.message', ['message_thread' => $message_thread]));
     }
 
     public function thread_store(Request $request)
