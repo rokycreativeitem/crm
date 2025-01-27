@@ -16,7 +16,7 @@
                 <li> <div class="dot"></div> <span> {{__('Database password')}} </span> </li>
                 <li> <div class="dot"></div> <span> {{__('Database name')}} </span> </li>
                 <li> <div class="dot"></div> <span> {{__('Database hostname')}} </span> </li>
-                <li> <div class="dot"></div> <span> {{_('Database username')}} </span> </li>
+                <li> <div class="dot"></div> <span> {{__('Database username')}} </span> </li>
             </ul>
         </div>
         <p class="ins-p-2">{{__('We are going to use the above information to write database.php file which will connect the application to your database. During the installation process, we will check if the files that are needed to be written')}} <strong>{{__('(config/database.php & config/routes.php)')}}</strong> {{__('have write permission. We will also check if curl and php mail functions are enabled on your server or not.')}}</p>

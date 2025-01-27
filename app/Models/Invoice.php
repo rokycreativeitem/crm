@@ -65,6 +65,9 @@ class Invoice extends Model
             $payment['payment_purpose'] = $payment_details['payment_purpose'];
             DB::table('payment_histories')->insert($payment);
         }
+
+        Smtp::send_mail('payment-conformation', $payment_details['items'][0]['user_email']);
+
         // Clear session items
         $remove_session_item[] = 'payment_details';
         Session::forget($remove_session_item);

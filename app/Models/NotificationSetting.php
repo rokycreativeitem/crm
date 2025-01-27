@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class NotificationSetting extends Model
 {
     use HasFactory;
-    protected $fillable = ['template'];
+    public $table = 'notification_settings';
+    protected $fillable = ['template','type'];
 }

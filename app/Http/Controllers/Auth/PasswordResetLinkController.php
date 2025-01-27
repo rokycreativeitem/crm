@@ -38,7 +38,7 @@ class PasswordResetLinkController extends Controller
         );
 
         // Send the email
-        $status = Smtp::send_mail('forgot-password', $request->email, $token);
+        $status = Smtp::send_mail('forget-password', $request->email, $token);
 
         return back()->with('status', __($status));
     }

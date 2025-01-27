@@ -6915,3 +6915,16 @@ hr {
     background-color: #f8f9fa;
     color: #0d6efd;
 }
+g rect[height="60"] {
+    fill: #ffffff;
+}
+
+g rect[height="40"] {
+    fill: #0000000f;
+}
+
+g text {
+    fill: #6D718C;
+    font-weight: 600;
+    padding: 10px !important;
+}

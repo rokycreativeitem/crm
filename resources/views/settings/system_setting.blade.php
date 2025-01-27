@@ -146,6 +146,27 @@
                     </form>
                 </div>
             </div>
+
+                <div class="ol-card radius-8px mt-4">
+                    <div class="ol-card-body py-4 px-20px">
+                    <form action="{{ route('admin.setting.logo') }}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="fpb7 mb-3">
+                            <label class="form-label ol-form-label" for="logo">{{ get_phrase('Update your application logo') }}</label>
+                            <img src="{{get_image(get_settings('logo'))}}" width="100px;" class="rounded mb-1" alt="">
+                            <input class="form-control ol-form-control" type="file" id="logo" name="logo">
+                        </div>
+                        <div class="fpb7 mb-2">
+                            <label class="form-label ol-form-label" for="favicon">{{ get_phrase('Update your application favicon') }}</label>
+                            <img src="{{get_image(get_settings('favicon'))}}" width="100px;" class="rounded mb-1" alt="">
+                            <input class="form-control ol-form-control" type="file" id="favicon" name="favicon">
+                        </div>
+                        <div class="fpb7 mb-2">
+                            <button type="submit" class="btn mt-3 ol-btn-primary">{{ get_phrase('Update') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

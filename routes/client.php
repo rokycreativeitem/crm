@@ -20,7 +20,7 @@ use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'verified', 'client', 'check.permission'])->group(function () {
+Route::middleware(['auth', 'verified', 'client', 'inject', 'check.permission'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'client_dashboard'])->name('dashboard');
 
     Route::controller(ProjectController::class)->group(function () {
@@ -91,8 +91,8 @@ Route::middleware(['auth', 'verified', 'client', 'check.permission'])->group(fun
         Route::post('user/update/{id}', 'update')->name('user.update');
         Route::post('user/multi-delete', 'multiDelete')->name('user.multi-delete');
 
-        Route::get('manage_profile', 'manage_profile')->name('manage_profile');
-        Route::post('manage_profile/update', 'manage_profile_update')->name('manage_profile.update');
+        Route::get('manage_profile', 'manage_profile')->name('manage.profile');
+        Route::post('manage_profile/update', 'manage_profile_update')->name('manage.profile.update');
 
     });
 

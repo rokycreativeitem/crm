@@ -21,7 +21,7 @@
         <div class="col-xl-7">
             <div class="ol-card p-4">
                 <div class="ol-card-body">
-                    <form action="{{ route('admin.manage_profile.update') }}" method="post" enctype="multipart/form-data">@csrf
+                    <form action="{{ route(get_current_user_role().'.manage.profile.update') }}" method="post" enctype="multipart/form-data">@csrf
                         <input type="hidden" name="type" value="general">
                         <div class="fpb7 mb-2">
                             <label class="form-label ol-form-label">{{ get_phrase('Name') }}</label>
@@ -86,7 +86,7 @@
         <div class="col-xl-5">
             <div class="ol-card p-4">
                 <div class="ol-card-body">
-                    <form action="{{ route('admin.manage_profile.update') }}" method="post"> @csrf
+                    <form action="{{ route(get_current_user_role().'.manage.profile.update') }}" method="post"> @csrf
                         <div class="fpb7 mb-2">
                             <label class="form-label ol-form-label">{{ get_phrase('Current password') }}</label>
                             <input type="password" class="form-control ol-form-control" name="current_password" required />

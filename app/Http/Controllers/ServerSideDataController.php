@@ -168,7 +168,7 @@ class ServerSideDataController extends Controller
                 return '
                     <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                         <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="fi-rr-menu-dots-vertical"></span>
+                            <span class="fi-rr-menu-dots-vertical fs-12px"></span>
                         </button>
                         <ul class="dropdown-menu">' . $options . '</ul>
                     </div>
@@ -192,76 +192,91 @@ class ServerSideDataController extends Controller
                 if (has_permission('project.edit')) {
                     $contextMenu['Edit'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Edit',
+                        'name'        => get_phrase('Edit'),
                         'action_link' => $editRoute,
-                        'title'       => 'Edit project',
+                        'title'       => get_phrase('Edit project'),
                     ];
                 }
                 if (has_permission('project.delete')) {
                     $contextMenu['Delete'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Delete',
+                        'name'        => get_phrase('Delete'),
                         'action_link' => $deleteRoute,
-                        'title'       => 'Delete project',
+                        'title'       => get_phrase('Delete project'),
                     ];
                 }
                 if (has_permission('project.details')) {
                     $contextMenu['Dashboard'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Dashboard',
+                        'name'        => get_phrase('Dashboard'),
                         'action_link' => $dashboardRoute,
-                        'title'       => 'Dashboard',
+                        'title'       => get_phrase('Dashboard'),
                     ];
-                    $contextMenu['Milestone'] = [
-                        'type'        => 'ajax',
-                        'name'        => 'Milestone',
-                        'action_link' => $milestoneRoute,
-                        'title'       => 'Milestone',
-                    ];
-                    $contextMenu['Task'] = [
-                        'type'        => 'ajax',
-                        'name'        => 'Task',
-                        'action_link' => $taskRoute,
-                        'title'       => 'Task',
-                    ];
-                    $contextMenu['File'] = [
-                        'type'        => 'ajax',
-                        'name'        => 'File',
-                        'action_link' => $fileRoute,
-                        'title'       => 'File',
-                    ];
-                    $contextMenu['Meeting'] = [
-                        'type'        => 'ajax',
-                        'name'        => 'Meeting',
-                        'action_link' => $meetingRoute,
-                        'title'       => 'Meeting',
-                    ];
-                    $contextMenu['Invoice'] = [
-                        'type'        => 'ajax',
-                        'name'        => 'Invoice',
-                        'action_link' => $invoiceRoute,
-                        'title'       => 'Invoice',
-                    ];
-                    $contextMenu['Timesheet'] = [
-                        'type'        => 'ajax',
-                        'name'        => 'Timesheet',
-                        'action_link' => $timesheetRoute,
-                        'title'       => 'Timesheet',
-                    ];
-                    $contextMenu['Gantt'] = [
-                        'type'        => 'ajax',
-                        'name'        => 'Gantt Chart',
-                        'action_link' => $ganttRoute,
-                        'title'       => 'Gantt Chart',
-                    ];
+                    if(has_permission('milestones')) {
+                        $contextMenu['Milestone'] = [
+                            'type'        => 'ajax',
+                            'name'        => get_phrase('Milestone'),
+                            'action_link' => $milestoneRoute,
+                            'title'       => get_phrase('Milestone'),
+                        ];
+                    }
+                    if(has_permission('tasks')) {
+                        $contextMenu['Task'] = [
+                            'type'        => 'ajax',
+                            'name'        => get_phrase('Task'),
+                            'action_link' => $taskRoute,
+                            'title'       => get_phrase('Task'),
+                        ];
+                    }
+                    if(has_permission('files')) {
+                        $contextMenu['File'] = [
+                            'type'        => 'ajax',
+                            'name'        => get_phrase('File'),
+                            'action_link' => $fileRoute,
+                            'title'       => get_phrase('File'),
+                        ];
+                    }
+                    if(has_permission('meetings')) {
+                        $contextMenu['Meeting'] = [
+                            'type'        => 'ajax',
+                            'name'        => get_phrase('Meeting'),
+                            'action_link' => $meetingRoute,
+                            'title'       => get_phrase('Meeting'),
+                        ];
+                    }
+                    if(has_permission('invoices')) {
+                        $contextMenu['Invoice'] = [
+                            'type'        => 'ajax',
+                            'name'        => get_phrase('Invoice'),
+                            'action_link' => $invoiceRoute,
+                            'title'       => get_phrase('Invoice'),
+                        ];
+                    }
+                    if(has_permission('timesheets')) {
+                        $contextMenu['Timesheet'] = [
+                            'type'        => 'ajax',
+                            'name'        => get_phrase('Timesheet'),
+                            'action_link' => $timesheetRoute,
+                            'title'       => get_phrase('Timesheet'),
+                        ];
+                    }
+                    if(has_permission('gantt.chart')) {
+                        $contextMenu['Gantt'] = [
+                            'type'        => 'ajax',
+                            'name'        => get_phrase('Gantt Chart'),
+                            'action_link' => $ganttRoute,
+                            'title'       => get_phrase('Gantt Chart'),
+                        ];
+                    }
                 }
                 // Fallback for empty context menu
                 if (empty($contextMenu)) {
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -357,17 +372,17 @@ class ServerSideDataController extends Controller
                 if (has_permission('project.category.edit')) {
                     $contextMenu['Edit'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Edit',
+                        'name'        => get_phrase('Edit'),
                         'action_link' => $editUrl,
-                        'title'       => 'Edit category',
+                        'title'       => get_phrase('Edit category'),
                     ];
                 }
                 if (has_permission('project.category.delete')) {
                     $contextMenu['Delete'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Delete',
+                        'name'        => get_phrase('Delete'),
                         'action_link' => $deleteUrl,
-                        'title'       => 'Delete category',
+                        'title'       => get_phrase('Delete category'),
                     ];
                 }
                 // Fallback for empty context menu
@@ -375,8 +390,9 @@ class ServerSideDataController extends Controller
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -470,12 +486,12 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="fi-rr-menu-dots-vertical"></span>
+                        <span class="fi-rr-menu-dots-vertical fs-12px"></span>
                     </button>
                     <ul class="dropdown-menu">' . $options . '</ul>
                 </div>
@@ -489,25 +505,26 @@ class ServerSideDataController extends Controller
                 if (has_permission('milestone.edit')) {
                     $contextMenu['Edit'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Edit',
+                        'name'        => get_phrase('Edit'),
                         'action_link' => $editRoute,
-                        'title'       => 'Edit milestone',
+                        'title'       => get_phrase('Edit milestone'),
                     ];
                 }
                 if (has_permission('milestone.delete')) {
                     $contextMenu['Delete'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Delete',
+                        'name'        => get_phrase('Delete'),
                         'action_link' => $deleteRoute,
-                        'title'       => 'Delete milestone',
+                        'title'       => get_phrase('Delete milestone'),
                     ];
                 }
                 if (empty($contextMenu)) {
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -519,11 +536,7 @@ class ServerSideDataController extends Controller
                 return 'context-menu';
             })
             ->with('filter_count', count($filter_count))
-            // if ($query->count() === 0) {
-            //     $noDataHtml = view('no-data')->render();
-            //     return $dataTable->with('no_data', $noDataHtml)->make(true);
-            // }
-            // return $dataTable
+        
             ->make(true);
     }
 
@@ -646,7 +659,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
                 }
                 return '
                     <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -665,25 +678,26 @@ class ServerSideDataController extends Controller
                 if (has_permission('task.edit')) {
                     $contextMenu['Edit'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Edit',
+                        'name'        => get_phrase('Edit'),
                         'action_link' => $editRoute,
-                        'title'       => 'Edit task',
+                        'title'       => get_phrase('Edit task'),
                     ];
                 }
                 if (has_permission('task.delete')) {
                     $contextMenu['Delete'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Delete',
+                        'name'        => get_phrase('Delete'),
                         'action_link' => $deleteRoute,
-                        'title'       => 'Delete task',
+                        'title'       => get_phrase('Delete task'),
                     ];
                 }
                 if (empty($contextMenu)) {
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -824,8 +838,9 @@ class ServerSideDataController extends Controller
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -943,8 +958,9 @@ class ServerSideDataController extends Controller
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -1075,8 +1091,9 @@ class ServerSideDataController extends Controller
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -1242,8 +1259,9 @@ class ServerSideDataController extends Controller
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -1344,8 +1362,9 @@ class ServerSideDataController extends Controller
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -1482,26 +1501,15 @@ class ServerSideDataController extends Controller
             ->addColumn('options', function ($role) {
                 $permissionRoute = route(get_current_user_role() . '.role.permission', ['role' => $role->id]);
 
-                $options = '';
                 if (has_permission('role.permission')) {
-                    $options .= '
-                        <li>
-                            <a class="dropdown-item" onclick="modal(\'Permission\',\'' . $permissionRoute . '\', \'modal-xl\')">' . get_phrase('Permissions') . '</a>
-                        </li>
+                    return '<div class="text-center">
+                    <a class="fs-12px btn ol-btn-outline-secondary m-auto" onclick="modal(\'User Permissions\',\'' . $permissionRoute . '\', \'modal-xl\')">' . get_phrase('Permissions') . '</a>
+                    </div>
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    return '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
                 }
-                return '
-            <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
-                <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="fi-rr-menu-dots-vertical"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    ' . $options . '
-                </ul>
-            </div>';
             })
             ->addColumn('context_menu', function ($role) {
                 $permissionRoute = route(get_current_user_role() . '.role.permission', $role->title);
@@ -1519,8 +1527,9 @@ class ServerSideDataController extends Controller
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this role.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -1620,8 +1629,9 @@ class ServerSideDataController extends Controller
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
@@ -1803,8 +1813,9 @@ class ServerSideDataController extends Controller
                     $contextMenu = [
                         'NoActions' => [
                             'type'  => 'info',
-                            'name'  => 'No actions available',
-                            'title' => 'No actions are permitted for this project.',
+                            'name'  => get_phrase('No actions available'),
+                            'action_link' => 'javascript:void(0)',
+                            'title' => get_phrase('No actions are permitted for this project'),
                         ],
                     ];
                 }
