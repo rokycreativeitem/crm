@@ -1,17 +1,18 @@
 @extends('layouts.admin')
 @push('title', get_phrase('Project Report'))
 
-@php
-    $start_date = strtotime('first day of this month');
-    $end_date = strtotime('last day of this month');
-@endphp
+<style>
+    .apexcharts-menu-icon {
+        display: none;
+    }
+</style>
 
 @section('content')
     <!-- Start Admin area -->
     <div class="row">
         <div class="col-12">
             <div class="ol-card">
-                <div class="ol-card-body p-3 mb-10 position-relative" id="filter_container">
+                <div class="ol-card-body p-3 mb-10 position-relative" id="filters-container">
                     <div class="ol-card radius-8px print-d-none">
                         <div class="ol-card-body px-2">
                             <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
@@ -89,8 +90,9 @@
                                             <div class="mb-3">
                                                 <label for="payment_method" class="form-label">{{ get_phrase('Payment Method') }}</label>
                                                 <select class="form-control px-14px ol-form-control ol-select2" name="payment_method" id="payment_method">
+                                                    <option value="all"> {{get_phrase('select payment method')}} </option>
                                                     @foreach ($payment_gateways as $payment_gateway)
-                                                        <option value="{{ $payment_gateway->id }}"> {{ $payment_gateway->identifier }} </option>
+                                                        <option value="{{ $payment_gateway->identifier }}"> {{ $payment_gateway->identifier }} </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -99,11 +101,11 @@
                                                 <label for="start_date" class="form-label">{{ get_phrase('Start Date') }}</label>
                                                 <input type="datetime-local" name="start_date" id="start_date" placeholder="{{ get_phrase('Start date') }}" class="form-control fs-14px">
                                             </div>
-                                            <!-- end date -->
+                                            {{-- <!-- end date -->
                                             <div class="mb-3">
                                                 <label for="end_date" class="form-label">{{ get_phrase('End Date') }}</label>
                                                 <input type="datetime-local" name="end_date" id="end_date" placeholder="{{ get_phrase('End date') }}" class="form-control fs-14px">
-                                            </div>
+                                            </div> --}}
 
                                             <!-- Apply Button -->
                                             <div class="text-end">

@@ -42,7 +42,8 @@ if (!function_exists('currency')) {
     function currency($price = "")
     {
         $currency_position = DB::table('settings')->where('type', 'currency_position')->value('description');
-        $symbol            = DB::table('settings')->where('type', 'system_currency')->value('description');
+        $symbol = DB::table('settings')->where('type', 'system_currency')->value('description');
+        $symbol = DB::table('currencies')->where('code', $symbol)->value('symbol');
         $currency_position = 'left';
         if ($currency_position == 'left') {
             return $symbol . '' . $price;

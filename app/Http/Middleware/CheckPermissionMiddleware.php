@@ -50,9 +50,22 @@ class CheckPermissionMiddleware
             return "{$role}.{$route}";
         }, $permissions);
 
+        // dd($prefixedRoutes);
         
         $dashboardRoute = "{$role}.dashboard";
 
+        if (str_contains($current_route, 'message_new')) {
+            $route = str_replace('message_new', 'thread.store', $current_route);
+            if (!in_array($route, $prefixedRoutes)){
+                array_push($prefixedRoutes, $route);
+            }
+        }
+        if (str_contains($current_route, '-store')) {
+            $route = str_replace('-store', '.create', $current_route);
+            if (!in_array($route, $prefixedRoutes)){
+                array_push($prefixedRoutes, $route);
+            }
+        }
         if (str_contains($current_route, '.store')) {
             $route = str_replace('.store', '.create', $current_route);
             if (!in_array($route, $prefixedRoutes)){

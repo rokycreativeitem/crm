@@ -18,6 +18,7 @@ class InvoiceController extends Controller
         if ($request->ajax()) {
             return app(ServerSideDataController::class)->invoice_server_side($request->project_id, $request->customSearch, $request->start_date);
         }
+
         $page_data['invoices'] = Invoice::get();
         return view('projects.invoice.index', $page_data);
     }

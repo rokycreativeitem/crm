@@ -89,6 +89,7 @@
 
     </ul>
     <div class="messenger-footer">
+        @if(has_permission('message.store'))
         <form action="{{ route(get_current_user_role() . '.message.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="sender_id" value="{{ $my_data->id }}">
@@ -110,6 +111,7 @@
                 </button>
             </div>
         </form>
+        @endif
     </div>
 </div>
 

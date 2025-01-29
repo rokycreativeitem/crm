@@ -21,7 +21,7 @@
         $last_message = $thread->messages()->orderBy('id', 'desc')->firstOrNew();
         $number_of_unread_message = $thread->messages()->where('read', '!=', 1)->count();
     @endphp
-    <li>
+    <li class="message-item">
         <a href="{{ route(get_current_user_role() . '.message', ['message_thread' => $thread->code]) }}" class="message-sidebar-message @if ($thread_code == $thread->code) active @endif">
             <div class="user">
                 <img src="{{ get_image($thread->user?->photo) }}" alt="">

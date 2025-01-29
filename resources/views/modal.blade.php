@@ -127,7 +127,7 @@
                         }, 1000);
                         processServerResponse(response);
                         setTimeout(function() {
-                            if (window.location.pathname.includes('/admin/events') || window.location.pathname.includes('/admin/event/delete')) {
+                            if (window.location.pathname.includes('/admin/events') || window.location.pathname.includes('/staff/events') || window.location.pathname.includes('/admin/event/delete') || window.location.pathname.includes('/staff/event/delete')) {
                                 location.reload();
                             }
                         }, 500)

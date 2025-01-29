@@ -212,7 +212,7 @@ class ServerSideDataController extends Controller
                         'action_link' => $dashboardRoute,
                         'title'       => get_phrase('Dashboard'),
                     ];
-                    if(has_permission('milestones')) {
+                    if (has_permission('milestones')) {
                         $contextMenu['Milestone'] = [
                             'type'        => 'ajax',
                             'name'        => get_phrase('Milestone'),
@@ -220,7 +220,7 @@ class ServerSideDataController extends Controller
                             'title'       => get_phrase('Milestone'),
                         ];
                     }
-                    if(has_permission('tasks')) {
+                    if (has_permission('tasks')) {
                         $contextMenu['Task'] = [
                             'type'        => 'ajax',
                             'name'        => get_phrase('Task'),
@@ -228,7 +228,7 @@ class ServerSideDataController extends Controller
                             'title'       => get_phrase('Task'),
                         ];
                     }
-                    if(has_permission('files')) {
+                    if (has_permission('files')) {
                         $contextMenu['File'] = [
                             'type'        => 'ajax',
                             'name'        => get_phrase('File'),
@@ -236,7 +236,7 @@ class ServerSideDataController extends Controller
                             'title'       => get_phrase('File'),
                         ];
                     }
-                    if(has_permission('meetings')) {
+                    if (has_permission('meetings')) {
                         $contextMenu['Meeting'] = [
                             'type'        => 'ajax',
                             'name'        => get_phrase('Meeting'),
@@ -244,7 +244,7 @@ class ServerSideDataController extends Controller
                             'title'       => get_phrase('Meeting'),
                         ];
                     }
-                    if(has_permission('invoices')) {
+                    if (has_permission('invoice')) {
                         $contextMenu['Invoice'] = [
                             'type'        => 'ajax',
                             'name'        => get_phrase('Invoice'),
@@ -252,7 +252,7 @@ class ServerSideDataController extends Controller
                             'title'       => get_phrase('Invoice'),
                         ];
                     }
-                    if(has_permission('timesheets')) {
+                    if (has_permission('timesheets')) {
                         $contextMenu['Timesheet'] = [
                             'type'        => 'ajax',
                             'name'        => get_phrase('Timesheet'),
@@ -260,7 +260,7 @@ class ServerSideDataController extends Controller
                             'title'       => get_phrase('Timesheet'),
                         ];
                     }
-                    if(has_permission('gantt.chart')) {
+                    if (has_permission('gantt.chart')) {
                         $contextMenu['Gantt'] = [
                             'type'        => 'ajax',
                             'name'        => get_phrase('Gantt Chart'),
@@ -536,7 +536,7 @@ class ServerSideDataController extends Controller
                 return 'context-menu';
             })
             ->with('filter_count', count($filter_count))
-        
+
             ->make(true);
     }
 
@@ -747,6 +747,13 @@ class ServerSideDataController extends Controller
             $query->whereBetween('size', [$minSize, $maxSize]);
         }
 
+            if (auth()->user()->role_id != 1 && has_permission('file.download')) {
+                $getRolePermissions = ["id", "title", "type", "size", "date", "updated_by", "options"];
+            } else {
+                $getRolePermissions = ["id", "title", "type", "size", "date", "updated_by", "downloaded", "options"];
+            }
+
+
         return datatables()
             ->eloquent($query)
             ->addColumn('id', function ($file) {
@@ -802,7 +809,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -821,17 +828,17 @@ class ServerSideDataController extends Controller
                 if (has_permission('file.edit')) {
                     $contextMenu['Edit'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Edit',
+                        'name'        => get_phrase('Edit'),
                         'action_link' => $editRoute,
-                        'title'       => 'Edit file',
+                        'title'       => get_phrase('Edit file'),
                     ];
                 }
                 if (has_permission('file.delete')) {
                     $contextMenu['Delete'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Delete',
+                        'name'        => get_phrase('Delete'),
                         'action_link' => $deleteRoute,
-                        'title'       => 'Delete file',
+                        'title'       => get_phrase('Delete file'),
                     ];
                 }
                 if (empty($contextMenu)) {
@@ -847,7 +854,7 @@ class ServerSideDataController extends Controller
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id", "title", "type", "size", "date", "updated_by", "downloaded", "options"])
+            ->rawColumns($getRolePermissions)
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -922,7 +929,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -941,17 +948,17 @@ class ServerSideDataController extends Controller
                 if (has_permission('meeting.edit')) {
                     $contextMenu['Edit'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Edit',
+                        'name'        => get_phrase('Edit'),
                         'action_link' => $editRoute,
-                        'title'       => 'Edit meeting',
+                        'title'       => get_phrase('Edit meeting'),
                     ];
                 }
                 if (has_permission('meeting.delete')) {
                     $contextMenu['Delete'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Delete',
+                        'name'        => get_phrase('Delete'),
                         'action_link' => $deleteRoute,
-                        'title'       => 'Delete meeting',
+                        'title'       => get_phrase('Delete meeting'),
                     ];
                 }
                 if (empty($contextMenu)) {
@@ -1055,7 +1062,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -1074,17 +1081,17 @@ class ServerSideDataController extends Controller
                 if (has_permission('timesheet.edit')) {
                     $contextMenu['Edit'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Edit',
+                        'name'        => get_phrase('Edit'),
                         'action_link' => $editRoute,
-                        'title'       => 'Edit timesheet',
+                        'title'       => get_phrase('Edit timesheet'),
                     ];
                 }
                 if (has_permission('timesheet.delete')) {
                     $contextMenu['Delete'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Delete',
+                        'name'        => get_phrase('Delete'),
                         'action_link' => $deleteRoute,
-                        'title'       => 'Delete timesheet',
+                        'title'       => get_phrase('Delete timesheet'),
                     ];
                 }
                 if (empty($contextMenu)) {
@@ -1111,7 +1118,9 @@ class ServerSideDataController extends Controller
     public function invoice_server_side($project_code, $string, $date)
     {
         $query = Invoice::query();
+
         $query->where('project_id', project_id_by_code($project_code));
+
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
                 $q->where('title', 'like', "%{$string}%");
@@ -1206,7 +1215,7 @@ class ServerSideDataController extends Controller
                         ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -1226,35 +1235,35 @@ class ServerSideDataController extends Controller
                 if (has_permission('invoice.edit')) {
                     $contextMenu['Edit'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Edit',
+                        'name'        => get_phrase('Edit'),
                         'action_link' => $editRoute,
-                        'title'       => 'Edit meeting',
+                        'title'       => get_phrase('Edit meeting'),
                     ];
                 }
                 if (has_permission('invoice.delete')) {
                     $contextMenu['Delete'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Delete',
+                        'name'        => get_phrase('Delete'),
                         'action_link' => $deleteRoute,
-                        'title'       => 'Delete meeting',
+                        'title'       => get_phrase('Delete meeting'),
                     ];
                 }
                 if (has_permission('invoice.view')) {
                     $contextMenu['Invoice'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Invoice',
+                        'name'        => get_phrase('Invoice'),
                         'action_link' => $invoiceRoute,
-                        'title'       => 'View invoice',
+                        'title'       => get_phrase('View invoice'),
                     ];
                 }
-                if (has_permission('invoice.payout')) {
-                    $contextMenu['Payout'] = [
-                        'type'        => 'ajax',
-                        'name'        => 'Payout',
-                        'action_link' => $invoiceRoute,
-                        'title'       => 'Payout invoice',
-                    ];
-                }
+                // if (has_permission('invoice.payout')) {
+                //     $contextMenu['Payout'] = [
+                //         'type'        => 'ajax',
+                //         'name'        => get_phrase('Payout'),
+                //         'action_link' => $invoiceRoute,
+                //         'title'       => get_phrase('Payout invoice'),
+                //     ];
+                // }
                 if (empty($contextMenu)) {
                     $contextMenu = [
                         'NoActions' => [
@@ -1268,7 +1277,7 @@ class ServerSideDataController extends Controller
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(["id", "title", "payment", "time", "due_date", "payment_status", "options"])
+            ->rawColumns(["id","title","payment","time","due_date","payment_status","options"])
             ->setRowClass(function () {
                 return 'context-menu';
             })
@@ -1378,27 +1387,37 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function project_report_server_side($string, $start_date, $end_date)
+    public function project_report_server_side($string, $payment_method, $start_date, $end_date)
     {
         $query = Payment_history::query();
 
-        $query = $query->select('project_code', DB::raw('MAX(date_added) as date_added'), DB::raw('SUM(amount) as total_amount'), DB::raw('GROUP_CONCAT(DISTINCT payment_type SEPARATOR ", ") as payment_types')
+        $query = $query->select(
+            'project_code',
+            DB::raw('MAX(date_added) as date_added'),
+            DB::raw('SUM(amount) as total_amount'),
+            DB::raw('GROUP_CONCAT(DISTINCT payment_type SEPARATOR ", ") as payment_types')
         )->groupBy('project_code');
 
+        $filter_count = [];
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
-                $q->where('title', 'like', "%{$string}%");
+                $q->where('project_code', 'like', "%{$string}%")
+                ->orWhereHas('project', function ($userQuery) use ($string) {
+                    $userQuery->where('title', 'like', "%{$string}%");
+                });
             });
         }
-        $filter_count = [];
-        if ($start_date && $end_date) {
+
+        if ($payment_method != 'all') {
+            $filter_count[] = $payment_method;
+            $query->where('payment_type', $payment_method);
+        }
+
+        
+        if (!empty($start_date)) {
             $filter_count[] = $start_date;
-            $start_date     = date('Y-m-d H:i:s', strtotime($start_date));
-            $end_date       = date('Y-m-d H:i:s', strtotime($end_date));
-            $query->where(function ($q) use ($start_date, $end_date) {
-                $q->where('created_at', '>=', $start_date);
-                $q->where('updated_at', '<=', $end_date);
-            });
+            $start_date = date('Y-m-d', strtotime($start_date));
+            $query->whereRaw("DATE(FROM_UNIXTIME(date_added)) = ?", [$start_date]);
         }
 
         return datatables()
@@ -1413,14 +1432,14 @@ class ServerSideDataController extends Controller
                 </div>';
             })
             ->addColumn('date', function ($report) {
-                return date('d-M-y h:i A', strtotime($report?->date_added));
+                return date('d-M-y h:i A', $report->date_added);
             })
 
             ->addColumn('project', function ($report) {
                 return Project::where('code', $report->project_code)->first()->title;
             })
             ->addColumn('amount', function ($report) {
-                return $report->total_amount;
+                return currency($report->total_amount);
             })
             ->addColumn('payment_types', function ($report) {
                 return $report->payment_types;
@@ -1433,9 +1452,17 @@ class ServerSideDataController extends Controller
     public function client_report_server_side($string, $start_date, $end_date)
     {
 
+        // $query = Payment_history::query();
+        // $query = $query->select('user_id', DB::raw('SUM(payment) as total_amount'))
+        //     ->groupBy('user_id');
         $query = Payment_history::query();
-        $query = $query->select('user_id', DB::raw('SUM(payment) as total_amount'))
-            ->groupBy('user_id');
+
+        $query = $query->select(
+            'user_id',
+            DB::raw('MAX(date_added) as date_added'),
+            DB::raw('SUM(amount) as total_amount'),
+            DB::raw('GROUP_CONCAT(DISTINCT payment_type SEPARATOR ", ") as payment_types')
+        )->groupBy('user_id');
 
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
@@ -1455,25 +1482,25 @@ class ServerSideDataController extends Controller
 
         return datatables()
             ->eloquent($query)
-            ->addColumn('id', function ($invoice) {
+            ->addColumn('id', function ($history) {
                 static $key = 1;
                 return '        <div class="d-flex align-items-center">
                                     <input type="checkbox" class="checkbox-item me-2 table-checkbox">
                                     <p class="row-number fs-12px">' . $key++ . '</p>
-                                    <input type="hidden" class="datatable-row-id" value="' . $invoice->id . '">
+                                    <input type="hidden" class="datatable-row-id" value="' . $history->id . '">
                                 </div>';
             })
-            ->addColumn('date', function ($invoice) {
-                return date('Y-m-d', strtotime($invoice->timestamp_start));
+            ->addColumn('date', function ($history) {
+                return date('Y-m-d', strtotime($history->timestamp_start));
             })
-            ->addColumn('client', function ($invoice) {
-                return User::where('id', $invoice->user_id)->first()->name;
+            ->addColumn('client', function ($history) {
+                return User::where('id', $history->user_id)->first()->name;
             })
-            ->addColumn('amount', function ($invoice) {
-                return currency($invoice->payment);
+            ->addColumn('amount', function ($history) {
+                return currency($history->total_amount);
             })
-            ->addColumn('payment_types', function ($invoice) {
-                return $invoice->payment_types;
+            ->addColumn('payment_types', function ($history) {
+                return $history->payment_types;
             })
             ->rawColumns(["id", "date", "client", "amount", "payment_types"])
             ->with('filter_count', count($filter_count))
@@ -1874,7 +1901,5 @@ class ServerSideDataController extends Controller
                 return 'context-menu';
             })
             ->make(true);
-
     }
-
 }

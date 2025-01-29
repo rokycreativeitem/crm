@@ -96,23 +96,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="col-12 col-sm-6 col-lg-4 col-xl-3 pt-3">
-                        <div class="role-card p-3 ">
-                            <h4> {{ get_phrase('Project gantt_chart access permission') }} </h4>
-                            <div class="d-flex flex-column gap-2 pt-3">
-                                @php
-                                    $permissions = App\Models\Permission::where('route', 'like', '%gantt_chart%')->get();
-                                @endphp
-
-                                @foreach ($permissions as $permission)
-                                    <div class="form-check">
-                                        <input type="checkbox" id="client-{{ $permission->id }}" class="form-check-input" onclick="create_permission('{{ $permission->id }}')" {{ in_array($permission->id, $permission_array) ? 'checked' : '' }}>
-                                        <label class="form-check-label text-capitalize sub-title fw-medium w-100" for="client-{{ $permission->id }}">{{ $permission->title }}</label>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div> --}}
+                
                     <div class="col-12 col-sm-6 col-lg-4 col-xl-3 pt-3">
                         <div class="role-card p-3 ">
                             <h4> {{ get_phrase('File permissions') }} </h4>
@@ -123,7 +107,7 @@
 
                                 @foreach ($file_permissions as $file)
                                 @php
-                                    if ($file->route == 'file.store' || $file->route == 'file.multi-delete' || $file->route == 'file.edit' || $file->route == 'manage.profile' || $file->route == 'manage.profile.update') {
+                                    if ($file->route == 'file.store' || $file->route == 'report.offile.payment' || $file->route == 'file.multi-delete' || $file->route == 'file.edit' || $file->route == 'manage.profile' || $file->route == 'manage.profile.update') {
                                         continue;
                                     }
                                 @endphp

@@ -50,7 +50,7 @@
                                     </a>
                                 </li>
                             @endif
-                            @if (has_permission(''))
+                            @if (has_permission('timesheets'))
                                 <li class="nav-item">
                                     <a class="nav-link @if ($tab == 'timesheet') active @endif" href="{{ route(get_current_user_role() . '.project.details', [$project_code, 'timesheet']) }}">{{ get_phrase('Timesheet') }}
                                     </a>

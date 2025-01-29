@@ -7,6 +7,7 @@ use App\Models\Payment_gateway;
 use App\Models\Payment_history;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -15,13 +16,12 @@ class ReportController extends Controller
     {
 
         if ($request->ajax()) {
-            return app(ServerSideDataController::class)->project_report_server_side($request->custom_search_box, $request->start_date, $request->end_date);
+            return app(ServerSideDataController::class)->project_report_server_side($request->customSearch, $request->payment_method, $request->start_date, $request->end_date);
         }
 
-        $query = Payment_history::query();
-
+        
         $payments = Project::distinct('title')->pluck('title')->toArray();
-
+        
         $data = [];
         foreach ($payments as $payment) {
             $data[] = [
@@ -29,13 +29,17 @@ class ReportController extends Controller
                 // 'amount'  => Payment::where('user_id', $payment)->sum('payment'),
             ];
         }
-
-        $payments = $query->get()->map(function ($payment) {
+        
+        $payments = Payment_history::with('project')
+        ->orderBy('id', 'DESC')
+        ->get()
+        ->groupBy('project_code')
+        ->map(function ($group) {
             return [
-                'project' => $payment->project->title ?? '-',
-                'amount'  => $payment->payment,
+                'project' => $group->first()->project->title ?? '-',
+                'amount'  => $group->sum('amount'),
             ];
-        });
+        })->values();
 
         $page_data['payments']         = $payments;
         $page_data['payment_gateways'] = Payment_gateway::get();
@@ -46,7 +50,7 @@ class ReportController extends Controller
     public function client_report(Request $request)
     {
         if ($request->ajax()) {
-            return app(ServerSideDataController::class)->client_report_server_side($request->custom_search_box, $request->start_date, $request->end_date);
+            return app(ServerSideDataController::class)->client_report_server_side($request->customSearch, $request->start_date, $request->end_date);
         }
 
         // $users = Project::distinct('user_id')->pluck('client_id')->toArray();
@@ -58,6 +62,18 @@ class ReportController extends Controller
         //     ];
         // }
 
+        $payments = Payment_history::with('project')
+        ->orderBy('id', 'DESC')
+        ->get()
+        ->groupBy('user_id')
+        ->map(function ($group) {
+            return [
+                'project' => $group->first()->project->title ?? '-',
+                'amount'  => $group->sum('amount'),
+            ];
+        })->values();
+
+        $page_data['payments']         = $payments;
         $page_data['payment_history'] = Payment_history::get();
 
         return view('reports.client_report', $page_data);

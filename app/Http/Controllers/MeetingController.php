@@ -18,8 +18,8 @@ class MeetingController extends Controller
 
     public function index(Request $request)
     {
-        if($request->ajax()){
-            return app(ServerSideDataController::class)->meeting_server_side($request->project_id, $request->customSearch, $request->start_date, $request->end_date);                
+        if ($request->ajax()) {
+            return app(ServerSideDataController::class)->meeting_server_side($request->project_id, $request->customSearch, $request->start_date, $request->end_date);
         }
         $page_data['meetings'] = Meeting::paginate(10);
         return view('projects.meeting.index', $page_data);
@@ -59,7 +59,7 @@ class MeetingController extends Controller
         }
 
         $data['provider']     = 'zoom';
-        $data['joining_data'] = $joiningData??null;
+        $data['joining_data'] = $joiningData ?? null;
 
         Meeting::insert($data);
         return response()->json([
@@ -69,14 +69,16 @@ class MeetingController extends Controller
 
     public function delete($id)
     {
-        $meeting = Meeting::join('projects', 'project_meetings.project_id', 'projects.id')
-            ->where('project_meetings.id', $id)
-            ->where('projects.user_id', Auth::user()->id)->first();
-            
-        if (!$meeting) {
-            Session::flash('error', get_phrase('Data not found.'));
-            return redirect()->back();
-        }
+        $meeting = Meeting::where('id', $id)->first();
+
+        // $meeting = Meeting::join('projects', 'project_meetings.project_id', 'projects.id')
+        //     ->where('project_meetings.id', $id)
+        //     ->where('projects.user_id', Auth::user()->id)->first();
+
+        // if (!$meeting) {
+        //     Session::flash('error', get_phrase('Data not found.'));
+        //     return redirect()->back();
+        // }
 
         $oldMeetingData = json_decode($meeting->joining_data, true);
         ZoomMeetingController::deleteMeeting($oldMeetingData['id']);
@@ -104,16 +106,23 @@ class MeetingController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $meeting = Meeting::join('projects', 'project_meetings.project_id', 'projects.id')
+        $meeting = Meeting::join('projects', 'project_meetings.project_id', '=', 'projects.id')
             ->where('project_meetings.id', $id)
             ->where('projects.user_id', Auth::user()->id)
             ->select('project_meetings.*')
             ->first();
+        // $meeting = Meeting::join('projects', 'project_meetings.project_id', '=', 'projects.id')
+        //     ->where('project_meetings.id', $id)
+        //     ->where('projects.user_id', Auth::user()->id)
+        //     ->select('project_meetings.*')
+        //     ->first();
+        $meeting = Meeting::where('id', $id)->first();
 
         if (!$meeting) {
             Session::flash('error', get_phrase('Data not found.'));
             return redirect()->back();
         }
+
 
         $data['title']             = $request->title;
         $data['timestamp_meeting'] = $request->timestamp_meeting;
@@ -127,6 +136,8 @@ class MeetingController extends Controller
         }
 
         $meeting->update($data);
+
+        // Meeting::where('id', $id)->update($data);
 
         Session::flash('success', get_phrase('Live class has been updated.'));
         return redirect()->back();
@@ -202,5 +213,4 @@ class MeetingController extends Controller
             return view('projects.meeting.zoom_meeting', ['meeting' => $meeting]);
         }
     }
-
 }

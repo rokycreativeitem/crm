@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\GanttChartController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MessageController;
@@ -108,7 +109,7 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
 
     });
 
-    Route::controller(PaymentController::class)->group(function () {
+    Route::controller(InvoiceController::class)->group(function () {
         Route::get('invoice', 'index')->name('invoice');
         Route::get('invoice/create', 'create')->name('invoice.create');
         Route::post('invoice/store', 'store')->name('invoice.store');
@@ -116,6 +117,8 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::get('invoice/edit/{id}', 'edit')->name('invoice.edit');
         Route::post('invoice/update/{id}', 'update')->name('invoice.update');
         Route::post('invoice/multi-delete', 'multiDelete')->name('invoice.multi-delete');
+        Route::get('invoice/payout/{id}', 'payout')->name('invoice.payout');
+        Route::get('invoice/view/{id}', 'view')->name('invoice.view');
     });
 
     Route::controller(TimesheetController::class)->group(function () {

@@ -68,7 +68,7 @@ class MessageController extends Controller
         MessageThread::insert($data);
 
         Session::flash('success', get_phrase('Message thread successfully created'));
-        return redirect(route('admin.message', ['message_thread' => $data['code']]));
+        return redirect(route(get_current_user_role().'.message', ['message_thread' => $data['code']]));
     }
 
     public function searchThreads(Request $request)

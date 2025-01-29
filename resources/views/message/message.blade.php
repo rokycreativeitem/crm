@@ -11,9 +11,11 @@
                         <div class="back-title d-flex align-items-center">
                             <p class="title fs-16px">{{ get_phrase('Chat') }}</p>
                         </div>
-                        <a href="#" onclick="modal('{{ get_phrase('Create a new thread') }}', '{{ route(get_current_user_role() . '.message.message_new') }}')" class="btn ol-btn-light ol-icon-btn ol-icon-btn-sm">
+                        @if(has_permission('message.thread.store'))
+                        <a href="javascript:void(0)" onclick="modal('{{ get_phrase('Create a new thread') }}', '{{ route(get_current_user_role() . '.message.message_new') }}')" class="btn ol-btn-light ol-icon-btn ol-icon-btn-sm">
                             <span class="fi-rr-plus"></span>
                         </a>
+                        @endif
                     </div>
                     <!-- Search -->
                     <form action="">
@@ -28,7 +30,7 @@
                                         fill="#4B5675"></path>
                                 </svg>
                             </label>
-                            <input type="search" class="form-control" onkeyup="loadView('{{ route(get_current_user_role() . '.message.message_left_side_bar') }}?thread_code={{ $thread_code ? $thread_code : '' }}&search='+$(this).val(), '#message-user-list')" id="message-sideSearch"
+                            <input type="search" class="form-control" id="message-sideSearch"
                                 placeholder="{{ get_phrase('Search by username') }}">
                             <button type="submit" hidden=""></button>
                         </div>
@@ -48,4 +50,27 @@
             @endif
         </div>
     </div>
+    <script>
+        // Get the search input and message list
+        const searchInput = document.getElementById('message-sideSearch');
+        const messageItems = document.querySelectorAll('.message-item');
+    
+        // Add a keyup event listener to the search input
+        searchInput.addEventListener('keyup', function () {
+            const filter = searchInput.value.toLowerCase();
+    
+            // Loop through the message items
+            messageItems.forEach(function (item) {
+                const name = item.querySelector('.name').textContent.toLowerCase();
+    
+                // Check if the name includes the filter text
+                if (name.includes(filter)) {
+                    item.style.display = ''; // Show the item
+                } else {
+                    item.style.display = 'none'; // Hide the item
+                }
+            });
+        });
+    </script>
+    
 @endsection

@@ -1,6 +1,6 @@
 <div class="ol-card">
     <div class="ol-card-body">
-        <form action="{{ route('admin.message.thread.store') }}" method="post">
+        <form action="{{ route(get_current_user_role().'.message.thread.store') }}" method="post">
             @csrf
             <div class="fpb-7 mb-3">
                 <label class="form-label ol-form-label">{{ get_phrase('Select Client') }}</label>

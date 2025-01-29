@@ -10,7 +10,8 @@
                     {{ get_phrase('Events') }}
                 </h4>
                 @if (has_permission('event.create'))
-                    <button onclick="rightCanvas('{{ route(get_current_user_role() . '.event.create') }}', 'Create event')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
+                    <button onclick="rightCanvas('{{ route(get_current_user_role() . '.event.create') }}', 'Create event')"
+                        class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
                         <span class="fi-rr-plus"></span>
                         <span>{{ get_phrase('Add new') }}</span>
                     </button>
@@ -53,8 +54,17 @@
                 contentHeight: 600,
 
                 dateClick: function(info) {
-                    let url = "{{ route(get_current_user_role() . '.event.create') }}?date=" + info.dateStr;
-                    rightCanvas(url, "Create Event");
+
+                    @if (has_permission('event.create'))
+                        let create_link =
+                            "{{ route(get_current_user_role() . '.event.create') }}?date=" + info
+                            .dateStr;
+                            let url = create_link;
+                            rightCanvas(url, "Create Event");
+                    @else
+                        let create_link = "javascript:void(0)";
+                    @endif
+
 
                     setTimeout(() => {
                         let startDateField = $("#start_date");
@@ -70,8 +80,15 @@
 
                 eventClick: function(info) {
                     let eventId = info.event.id;
-                    let url = "{{ route(get_current_user_role() . '.event.edit') }}?event_id=" + eventId;
-                    modal('Edit Event', url);
+
+                    @if(has_permission('event.edit'))
+                        let update_link = "{{ route(get_current_user_role() . '.event.edit') }}?event_id=" + eventId;
+                        let url = update_link;
+                        modal('Edit Event', url)
+                    @else
+                        let update_link = "javascript:void(0)";
+                    @endif
+
                 },
 
                 eventDidMount: function(info) {

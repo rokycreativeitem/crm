@@ -139,7 +139,7 @@
                     </div>
                 </div>
 
-                <input type="hidden" value="payment" id="datatable_type">
+                <input type="hidden" value="invoice" id="datatable_type">
                 <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
                     <i class="fi fi-rr-trash"></i>
                     {{ get_phrase('Delete') }}
