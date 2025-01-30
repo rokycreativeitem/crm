@@ -529,6 +529,22 @@ span[class="fi-rr-"]:before {
     padding: 6px;
     font-size: 12px;
 }
+
+input.progress-range-input {
+    padding: 6px;
+    width: 50px;
+    text-align: center;
+    border: none !important;
+}
+.progress-range-input::-webkit-outer-spin-button,
+.progress-range-input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+.progress-range-input[type="number"] {
+    -moz-appearance: textfield !important;
+}
 #offcanvas-body {
     padding: 1px;
 }

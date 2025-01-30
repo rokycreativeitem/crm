@@ -60,7 +60,12 @@
                     <div class="fpb7 mb-3">
                         <label class="form-label ol-form-label" for="progress">{{ get_phrase('Progress') }}</label>
                         <div id="progress-slider"></div>
-                        <input type="number" id="progress-input" name="progress" class="form-control ol-form-control" required>
+                        <div class="d-flex align-items-center mt-3 gap-2">
+                            <p class="progress-range">
+                                {{ get_phrase('Value') }}:
+                            </p>
+                            <input type="number" id="progress-input" name="progress" class="form-control ol-form-control progress-range-input " min="0" max="100" readonly>%
+                        </div>
                     </div>
 
                     <div class="fpb7 mb-2">
