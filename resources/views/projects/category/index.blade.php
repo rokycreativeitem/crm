@@ -46,8 +46,8 @@
                                 <input type="checkbox" id="select-all" class="me-2 table-checkbox">
                                 <span> # </span>
                             </th>
-                            <th scope="col">{{ get_phrase('name') }}</th>
-                            <th scope="col">{{ get_phrase('parent') }}</th>
+                            <th scope="col">{{ get_phrase('Category') }}</th>
+                            <th scope="col">{{ get_phrase('parent category') }}</th>
                             <th scope="col">{{ get_phrase('status') }}</th>
                             <th scope="col" class="d-flex justify-content-center">{{ get_phrase('Options') }}</th>
                         </tr>
