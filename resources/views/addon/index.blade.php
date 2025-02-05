@@ -45,7 +45,7 @@
                                         </button>
                                         <ul class="dropdown-list dropdown-export">
                                             <li class="mb-1">
-                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'Timesheet-list')"><i class="fi-rr-file-pdf"></i>
+                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'addon-list')"><i class="fi-rr-file-pdf"></i>
                                                     {{ get_phrase('PDF') }}</a>
                                             </li>
                                             <li>
@@ -96,7 +96,7 @@
                             {{ get_phrase('of') . ' ' . count($addons) }}</label>
                     </div>
 
-                    <input type="hidden" value="timesheet" id="datatable_type">
+                    <input type="hidden" value="addon" id="datatable_type">
                     <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
                         <i class="fi fi-rr-trash"></i>
                         {{ get_phrase('Delete') }}

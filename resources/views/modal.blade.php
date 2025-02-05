@@ -1,5 +1,3 @@
-{{-- <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script> --}}
-
 <div class="placeholder-content d-none">
     <div class="d-flex justify-content-center align-items-center">
         <div class="spinner-border text-primary spinner-border-lg" role="status">
@@ -9,76 +7,13 @@
     <p class="py-4 text-center">{{ get_phrase('Loading please wait...') }}</p>
 </div>
 
-
-<!-- normal modal -->
-<div class="modal global fade ad-modal" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="modalLabel"></h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-    "use strict";
-
-    function modal(title = '', url = '', size = 'modal-md') {
-
-        // load the spinner on every open
-        let placeholder = $('.placeholder-content').html();
-        $('#modal .modal-body').empty().html(placeholder);
-
-        // set modal data
-        $('#modal .modal-title').html(title);
-        $('#modal .modal-dialog').addClass(size);
-        $("#modal").modal('show');
-
-        $.ajax({
-            type: 'get',
-            url: url,
-            success: function(response) {
-                if (response) {
-                    $('#modal .modal-body').empty().html(response);
-                }
-            }
-        });
-    }
-</script>
-
 <!-- setup offcanvas -->
-<div class="global offcanvas p-1" data-bs-scroll="true" tabindex="-1" id="Id1" aria-labelledby="backdrop">
+<div class="global offcanvas p-1" id="ajaxOffcanvas" data-bs-scroll="true" tabindex="-1" id="Id1" aria-labelledby="backdrop">
     <div class="offcanvas-header pb-0">
         <h5 class="offcanvas-title" id="backdrop"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body pt-2"></div>
-</div>
-{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> --}}
-
-<!-- confirm modal -->
-<div class="modal fade" id="ajaxModal" aria-labelledby="ajaxModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title text-dark text-16px" id="ajaxModalLabel"></h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="w-100 text-center py-5">
-                    <div class="spinner-border my-5" role="status">
-                        <span class="visually-hidden"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn ol-btn-secondary" data-bs-dismiss="modal">{{ get_phrase('Close') }}</button>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="modal fade" id="confirmModal" aria-labelledby="ajaxModalLabel" aria-hidden="true">
@@ -108,53 +43,6 @@
     </div>
 </div>
 
-<script>
-    "use strict";
-
-    function confirmModal(url, elem = false, actionType = null, content = null) {
-        $("#confirmModal").modal('show');
-
-        if (elem == false) {
-            $('#confirmModal .confirm-btn').click(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: url,
-                    success: function(response) {
-                        $("#confirmModal").modal('hide');
-                        var table = new DataTable('.table');
-                        setTimeout(function() {
-                            table.ajax.reload();
-                        }, 1000);
-                        processServerResponse(response);
-                        setTimeout(function() {
-                            if (window.location.pathname.includes('/admin/events') || window.location.pathname.includes('/staff/events') || window.location.pathname.includes('/admin/event/delete') || window.location.pathname.includes('/staff/event/delete')) {
-                                location.reload();
-                            }
-                        }, 500)
-                    }
-                });
-            });
-        } else {
-            $('#confirmModal .confirm-btn').attr('href', url);
-            $('#confirmModal .confirm-btn').removeAttr('onclick');
-        }
-    }
-
-    function processServerResponse(response) {
-        if (response.success) {
-            success(response.success)
-        }
-
-        if (response.error) {
-            error(response.error)
-        }
-
-        if (response.validationError) {
-            console.log(JSON.stringify(response.validationError))
-        }
-    }
-</script>
-
 <div class="modal fade" id="multiDelete" aria-labelledby="ajaxModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content pt-2">
@@ -181,8 +69,60 @@
         </div>
     </div>
 </div>
+
+@push('js')
 <script>
     "use strict";
+    function confirmModal(url, elem = false, actionType = null, content = null) {
+        $("#confirmModal").modal('show');
+
+        if (elem == false) {
+            $('#confirmModal .confirm-btn').click(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: url,
+                    success: function(response) {
+                        $("#confirmModal").modal('hide');
+                        setTimeout(function() {
+                            reloadDataTable();
+                        }, 1000);
+                        processServerResponse(response);
+                        setTimeout(function() {
+                            if (window.location.pathname.includes('/admin/events') || window.location.pathname.includes('/staff/events') || window.location.pathname.includes('/admin/event/delete') || window.location.pathname.includes('/staff/event/delete')) {
+                                location.reload();
+                            }
+                        }, 500)
+                    }
+                });
+            });
+        } else {
+            $('#confirmModal .confirm-btn').attr('href', url);
+            $('#confirmModal .confirm-btn').removeAttr('onclick');
+        }
+    }
+
+    function rightCanvas(url, title, position = '') {
+        let spinner = $('.placeholder-spinner').html();
+        let offcanvasBody = $('.global .offcanvas-body').empty().append(spinner);
+        let canvasPosition = position == 'right' ? 'offcanvas-end' : 'offcanvas-start';
+
+        $('.global .offcanvas-title').text(title);
+        $('.global.offcanvas').addClass(position == '' ? 'offcanvas-end' : canvasPosition);
+        $('.global.offcanvas').offcanvas('show');
+
+        $('.offcanvas').show();
+        $('.offcanvas-backdrop').show();
+
+        $.ajax({
+            type: "get",
+            url: url,
+            success: function(response) {
+                if (response) {
+                    $('.global.offcanvas .offcanvas-body').empty().html(response);
+                }
+            }
+        });
+    }
 
     function multiDelete(selectedIds, database_type, url) {
         $("#multiDelete").modal('show');
@@ -203,46 +143,18 @@
                     if (response.success) {
                         processServerResponse(response);
                         $("#multiDelete").modal('hide');
-                        $('.server-side-datatable').DataTable().ajax.reload(null, false);
+                        reloadDataTable();
+                        // $('.server-side-datatable').DataTable().ajax.reload(null, false);
                         grid_view();
                     }
                 },
+                // error: function(xhr, error, thrown) {
+                //     console.log(xhr.responseText);
+                // }
             });
         });
     }
 </script>
+@endpush
 
-{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-<div class="offcanvas offcanvas-end" tabindex="-1" id="right-modal" aria-labelledby="right-modalLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title title text-16px" id="right-modalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-    </div>
-</div>
-
-<script>
-    "use strict";
-
-    function rightCanvas(url, title, position = '') {
-        let spinner = $('.placeholder-spinner').html();
-        let offcanvasBody = $('.global .offcanvas-body').empty().append(spinner);
-        let canvasPosition = position == 'right' ? 'offcanvas-end' : 'offcanvas-start';
-
-        $('.global .offcanvas-title').text(title);
-        $('.global.offcanvas').addClass(position == '' ? 'offcanvas-end' : canvasPosition);
-        $('.global.offcanvas').offcanvas('show');
-
-        $.ajax({
-            type: "get",
-            url: url,
-            success: function(response) {
-                if (response) {
-                    $('.global.offcanvas .offcanvas-body').empty().html(response);
-                }
-            }
-        });
-    }
-</script>
-@include('toastr')
+{{-- @include('toastr') --}}

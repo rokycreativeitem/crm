@@ -14,16 +14,51 @@
 <script>
     "use strict";
 
+    function processServerResponse(response) {
+        if (response.success) {
+            success(response.success)
+        }
+
+        if (response.error) {
+            error(response.error)
+        }
+
+        if (response.validationError) {
+            // Clear previous errors
+            $('.error-message').remove();
+
+            // Loop through each error in the validationError object
+            for (let field in response.validationError) {
+                if (response.validationError.hasOwnProperty(field)) {
+                    let messages = response.validationError[field];
+
+                    // Find the input field by name and append the error messages
+                    let inputField = $(`[name="${field}"]`);
+                    if (inputField.length) {
+                        inputField.after(
+                            `<div class="error-message text-danger">${messages.join('<br>')}</div>`);
+                    } else {
+                        console.warn(`Input field with name '${field}' not found.`);
+                    }
+                }
+            }
+        }
+
+    }
+
     function toaster_message(type, icon, header, message) {
         $("#type").addClass(type);
         $("#icon").addClass(icon);
         $("#header").html(header);
         $("#message").html(message);
         var toasterMessage = $("#toaster-content").html();
-       
         $('.toast-container').html(toasterMessage);
-        const toast = new bootstrap.Toast('.toast')
-        toast.show()
+
+        var toast = new bootstrap.Toast('.toast');
+        toast.show();
+    
+               // $('.toast').css('opacity', 1);
+        // $('.toast').css('display', 'block');
     }
 
     function success(message) {

@@ -6459,7 +6459,6 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 
 #bar-chart .apexcharts-series path {
     display: inherit;
-    fill: black;
     stroke-linecap: round;
     border-radius: 5px;
 }

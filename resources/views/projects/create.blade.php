@@ -89,7 +89,6 @@
         </form>
     </div>
 </div>
-
 @include('ajax')
-@include('init_js')
-@include('projects.budget_range')
+{{-- @include('init_js') --}}
+{{-- @include('projects.budget_range') --}}

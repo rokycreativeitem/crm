@@ -13,5 +13,9 @@ class Payment_history extends Model
     {
         return $this->belongsTo(Project::class, 'project_code', 'code');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 
 }

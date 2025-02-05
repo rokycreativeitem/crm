@@ -18,7 +18,6 @@
     });
 
     // server side data table rendering
-    var tableInstance;
     function server_side_datatable(columnsParam, url) {
         let columnsArray = Array.isArray(columnsParam) ? columnsParam : JSON.parse(columnsParam);
         if (!Array.isArray(columnsArray)) {
@@ -64,7 +63,6 @@
                 emptyTable: noData,
             },
         });
-        tableInstance = table;
 
         table.on('xhr', function(e, settings, json) {
             // console.log(json.filter_count);
@@ -73,8 +71,6 @@
                 $('#filter-reset').removeClass('d-none');
             }
         });
-
-        
 
         // $('.server-side-datatable').on('xhr.dt', function(e, settings, json) {
         //     if (json.no_data) {
@@ -153,11 +149,6 @@
 
     }
 
-    
-    function reloadDataTable(){
-        tableInstance.ajax.reload();
-    }
-
     function init_context_menu(context_menu) {
         const contextMenuItems = {};
         $.each(context_menu, function(key, value) {
@@ -170,6 +161,7 @@
             };
         });
 
+        // console.log("Initializing context menu with:", contextMenuItems);
         $.contextMenu({
             selector: '.category-context-menu',
             autoHide: false,
@@ -200,7 +192,7 @@
 
         // Handle filter button click
         $('#filter').on('click', function() {
-            reloadDataTable();
+            $('.server-side-datatable').DataTable().ajax.reload(null, false); // Reload the DataTable
         });
 
         // Handle filter-reset button click
@@ -216,7 +208,7 @@
             $('.filter-count-display, #filter-reset').addClass('d-none');
 
             // Reload the DataTable
-            reloadDataTable();
+            $('.server-side-datatable').DataTable().ajax.reload(null, false);
         });
     });
 </script>

@@ -86,7 +86,6 @@
 
                                         <!-- Dropdown Menu -->
                                         <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
-                                            <!-- project task -->
                                             <div class="mb-3">
                                                 <label for="payment_method" class="form-label">{{ get_phrase('Payment Method') }}</label>
                                                 <select class="form-control px-14px ol-form-control ol-select2" name="payment_method" id="payment_method">
@@ -101,12 +100,26 @@
                                                 <label for="start_date" class="form-label">{{ get_phrase('Start Date') }}</label>
                                                 <input type="datetime-local" name="start_date" id="start_date" placeholder="{{ get_phrase('Start date') }}" class="form-control fs-14px">
                                             </div>
-                                            {{-- <!-- end date -->
-                                            <div class="mb-3">
-                                                <label for="end_date" class="form-label">{{ get_phrase('End Date') }}</label>
-                                                <input type="datetime-local" name="end_date" id="end_date" placeholder="{{ get_phrase('End date') }}" class="form-control fs-14px">
-                                            </div> --}}
 
+                                            <div class="mb-3">
+                                                <label for="budget" class="form-label">{{ get_phrase('Project Amount') }}</label>
+    
+                                                <div class="accordion-item-range">
+                                                    <div id="budget-slider"></div>
+                                                    <div class="accordion-range-value d-flex align-items-center mt-4">
+                                                        <div class="d-flex align-items-center">
+                                                            <label for="min-price" class="me-2"> {{ get_phrase('From') }} </label>
+                                                            <input type="text" class="value minPrice" disabled id="min-price" name="minPrice">
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <label for="max-price" class="mx-2"> {{ get_phrase('To') }} </label>
+                                                            <input type="text" class="value" disabled id="max-price" name="maxPrice">
+                                                        </div>
+                                                    </div>
+                                                </div>
+    
+    
+                                            </div>
                                             <!-- Apply Button -->
                                             <div class="text-end">
                                                 <button type="button" id="filter" class="btn btn-apply px-14px">{{ get_phrase('Apply') }}</button>
@@ -150,11 +163,11 @@
                         </div>
                     </div>
 
-                    <input type="hidden" value="project" id="datatable_type">
+                    {{-- <input type="hidden" value="project" id="datatable_type">
                     <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
                         <i class="fi fi-rr-trash"></i>
                         {{ get_phrase('Delete') }}
-                    </button>
+                    </button> --}}
                 </div>
             </div>
         </div>
@@ -179,59 +192,79 @@
         </div>
     </div>
     @include('components.datatable')
+    @include('projects.budget_range')
 @endsection
-
-
-
+    
+    
+    
 @push('js')
     <script>
-        const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search__field');
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        });
-
         setTimeout(function() {
             server_side_datatable('["id","date","project","amount","payment_types"]', "{{ route(get_current_user_role() . '.project_report') }}");
         }, 500);
+        // const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search__field');
+        // dropdownItems.forEach(item => {
+        //     item.addEventListener('click', function(e) {
+        //         e.stopPropagation();
+        //     });
+        // });
+
     </script>
     <script>
         "use strict";
         document.addEventListener('DOMContentLoaded', function() {
-
-            let dataArr = @json($payments).map(function(payment) {
-
+            let payments = {!! json_encode($payments) !!};
+            let colors = [
+                '#000', '#1b84ff', '#4de78e', '#98B9EC', '#98ecca',
+                '#acec98', '#eeee84', '#efb082', '#e87777', '#8b8e9a'
+            ];
+    
+            let dataArr = payments.map(function(payment, index) {
                 return {
                     x: payment.project,
-
-                    y: parseFloat(payment.amount)
+                    y: parseFloat(payment.amount),
+                    fillColor: colors[index % colors.length] // Assign colors dynamically
                 };
             });
-
+    
             var barOptions = {
                 chart: {
                     type: 'bar',
                     height: 300,
-                    borderRadius: 5,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Inter'
                 },
-
+                // dataLabels: {
+                //     enabled: true, // Enable labels inside bars
+                //     style: {
+                //         colors: ['#ffffff'] // Set text color inside bars (white)
+                //     },
+                //     inside: true // Position labels inside the bars
+                // },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 5,
+                        distributed: true // Ensures different colors for each bar
+                    }
+                },
                 series: [{
+                    name: "Income",
                     data: dataArr
                 }],
-
-
+                xaxis: {
+                    type: 'category'
+                },
                 title: {
                     text: 'Project Income Bar',
                     align: 'left'
-                }
+                },
+                colors: colors // Ensure colors are applied
             };
-
+    
             var barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
             barChart.render();
         });
     </script>
+    
 
 
     <script>

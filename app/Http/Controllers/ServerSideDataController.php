@@ -399,9 +399,11 @@ class ServerSideDataController extends Controller
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-
             ->rawColumns(["id", "name", "parent", "status", "options"])
-            ->setRowClass('category-context-menu')
+            // ->setRowClass('category-context-menu')
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
             ->with('filter_count', 0)
             ->make(true);
     }
@@ -1387,7 +1389,7 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function project_report_server_side($string, $payment_method, $start_date, $end_date)
+    public function project_report_server_side($string, $payment_method, $start_date, $minPrice, $maxPrice)
     {
         $query = Payment_history::query();
 
@@ -1406,6 +1408,13 @@ class ServerSideDataController extends Controller
                     $userQuery->where('title', 'like', "%{$string}%");
                 });
             });
+        }
+
+        $maxPrice = str_replace('$','',$maxPrice);
+        $minPrice = str_replace('$','',$minPrice);
+        if ($minPrice > 0 && is_numeric($minPrice) && is_numeric($maxPrice)) {
+            $filter_count[] = $minPrice ?? $maxPrice;
+            $query->havingRaw('SUM(amount) BETWEEN ? AND ?', [$minPrice, $maxPrice]);
         }
 
         if ($payment_method != 'all') {
@@ -1449,12 +1458,9 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function client_report_server_side($string, $start_date, $end_date)
+    public function client_report_server_side($string, $payment_method, $start_date, $minPrice, $maxPrice)
     {
 
-        // $query = Payment_history::query();
-        // $query = $query->select('user_id', DB::raw('SUM(payment) as total_amount'))
-        //     ->groupBy('user_id');
         $query = Payment_history::query();
 
         $query = $query->select(
@@ -1466,32 +1472,48 @@ class ServerSideDataController extends Controller
 
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
-                $q->where('title', 'like', "%{$string}%");
+                $q->where('project_code', 'like', "%{$string}%")
+                    ->orWhereHas('user', function ($userQuery) use ($string) {
+                        $userQuery->where('name', 'like', "%{$string}%");
+                    });
             });
         }
+
         $filter_count = [];
-        if ($start_date && $end_date) {
+
+        $maxPrice = str_replace('$','',$maxPrice);
+        $minPrice = str_replace('$','',$minPrice);
+       
+        if ($minPrice > 0 && is_numeric($minPrice) && is_numeric($maxPrice)) {
+            $filter_count[] = $minPrice ?? $maxPrice;
+            // $query->whereBetween('amount', [$minPrice, $maxPrice]);
+            $query->havingRaw('SUM(amount) BETWEEN ? AND ?', [$minPrice, $maxPrice]);
+        }
+
+        if (!empty($start_date)) {
             $filter_count[] = $start_date;
-            $start_date     = date('Y-m-d H:i:s', strtotime($start_date));
-            $end_date       = date('Y-m-d H:i:s', strtotime($end_date));
-            $query->where(function ($q) use ($start_date, $end_date) {
-                $q->where('created_at', '>=', $start_date);
-                $q->where('updated_at', '<=', $end_date);
-            });
+            $start_date = date('Y-m-d', strtotime($start_date));
+            $query->whereRaw("DATE(FROM_UNIXTIME(date_added)) = ?", [$start_date]);
+        }
+
+        if ($payment_method != 'all') {
+            $filter_count[] = $payment_method;
+            $query->where('payment_type', $payment_method);
         }
 
         return datatables()
             ->eloquent($query)
             ->addColumn('id', function ($history) {
                 static $key = 1;
-                return '        <div class="d-flex align-items-center">
-                                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
-                                    <p class="row-number fs-12px">' . $key++ . '</p>
-                                    <input type="hidden" class="datatable-row-id" value="' . $history->id . '">
-                                </div>';
+            return '<div class="d-flex align-items-center">
+                        <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                        <p class="row-number fs-12px">' . $key++ . '</p>
+                        <input type="hidden" class="datatable-row-id" value="' . $history->id . '">
+                    </div>';
             })
             ->addColumn('date', function ($history) {
-                return date('Y-m-d', strtotime($history->timestamp_start));
+                // return date('Y-m-d', strtotime($history->timestamp_start));
+                return date('d-M-y h:i A', $history->date_added);
             })
             ->addColumn('client', function ($history) {
                 return User::where('id', $history->user_id)->first()->name;
@@ -1672,41 +1694,41 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function offline_payments_server_side($string, $user, $status, $date, $minPrice, $maxPrice)
+    public function offline_payments_server_side($string, $status, $user, $start_date, $minPrice, $maxPrice)
     {
+      
         $query = OfflinePayment::query();
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
-                $q->where('name', 'like', "%{$string}%")
-                    ->orWhere('email', 'like', "%{$string}%")
-                    ->orWhere('id', 'like', "%{$string}%");
+                $q->WhereHas('user', function ($userQuery) use ($string) {
+                    $userQuery->where('name', 'like', "%{$string}%");
+                });                
             });
         }
 
         $filter_count = [];
-        if ($user != 'all') {
-            $filter_count[] = $user;
-            $query->where(function ($q) use ($user) {
-                $q->where('user_id', $user);
-            });
-        }
-        if ($status != 'all') {
-            $filter_count[] = $status;
-            $query->where(function ($q) use ($status) {
-                $q->where('status', $status);
-            });
-        }
-        if ($date) {
-            $filter_count[] = $date;
-            $issue_date     = date('Y-m-d', strtotime($date));
-            $query->whereDate('created_at', $issue_date);
-        }
 
-        $maxPrice = (int) $maxPrice;
-        $minPrice = (int) $minPrice;
+        $maxPrice = str_replace('$','',$maxPrice);
+        $minPrice = str_replace('$','',$minPrice);
         if ($minPrice > 0 && is_numeric($minPrice) && is_numeric($maxPrice)) {
             $filter_count[] = $minPrice ?? $maxPrice;
-            $query->whereBetween('budget', [$minPrice, $maxPrice]);
+            $query->whereBetween('total_amount', [$minPrice, $maxPrice]);
+        }
+
+        if ($status != 'all') {
+            $filter_count[] = $status;
+            $query->where('status', $status);
+        }
+        if ($user != 'all') {
+            $filter_count[] = $user;
+            $query->where('user_id', $user);
+        }
+
+        
+        if (!empty($start_date)) {
+            $filter_count[] = $start_date;
+            $start_date = date('Y-m-d', strtotime($start_date));
+            $query->whereDate("created_at", $start_date);
         }
 
         return datatables()
@@ -1723,7 +1745,7 @@ class ServerSideDataController extends Controller
             ->addColumn('user_info', function ($payment) {
                 $user = get_user_info($payment->user_id);
                 return '<div class="dAdmin_profile d-flex align-items-center min-w-200px">
-                        <div class="dAdmin_profile_name">
+                        <div>
                             <h4 class="title fs-14px">' . $user->name . '</h4>
                             <p class="sub-title text-12px">' . $user->email . '</p>
                         </div>
@@ -1743,7 +1765,7 @@ class ServerSideDataController extends Controller
                 return '';
             })
             ->addColumn('total_amount', function ($payment) {
-                return $payment->total_amount;
+                return currency($payment->total_amount);
             })
             ->addColumn('date', function ($payment) {
                 return '<div class="sub-title2 text-12px">
@@ -1815,25 +1837,25 @@ class ServerSideDataController extends Controller
                 if (has_permission('offline.payment.doc')) {
                     $contextMenu['Download'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Download',
+                        'name'        => get_phrase('Download'),
                         'action_link' => $downloadRoute,
-                        'title'       => 'Download payment document',
+                        'title'       => get_phrase('Download payment document'),
                     ];
                 }
                 if (has_permission('offline.payment.accept')) {
                     $contextMenu['Accept'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Accept',
+                        'name'        => get_phrase('Accept'),
                         'action_link' => $acceptRoute,
-                        'title'       => 'Accept payment',
+                        'title'       => get_phrase('Accept payment'),
                     ];
                 }
                 if (has_permission('offline.payment.decline')) {
                     $contextMenu['Decline'] = [
                         'type'        => 'ajax',
-                        'name'        => 'Decline',
+                        'name'        => get_phrase('Decline'),
                         'action_link' => $declineRoute,
-                        'title'       => 'Decline payment',
+                        'title'       => get_phrase('Decline payment'),
                     ];
                 }
                 if (empty($contextMenu)) {
@@ -1851,17 +1873,47 @@ class ServerSideDataController extends Controller
             })
             ->rawColumns(['id', 'user_info', 'item_type', 'total_amount', 'date', 'download', 'status', 'options'])
             ->with('filter_count', count($filter_count))
+            ->setRowClass(function () {
+                return 'context-menu';
+            })
             ->make(true);
     }
-    public function payments_report_server_side($string)
+    public function payments_report_server_side($string, $start_date, $payment_method, $minPrice, $maxPrice)
     {
-
         $query = Payment_history::query();
-        if (!empty($string)) {
-            $query->where(function ($q) use ($string) {
-                $q->where('payment_type', 'like', "%{$string}%");
+
+        $query->where(function ($q) use ($string) {
+            $q->where('project_code', 'like', "%{$string}%")
+            ->orWhereHas('project', function ($userQuery) use ($string) {
+                $userQuery->where('title', 'like', "%{$string}%");
             });
+        });
+
+        $filter_count = [];
+        
+        $maxPrice = str_replace('$','',$maxPrice);
+        $minPrice = str_replace('$','',$minPrice);
+        if ($minPrice > 0 && is_numeric($minPrice) && is_numeric($maxPrice)) {
+            $filter_count[] = $minPrice ?? $maxPrice;
+            $query->whereBetween('amount', [$minPrice, $maxPrice]);
         }
+
+        // echo $payment_method;
+        // die;
+
+        if ($payment_method != 'all') {
+            $filter_count[] = $payment_method;
+            $query->where('payment_type', $payment_method);
+        }
+
+        
+        if (!empty($start_date)) {
+            $filter_count[] = $start_date;
+            $start_date = date('Y-m-d', strtotime($start_date));
+            $query->whereRaw("DATE(FROM_UNIXTIME(date_added)) = ?", [$start_date]);
+        }
+
+
         return datatables()
             ->eloquent($query)
             ->addColumn('id', function ($payment_history) {
@@ -1881,7 +1933,7 @@ class ServerSideDataController extends Controller
                 return Invoice::where('id', $payment_history->invoice_id)->first()->title;
             })
             ->addColumn('amount', function ($payment_history) {
-                return $payment_history->amount;
+                return currency($payment_history->amount);
             })
             ->addColumn('transaction_id', function ($payment_history) {
                 $decodedTransactionId = json_decode($payment_history->transaction_id, true);
@@ -1896,10 +1948,11 @@ class ServerSideDataController extends Controller
                 return date('d-M-y h:i A', strtotime($payment_history->created_at));
             })
 
+
+            
             ->rawColumns(["id", "payment_type", "invoice_id", "amount", "transaction_id", "payment_purpose", "created_at"])
-            ->setRowClass(function () {
-                return 'context-menu';
-            })
+            ->with('filter_count', count($filter_count))
+          
             ->make(true);
     }
 }
