@@ -43,7 +43,7 @@
                                         </button>
                                         <ul class="dropdown-list dropdown-export">
                                             <li class="mb-1">
-                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'OfflinePayment-list')"><i class="fi-rr-file-pdf"></i>
+                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'Offline-payment-list')"><i class="fi-rr-file-pdf"></i>
                                                     {{ get_phrase('PDF') }}</a>
                                             </li>
                                             <li>
@@ -101,7 +101,7 @@
                                             <!-- Date Filter -->
                                             <div class="mb-3">
                                                 <label for="date" class="form-label">{{ get_phrase('Date') }}</label>
-                                                <input type="date" class="form-control" id="date" name="date">
+                                                <input type="date" class="form-control" id="start_date" name="date_added">
                                             </div>
                                             <!-- Amount Filter -->
                                             <div class="mb-3">
@@ -181,9 +181,9 @@
         </div>
     </div>
     </div>
+    @include('projects.budget_range')
+    @include('components.datatable')
 @endsection
-@include('components.datatable')
-@include('projects.budget_range')
 @push('js')
     <script>
         "use strict";

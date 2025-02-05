@@ -1,12 +1,18 @@
 @extends('layouts.admin')
 @push('title', get_phrase('Client Report'))
 
+<style>
+    .apexcharts-menu-icon {
+        display: none;
+    }
+</style>
+
 @section('content')
     <!-- Start Admin area -->
     <div class="row">
         <div class="col-12">
             <div class="ol-card">
-                <div class="ol-card-body p-3 mb-10 position-relative">
+                <div class="ol-card-body p-3 mb-10 position-relative" id="filters-container">
                     <div class="ol-card radius-8px print-d-none">
                         <div class="ol-card-body px-2">
                             <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-lg-nowrap">
@@ -43,7 +49,7 @@
                                         </button>
                                         <ul class="dropdown-list dropdown-export">
                                             <li class="mb-1">
-                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'ClientReport-list')"><i class="fi-rr-file-pdf"></i>
+                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'Client-report-list')"><i class="fi-rr-file-pdf"></i>
                                                     {{ get_phrase('PDF') }}</a>
                                             </li>
                                             <li>
@@ -73,18 +79,29 @@
                                                 <path d="M7 6.99927L1.00141 1.00068" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
                                                 <path d="M1 6.99936L6.99859 1.00077" stroke="#99A1B7" stroke-width="1.3" stroke-linecap="round" />
                                             </svg>
-
                                             <span>|</span>
                                         </a>
 
                                         <!-- Dropdown Menu -->
                                         <div class="dropdown-menu px-14px" aria-labelledby="filterDropdownButton">
-                                            <!-- Category -->
+                                            <div class="mb-3">
+                                                <label for="payment_method" class="form-label">{{ get_phrase('Payment Method') }}</label>
+                                                <select class="form-control px-14px ol-form-control ol-select2" name="payment_method" id="payment_method">
+                                                    <option value="all"> {{get_phrase('select payment method')}} </option>
+                                                    @foreach ($payment_gateways as $payment_gateway)
+                                                        <option value="{{ $payment_gateway->identifier }}"> {{ $payment_gateway->identifier }} </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <!-- start date -->
+                                            <div class="mb-3">
+                                                <label for="start_date" class="form-label">{{ get_phrase('Start Date') }}</label>
+                                                <input type="datetime-local" name="start_date" id="start_date" placeholder="{{ get_phrase('Start date') }}" class="form-control fs-14px">
+                                            </div>
 
-                                            <!-- Price -->
                                             <div class="mb-3">
                                                 <label for="budget" class="form-label">{{ get_phrase('Budget') }}</label>
-
+    
                                                 <div class="accordion-item-range">
                                                     <div id="budget-slider"></div>
                                                     <div class="accordion-range-value d-flex align-items-center mt-4">
@@ -98,7 +115,10 @@
                                                         </div>
                                                     </div>
                                                 </div>
+    
+    
                                             </div>
+
                                             <!-- Apply Button -->
                                             <div class="text-end">
                                                 <button type="button" id="filter" class="btn btn-apply px-14px">{{ get_phrase('Apply') }}</button>
@@ -143,11 +163,11 @@
                         </div>
                     </div>
 
-                    <input type="hidden" value="report" id="datatable_type">
+                    {{-- <input type="hidden" value="report" id="datatable_type">
                     <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
                         <i class="fi fi-rr-trash"></i>
                         {{ get_phrase('Delete') }}
-                    </button>
+                    </button> --}}
                 </div>
             </div>
         </div>
@@ -180,6 +200,7 @@
         </div>
     </div>
     @include('components.datatable')
+    @include('projects.budget_range')
 @endsection
 
 @push('js')

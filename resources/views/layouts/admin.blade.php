@@ -70,7 +70,6 @@
     <!-- Select JS -->
     <script type="text/javascript" src="{{ asset('assets/global/select2/select2.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/global/nice-select/nice-select.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/global/avalynx-select/avalynx-select.js') }}"></script>
 
     <!-- Additional Libraries -->
     <script type="text/javascript" src="{{ asset('assets/global/summernote/summernote-lite.min.js') }}"></script>
@@ -93,7 +92,6 @@
 
 
     @include('modal')
-    @include('init_js')
     @include('toastr')
     @include('script')
 

@@ -16,13 +16,13 @@ $(document).ready(function () {
         }
     });
 
-    var $niceSelect1 = $('.ol-small-niceSelect'),
+    var $niceSelect1 = $('.ol-niceSelect'),
         $select2 = $('.ol-select2');
 
 
     // Nice Select
     if ($niceSelect1.length > 0) {
-        $($niceSelect1).select2({
+        $($niceSelect1).niceSelect({
             closeOnSelect: false, // Keeps the dropdown open
             allowClear: true,     // Allows clearing selection (optional)
             placeholder: "Select an option", // Placeholder text
@@ -32,12 +32,12 @@ $(document).ready(function () {
 
 
     // Select 2
-    // if ($select2.length > 0) {
-    //     var $select = $(".ol-select2").select2({});
-    //     $($select).each(function () {
-    //         $(this).data('select2').$dropdown.addClass('select-drop');
-    //     });
-    // }
+    if ($select2.length > 0) {
+        var $select = $(".ol-select2").select2();
+        $($select).each(function () {
+            $(this).data('select2').$dropdown.addClass('select-drop');
+        });
+    }
 
 
 

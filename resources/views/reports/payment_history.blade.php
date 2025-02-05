@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12">
             <div class="ol-card">
-                <div class="ol-card-body p-3 mb-10 position-relative">
+                <div class="ol-card-body p-3 mb-10 position-relative" id="filters-container">
                     <div class="ol-card radius-8px print-d-none">
                         <div class="ol-card-body px-2">
                             <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
@@ -42,7 +42,7 @@
                                         </button>
                                         <ul class="dropdown-list dropdown-export">
                                             <li class="mb-1">
-                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server_side_datatable', 'PaymentHistory-list')"><i class="fi-rr-file-pdf"></i>
+                                                <a class="dropdown-item export-btn" href="#" onclick="downloadPDF('.server-side-datatable', 'Payment-history-list')"><i class="fi-rr-file-pdf"></i>
                                                     {{ get_phrase('PDF') }}</a>
                                             </li>
                                             <li>
@@ -80,8 +80,9 @@
                                             <div class="mb-3">
                                                 <label for="payment_method" class="form-label">{{ get_phrase('Payment Method') }}</label>
                                                 <select class="form-control px-14px ol-form-control ol-select2" name="payment_method" id="payment_method">
+                                                    <option value="all"> {{get_phrase('Select Payment Method')}} </option>
                                                     @foreach ($payment_gateways as $payment_gateway)
-                                                        <option value="{{ $payment_gateway->id }}"> {{ $payment_gateway->identifier }} </option>
+                                                        <option value="{{ $payment_gateway->identifier }}"> {{ $payment_gateway->identifier }} </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -89,11 +90,11 @@
                                             <!-- Date Filter -->
                                             <div class="mb-3">
                                                 <label for="date" class="form-label">{{ get_phrase('Date') }}</label>
-                                                <input type="date" class="form-control" id="date" name="date">
+                                                <input type="date" name="start_date" class="form-control" id="date" name="date">
                                             </div>
                                             <!-- Amount Filter -->
                                             <div class="mb-3">
-                                                <label for="budget" class="form-label">{{ get_phrase('Amount') }}</label>
+                                                <label for="budget" class="form-label">{{ get_phrase('Payment Amount') }}</label>
 
                                                 <div class="accordion-item-range">
                                                     <div id="budget-slider"></div>
@@ -124,7 +125,7 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table server-side-datatable" id="offline_payment_list">
+                        <table class="table server-side-datatable server_side_datatable" id="offline_payment_list">
                             <thead>
                                 <tr class="context-menu-header">
                                     <th scope="col" class="d-flex align-items-center">
@@ -156,7 +157,7 @@
                         <label for="page-length-select" class="ps-2 w-100"> of {{ count($payment_history) }}</label>
                     </div>
 
-                    <input type="hidden" value="user" id="datatable_type">
+                    <input type="hidden" value="payment_history" id="datatable_type">
                     <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
                         <i class="fi fi-rr-trash"></i>
                         {{ get_phrase('Delete') }}
@@ -165,18 +166,20 @@
             </div>
         </div>
     </div>
+    @include('projects.budget_range')
+    {{-- @include('script') --}}
+    @include('components.datatable')
 @endsection
-@include('components.datatable')
 
 @push('js')
     <script>
         "use strict";
-        const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search__field');
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        });
+        // const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search__field');
+        // dropdownItems.forEach(item => {
+        //     item.addEventListener('click', function(e) {
+        //         e.stopPropagation();
+        //     });
+        // });
         setTimeout(function() {
             server_side_datatable(
                 '["id","payment_type","invoice_id","amount","transaction_id","payment_purpose", "created_at"]',

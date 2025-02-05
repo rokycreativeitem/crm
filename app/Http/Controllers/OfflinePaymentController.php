@@ -56,7 +56,7 @@ class OfflinePaymentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return app(ServerSideDataController::class)->offline_payments_server_side($request->customSearch, $request->user, $request->status, $request->date, str_replace('$', '', $request->minPrice), str_replace('$', '', $request->maxPrice));
+            return app(ServerSideDataController::class)->offline_payments_server_side($request->customSearch, $request->status, $request->user, $request->date_added, $request->minPrice, $request->maxPrice);
         }
 
         $page_data['users']    = User::get();
@@ -85,6 +85,7 @@ class OfflinePaymentController extends Controller
 
     public function accept_payment($id)
     {
+ 
         $session_payment_details = session('payment_details');
         // validate id
         if (empty($id)) {
@@ -92,14 +93,7 @@ class OfflinePaymentController extends Controller
             return redirect()->back();
         }
 
-        // payment details
-        $query = OfflinePayment::where('id', $id)->where('status', 0);
-        if ($query->doesntExist()) {
-            Session::flash('error', get_phrase('Data not found.'));
-            return redirect()->back();
-        }
-
-        $payment_details = $query->first();
+        $payment_details = OfflinePayment::where('id', $id)->first();
 
         $payment['user_id']         = $payment_details['user_id'];
         $payment['payment_type']    = 'offline';

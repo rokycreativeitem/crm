@@ -58,11 +58,6 @@
                 </table>
             </div>
 
-            {{has_permission('project.category.edit')}}
-            @php
-                echo 777;
-            @endphp
-
             <div class="d-none d-lg-block">
                 <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
                     <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>

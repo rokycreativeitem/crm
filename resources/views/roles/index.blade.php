@@ -96,7 +96,6 @@
     @include('components.datatable')
 @endsection
 
-
 @push('js')
     <script>
         "use strict";

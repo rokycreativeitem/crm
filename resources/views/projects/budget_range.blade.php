@@ -2,7 +2,14 @@
 <link rel="stylesheet" href="{{ asset('assets/css/nouislider.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
 @php
-    $max_value = App\Models\Project::select(DB::raw('CAST(budget AS UNSIGNED) as numeric_budget'))->orderBy('numeric_budget', 'desc')->value('numeric_budget');
+    if(request()->is(get_current_user_role().'/client_report') || request()->is(get_current_user_role().'/projects_report') || request()->is(get_current_user_role().'/payment_history')) {
+        $max_value = App\Models\Payment_history::sum('amount');
+    } elseif(request()->is(get_current_user_role().'/offline-payments')){
+        $max_value = App\Models\OfflinePayment::max('total_amount');
+    } else {
+        $max_value = App\Models\Project::select(DB::raw('CAST(budget AS UNSIGNED) as numeric_budget'))->orderBy('numeric_budget', 'desc')->value('numeric_budget');
+    }
+    // $max_value = 100;
 @endphp
 
 
@@ -19,7 +26,7 @@
 
     var slider = document.getElementById('budget-slider');
     var min = 0;
-
+   
     noUiSlider.create(slider, {
         start: [min, max], // Initial range values
         connect: true,
@@ -47,7 +54,7 @@
     });
 </script>
 
-<script>
+{{-- <script>
     var max = {{ isset($max_value) ? $max_value : 100 }}; // Set your max dynamically or use a default
     var min = 0;
 
@@ -83,4 +90,4 @@
             slider.noUiSlider.set(value);
         }
     });
-</script>
+</script> --}}
