@@ -109,15 +109,15 @@ class ServerSideDataController extends Controller
             })
             ->addColumn('progress', function ($project) {
                 $progress = $project->progress;
-                return '<div class="dAdmin_profile d-flex align-items-start flex-column min-w-200px">
-                <span class="p-2 pt-0 fs-12px">' . $progress . '%</span>
-                <div class="progress ms-2">
+                return '<div class="dAdmin_profile d-flex gap-2 align-items-center min-w-200px">
+                <div class="progress">
                     <div class="progress-bar bg-primary" role="progressbar"
                     style="width: ' . $progress . '%; "
                     aria-valuenow="' . $progress . '" aria-valuemin="0"
                     aria-valuemax="100">
                     </div>
                 </div>
+                 <span class="fs-12px">' . $progress . '%</span>
             </div>';
             })
             ->addColumn('status', function ($project) {
@@ -189,22 +189,6 @@ class ServerSideDataController extends Controller
                 $timesheetRoute = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'timesheet']);
                 $contextMenu    = [];
 
-                if (has_permission('project.edit')) {
-                    $contextMenu['Edit'] = [
-                        'type'        => 'ajax',
-                        'name'        => get_phrase('Edit'),
-                        'action_link' => $editRoute,
-                        'title'       => get_phrase('Edit project'),
-                    ];
-                }
-                if (has_permission('project.delete')) {
-                    $contextMenu['Delete'] = [
-                        'type'        => 'ajax',
-                        'name'        => get_phrase('Delete'),
-                        'action_link' => $deleteRoute,
-                        'title'       => get_phrase('Delete project'),
-                    ];
-                }
                 if (has_permission('project.details')) {
                     $contextMenu['Dashboard'] = [
                         'type'        => 'ajax',
@@ -266,6 +250,22 @@ class ServerSideDataController extends Controller
                             'name'        => get_phrase('Gantt Chart'),
                             'action_link' => $ganttRoute,
                             'title'       => get_phrase('Gantt Chart'),
+                        ];
+                    }
+                    if (has_permission('project.edit')) {
+                        $contextMenu['Edit'] = [
+                            'type'        => 'ajax',
+                            'name'        => get_phrase('Edit'),
+                            'action_link' => $editRoute,
+                            'title'       => get_phrase('Edit project'),
+                        ];
+                    }
+                    if (has_permission('project.delete')) {
+                        $contextMenu['Delete'] = [
+                            'type'        => 'ajax',
+                            'name'        => get_phrase('Delete'),
+                            'action_link' => $deleteRoute,
+                            'title'       => get_phrase('Delete project'),
                         ];
                     }
                 }

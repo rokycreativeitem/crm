@@ -1,3 +1,4 @@
+
 <form action="{{ route(get_current_user_role() . '.project.category.store') }}" method="post" id="ajaxForm">
     @csrf
     <div class="fpb7 mb-2">

@@ -17,14 +17,15 @@
 <script src="{{ asset('assets/js/nouislider.min.js') }}"></script>
 <script>
     var max = {{ isset($max_value) ? $max_value : 0 }};
-    const dropdownItems = document.querySelectorAll('.dropdown-menu');
-    dropdownItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent the dropdown from closing
-        });
-    });
+    // const dropdownItems = document.querySelectorAll('.dropdown-menu');
+    // dropdownItems.forEach(item => {
+    //     item.addEventListener('click', function(e) {
+    //         e.stopPropagation(); // Prevent the dropdown from closing
+    //     });
+    // });
 
     var slider = document.getElementById('budget-slider');
+ 
     var min = 0;
    
     noUiSlider.create(slider, {

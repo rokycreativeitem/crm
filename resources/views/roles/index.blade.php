@@ -75,7 +75,7 @@
                     </div>
                     <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
                         <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
-                        <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
+                        <select id="page-length-select" class="form-select ol-from-control fs-12px w-auto ol-niceSelect">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
                             <option value="50">50</option>

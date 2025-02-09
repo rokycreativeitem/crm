@@ -5,11 +5,11 @@
                 <div class="col-12">
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="title">{{ get_phrase('Title') }}</label>
-                        <input class="form-control ol-form-control" type="text" id="title" name="title" required>
+                        <input class="form-control ol-form-control" placeholder="{{get_phrase('Enter title')}}" type="text" id="title" name="title" required>
                     </div>
                     <div class="fpb-7 mb-3">
                         <label class="form-label ol-form-label">{{ get_phrase('Select Client') }}</label>
-                        <select class="form-select avalynx-select" name="client_id" required>
+                        <select class="form-select ol-select2 ol-form-control" name="client_id" required>
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">{{ $client->name }}</option>
                             @endforeach
@@ -17,15 +17,16 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="code">{{ get_phrase('Code') }}</label>
-                        <input class="form-control ol-form-control" type="text" id="code" name="code" required>
+                        <input class="form-control ol-form-control" placeholder="{{get_phrase('Enter code')}}" type="text" id="code" name="code" required>
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="description">{{ get_phrase('Description') }}</label>
-                        <textarea class="form-control ol-form-control" id="description" name="description" required></textarea>
+                        <textarea class="form-control ol-form-control" id="description" name="description" placeholder="{{get_phrase('Enter description')}}" required></textarea>
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="category_id">{{ get_phrase('Category') }}</label>
-                        <select class="form-select avalynx-select" name="category_id" required>
+                        <select class="form-select ol-select2 ol-form-control" name="category_id" required>
+                            <option value=""> {{get_phrase('Select category')}} </option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
@@ -46,7 +47,7 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="budget">{{ get_phrase('Budget') }}</label>
-                        <input class="form-control ol-form-control" type="number" id="budget" name="budget" required>
+                        <input class="form-control ol-form-control" type="number" id="budget" name="budget" placeholder="{{get_phrase('Enter budget')}}" required>
                     </div>
 
                     <div class="fpb7 mb-2">
@@ -57,20 +58,17 @@
                             <option value="completed">{{ get_phrase('Completed') }}</option>
                         </select>
                     </div>
-                    <div class="fpb7 mb-3">
-                        <label class="form-label ol-form-label" for="progress">{{ get_phrase('Progress') }}</label>
-                        <div id="progress-slider"></div>
-                        <div class="d-flex align-items-center mt-3 gap-2">
-                            <p class="progress-range">
-                                {{ get_phrase('Value') }}:
-                            </p>
-                            <input type="number" id="progress-input" name="progress" class="form-control ol-form-control progress-range-input " min="0" max="100" readonly>%
-                        </div>
-                    </div>
 
                     <div class="fpb7 mb-2">
-                        <label class="form-label ol-form-label" for="note">{{ get_phrase('Note') }}</label>
-                        <textarea class="form-control ol-form-control" id="note" name="note" required></textarea>
+                        <label class="form-label ol-form-label" for="note">{{ get_phrase('Progress') }}</label>
+                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="progress" name="progress" required>
+                            <option value="">{{ get_phrase('Select progress') }}</option>
+                            @php
+                                for ($i = 1; $i <= 100; $i++) {
+                                    echo "<option value=\"$i\">$i</option>";
+                                }
+                            @endphp
+                        </select>
                     </div>
 
                     <div class="fpb7 mb-2">
@@ -89,6 +87,14 @@
         </form>
     </div>
 </div>
+<script>
+    $(".ol-select2").select2({
+        dropdownParent: $('#ajaxOffcanvas')
+    });
+    $(".ol-niceSelect").niceSelect({
+        dropdownParent: $('#ajaxOffcanvas')
+    });
+</script>
 @include('ajax')
 {{-- @include('init_js') --}}
 {{-- @include('projects.budget_range') --}}

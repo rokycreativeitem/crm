@@ -4,7 +4,7 @@
             @csrf
             <div class="fpb-7 mb-3">
                 <label class="form-label ol-form-label">{{ get_phrase('Select Client') }}</label>
-                <select class="form-select avalynx-select" data-toggle="select2" name="receiver_id" required>
+                <select class="form-select ol-select2 from-control" data-toggle="select2" name="receiver_id" required>
                     @foreach (App\Models\User::where('id', '!=', auth()->user()->id)->get() as $user)
                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                     @endforeach
@@ -19,5 +19,12 @@
     </div>
 </div>
 
-@include('ajax')
+<script>
+    $(".ol-select2").select2({
+        dropdownParent: $('#modal')
+    });
+    $(".ol-niceSelect").niceSelect({
+        dropdownParent: $('#modal')
+    });
+</script>
 @include('script')

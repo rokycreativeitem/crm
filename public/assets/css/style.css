@@ -135,6 +135,7 @@ body {
     font-style: normal;
     font-weight: 500;
     color: #212534;
+    overflow-x: hidden;
 }
 
 .cursor-pointer {
@@ -445,7 +446,7 @@ span[class="fi-rr-"]:before {
     color: #f6c000;
     border: 1px solid #fff6d8;
     border-radius: 6px;
-    padding: 6px;
+    padding: 2px 8px;
     font-size: 12px;
 }
 .processing {
@@ -454,7 +455,7 @@ span[class="fi-rr-"]:before {
     color: #f6c000;
     border: 1px solid #fff6d8;
     border-radius: 6px;
-    padding: 6px;
+    padding: 2px 8px;
     font-size: 12px;
 }
 .pending {
@@ -463,7 +464,7 @@ span[class="fi-rr-"]:before {
     color: #f6c000;
     border: 1px solid #fff6d8;
     border-radius: 6px;
-    padding: 6px;
+    padding: 2px 8px;
     font-size: 12px;
 }
 .not_started {
@@ -472,7 +473,7 @@ span[class="fi-rr-"]:before {
     color: #f8285a;
     border: 1px solid #ffe1e8;
     border-radius: 6px;
-    padding: 6px;
+    padding: 2px 8px;
     font-size: 12px;
 }
 .unpaid {
@@ -481,7 +482,7 @@ span[class="fi-rr-"]:before {
     color: #f8285a;
     border: 1px solid #ffe1e8;
     border-radius: 6px;
-    padding: 6px;
+    padding: 2px 8px;
     font-size: 12px;
 }
 .decline {
@@ -490,16 +491,16 @@ span[class="fi-rr-"]:before {
     color: #f8285a;
     border: 1px solid #ffe1e8;
     border-radius: 6px;
-    padding: 6px;
+    padding: 2px 8px;
     font-size: 12px;
 }
 .completed {
     display: inline-block;
-    background: #d5fde5;
+    background: #ECFDF3;
     color: #17c653;
-    border: 1px solid #ecfdf3;
+    border: 1px solid #D5FDE5;
     border-radius: 6px;
-    padding: 6px;
+    padding: 2px 8px;
     font-size: 12px;
 }
 .paid {
@@ -508,7 +509,7 @@ span[class="fi-rr-"]:before {
     color: #17c653;
     border: 1px solid #ecfdf3;
     border-radius: 6px;
-    padding: 6px;
+    padding: 2px 8px;
     font-size: 12px;
 }
 .accepted {
@@ -517,7 +518,7 @@ span[class="fi-rr-"]:before {
     color: #17c653;
     border: 1px solid #ecfdf3;
     border-radius: 6px;
-    padding: 6px;
+    padding: 2px 8px;
     font-size: 12px;
 }
 .form-check-input-radio:checked[type="radio"] {
@@ -2010,6 +2011,7 @@ textarea.ol-form-textarea {
     border-radius: 8px;
     padding: 10px 35px 10px 15px;
     transition: 0.3s;
+    background: #f7f7f9;
 }
 
 .ol-select2 ~ .select2-container--default .select2-selection--single:hover {
@@ -2595,7 +2597,7 @@ textarea.ol-form-textarea {
     box-shadow: 0px 4px 40px 0px var(--shadow);
     padding: 4px;
     border: none;
-    min-width: 133px;
+    min-width: 200px;
 }
 
 .ol-icon-dropdown .dropdown-menu li:not(:last-child),
@@ -4626,6 +4628,15 @@ i:not(.fas, .fa, .fab) {
 .select2-container--default .select2-results__option--selected {
     background-color: var(--gray-light-2) !important;
     color: var(--active-color) !important;
+    font-weight: 500;
+}
+
+span.select2-dropdown.select2-dropdown--below {
+    border: none;
+    box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.1);
+}
+.select2-container--default.select2-container--open.select2-container--below .select2-selection--single, .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple {
+    border-radius: 8px !important;
 }
 
 .select2-dropdown {
@@ -4762,6 +4773,7 @@ input.daterangepicker {
 .ol-icon-dropdown .dropdown-menu {
     width: max-content;
     max-width: 250px;
+    min-width: 200px;
 }
 
 .ol-icon-dropdown .dropdown-menu a {
@@ -5715,7 +5727,7 @@ td .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
     border: 1px solid #e4e7f1;
 }
 .grid-list .context-menu {
-    border-bottom: 1px solid #e4e7f1 !important;
+    border-bottom: 1px dashed #e4e7f1 !important;
 }
 
 .grid-header {
@@ -6059,7 +6071,7 @@ div.dt-container.dt-empty-footer tbody > tr:last-child > * {
 }
 .context-menu,
 .server-side-datatable tbody tr {
-    border-bottom: 1px solid #dbdfeb !important;
+    border-bottom: 1px dashed #dbdfeb !important;
 }
 .context-menu-header {
     border-bottom: 1px solid #dbdfeb !important;
@@ -6179,13 +6191,12 @@ table.dataTable thead > tr > td.dt-orderable-desc:hover {
     background: #1b84ff !important;
 }
 .table-checkbox:checked::after {
-    content: "✔";
+    content: url(../images/icons/check.svg);
     color: white;
     font-size: 10px;
     position: absolute;
-    top: 0px;
-    left: 3px;
-    transform: rotate(15deg);
+    top: -1px;
+    left: -1px;
 }
 #project_list_info {
     display: none;
@@ -6548,6 +6559,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     padding: 5px;
     border: 0;
     border-radius: 6px;
+    min-width: 200px;
 }
 
 .custom-context-menu li {
@@ -6914,12 +6926,16 @@ hr {
     z-index: 2;
     width: calc(100% + 2px);
     left: -1px;
+    transform: none;
+    transition: none;
 }
 .ol-niceSelect .option {
     min-height: auto;
     line-height: inherit;
     padding: 6px 8px;
     border-radius: 4px;
+    font-weight: 500;
+    color: #000;
 }
 .ol-niceSelect .option.selected {
     font-weight: inherit;
@@ -6929,6 +6945,7 @@ hr {
 .ol-niceSelect .option.selected.focus {
     background-color: #f8f9fa;
     color: #0d6efd;
+    font-weight: 500;
 }
 g rect[height="60"] {
     fill: #ffffff;
@@ -6942,4 +6959,36 @@ g text {
     fill: #6D718C;
     font-weight: 600;
     padding: 10px !important;
+}
+
+.page-length-select .nice-select {
+    padding: 5px 35px 5px 15px;
+}
+.page-length-select .nice-select:focus {
+    box-shadow: 0 0 0 0;
+}
+
+.admin-dashboard .apexcharts-toolbar {
+    display: none;
+}
+.dashboard-donut .apexcharts-canvas{
+    height: 100% !important;
+}
+.admin-dashboard .dashboard-card {
+    padding: 10px 20px;
+}
+.admin-dashboard .dashboard-card h3 {
+    padding-bottom: 8px;
+}
+.admin-dashboard .dashboard-table tr {
+    border-bottom: 1px dashed #dbdfeb;
+}
+.admin-dashboard .dashboard-table thead tr {
+    border-bottom: 1px solid #dbdfeb;
+}
+.table {
+    vertical-align: middle;
+}
+.grid-list .context-menu {
+    border-bottom: 1px solid rgb(228, 231, 241) !important;
 }

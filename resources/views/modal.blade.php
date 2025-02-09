@@ -70,6 +70,20 @@
     </div>
 </div>
 
+<!-- normal modal -->
+<div class="modal global fade ad-modal" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modalLabel"></h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('js')
 <script>
     "use strict";
@@ -152,6 +166,28 @@
                 //     console.log(xhr.responseText);
                 // }
             });
+        });
+    }
+
+    function modal(title = '', url = '', size = 'modal-md') {
+
+        // load the spinner on every open
+        let placeholder = $('.placeholder-content').html();
+        $('#modal .modal-body').empty().html(placeholder);
+
+        // set modal data
+        $('#modal .modal-title').html(title);
+        $('#modal .modal-dialog').addClass(size);
+        $("#modal").modal('show');
+
+        $.ajax({
+            type: 'get',
+            url: url,
+            success: function(response) {
+                if (response) {
+                    $('#modal .modal-body').empty().html(response);
+                }
+            }
         });
     }
 </script>

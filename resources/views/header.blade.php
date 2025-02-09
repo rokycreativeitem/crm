@@ -127,6 +127,7 @@
                     </div>
                     <div>
                         <h6 class="title fs-12px mb-2px">{{ $my_data->name }}</h6>
+                        <small>{{$my_data->role_id == 1 ? get_phrase('Admin') : ($my_data->role_id == 2 ? get_phrase('Client') : get_phrase('Staff'))}}</small>
                     </div>
                 </div>
                 <ul class="mb-12px pb-12px ol-border-bottom-2">

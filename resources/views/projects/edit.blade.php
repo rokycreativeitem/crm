@@ -68,9 +68,17 @@
                                 {{ get_phrase('Completed') }}</option>
                         </select>
                     </div>
-                    <div class="fpb7 mb-3">
-                        <label class="form-label ol-form-label" for="progress">{{ get_phrase('Progress') }}</label>
-                        <input type="number" class="form-control" id="progress" name="progress" placeholder="Enter progress in %" value="{{ old('progress', $project->progress) }}" required>
+                 
+                    <div class="fpb7 mb-2">
+                        <label class="form-label ol-form-label" for="note">{{ get_phrase('Progress') }}</label>
+                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="progress" name="progress" required>
+                            <option value="{{ old('progress', $project->progress) }}">{{ old('progress', $project->progress) }}</option>
+                            @php
+                                for ($i = 1; $i <= 100; $i++) {
+                                    echo "<option value=\"$i\">$i</option>";
+                                }
+                            @endphp
+                        </select>
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="note">{{ get_phrase('Note') }}</label>
@@ -92,6 +100,13 @@
         </form>
     </div>
 </div>
-
+<script>
+    $(".ol-select2").select2({
+        dropdownParent: $('#ajaxOffcanvas')
+    });
+    $(".ol-niceSelect").niceSelect({
+        dropdownParent: $('#ajaxOffcanvas')
+    });
+</script>
 @include('ajax')
 @include('script')
