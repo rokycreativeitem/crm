@@ -19,10 +19,10 @@
             <span class="text-12px d-none d-md-inline-block"></span>
         </div>
     </div>
-    <div class="header-content-right d-flex align-items-center justify-content-end">
+    <div class="header-content-right d-flex align-items-center justify-content-end gap-14">
 
         <!-- language Select -->
-        <div class="d-none d-sm-block">
+        {{-- <div class="d-none d-sm-block">
             <div class="img-text-select ">
                 @php
                     $activated_language = strtolower(session('language') ?? get_settings('language'));
@@ -44,10 +44,34 @@
                     </ul>
                 </div>
             </div>
+        </div> --}}
+
+
+        <div class="dropdown ol-icon-dropdown ol-icon-dropdown-transparent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Languages"  id="header-lan">
+            <button class="btn ol-btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 17.0625C4.5525 17.0625 0.9375 13.4475 0.9375 9C0.9375 4.5525 4.5525 0.9375 9 0.9375C13.4475 0.9375 17.0625 4.5525 17.0625 9C17.0625 13.4475 13.4475 17.0625 9 17.0625ZM9 2.0625C5.175 2.0625 2.0625 5.175 2.0625 9C2.0625 12.825 5.175 15.9375 9 15.9375C12.825 15.9375 15.9375 12.825 15.9375 9C15.9375 5.175 12.825 2.0625 9 2.0625Z" fill="#6D718C"/>
+                <path d="M6.74993 16.3125H5.99993C5.69243 16.3125 5.43743 16.0575 5.43743 15.75C5.43743 15.4425 5.67743 15.195 5.98493 15.1875C4.80743 11.1675 4.80743 6.8325 5.98493 2.8125C5.67743 2.805 5.43743 2.5575 5.43743 2.25C5.43743 1.9425 5.69243 1.6875 5.99993 1.6875H6.74993C6.92993 1.6875 7.10243 1.7775 7.20743 1.92C7.31243 2.07 7.34243 2.2575 7.28243 2.43C5.87243 6.6675 5.87243 11.3325 7.28243 15.5775C7.34243 15.75 7.31243 15.9375 7.20743 16.0875C7.10243 16.2225 6.92993 16.3125 6.74993 16.3125Z" fill="#6D718C"/>
+                <path d="M11.2501 16.3125C11.1901 16.3125 11.1301 16.305 11.0701 16.2825C10.7776 16.185 10.6126 15.8625 10.7176 15.57C12.1276 11.3325 12.1276 6.66751 10.7176 2.42251C10.6201 2.13001 10.7776 1.80751 11.0701 1.71001C11.3701 1.61251 11.6851 1.77001 11.7826 2.06251C13.2751 6.53251 13.2751 11.4525 11.7826 15.915C11.7076 16.1625 11.4826 16.3125 11.2501 16.3125Z" fill="#6D718C"/>
+                <path d="M9 12.9C6.9075 12.9 4.8225 12.6075 2.8125 12.015C2.805 12.315 2.5575 12.5625 2.25 12.5625C1.9425 12.5625 1.6875 12.3075 1.6875 12V11.25C1.6875 11.07 1.7775 10.8975 1.92 10.7925C2.07 10.6875 2.2575 10.6575 2.43 10.7175C6.6675 12.1275 11.34 12.1275 15.5775 10.7175C15.75 10.6575 15.9375 10.6875 16.0875 10.7925C16.2375 10.8975 16.32 11.07 16.32 11.25V12C16.32 12.3075 16.065 12.5625 15.7575 12.5625C15.45 12.5625 15.2025 12.3225 15.195 12.015C13.1775 12.6075 11.0925 12.9 9 12.9Z" fill="#6D718C"/>
+                <path d="M15.7501 7.31249C15.6901 7.31249 15.6301 7.30499 15.5701 7.28249C11.3326 5.87249 6.66008 5.87249 2.42258 7.28249C2.12258 7.37999 1.80758 7.22249 1.71008 6.92999C1.62008 6.62999 1.77758 6.31499 2.07008 6.21749C6.54008 4.72499 11.4601 4.72499 15.9226 6.21749C16.2151 6.31499 16.3801 6.63749 16.2751 6.92999C16.2076 7.16249 15.9826 7.31249 15.7501 7.31249Z" fill="#6D718C"/>
+            </svg>
+
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+                @foreach (App\Models\Language::get() as $lng)
+                    <li>
+                        <a href="{{ route('admin.select.language', ['language' => $lng->name]) }}" class="dropdown-item">
+                            {{ $lng->name }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
         </div>
 
-
-        <div class="dropdown ol-icon-dropdown ol-icon-dropdown-transparent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Help center">
+        <div class="dropdown ol-icon-dropdown ol-icon-dropdown-transparent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Help center" id="header-help">
             <button class="btn ol-btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_1182_7818)">
@@ -117,27 +141,46 @@
         <div class="header-dropdown-md">
             <button class="header-dropdown-toggle-md" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <div class="user-profile-sm">
-                    <img src="{{ get_image($my_data->photo) }}" alt="">
+                    <img src="{{ get_image($my_data->photo) }}" class="header-image" id="header-image" alt="">
                 </div>
             </button>
-            <div class="header-dropdown-menu-md p-3">
-                <div class="d-flex column-gap-2 mb-12px pb-12px ol-border-bottom-2">
+            <div class="header-dropdown-menu-md">
+                <div class="d-flex column-gap-2 mb-8px pb-14px ol-border-bottom-2">
                     <div class="user-profile-sm">
-                        <img src="{{ get_image($my_data->photo) }}" alt="">
+                        <img src="{{ get_image($my_data->photo) }}" class="dropdown-image" alt="">
                     </div>
                     <div>
-                        <h6 class="title fs-12px mb-2px">{{ $my_data->name }}</h6>
-                        <small>{{$my_data->role_id == 1 ? get_phrase('Admin') : ($my_data->role_id == 2 ? get_phrase('Client') : get_phrase('Staff'))}}</small>
+                        <h6 class="title fs-14px">{{ $my_data->name }}</h6>
+                        <small class="fs-12px color-ass">{{$my_data->role_id == 1 ? get_phrase('Admin') : ($my_data->role_id == 2 ? get_phrase('Client') : get_phrase('Staff'))}}</small>
                     </div>
                 </div>
-                <ul class="mb-12px pb-12px ol-border-bottom-2">
+                <ul class="mb-8px pb-8px ol-border-bottom-2">
                     <li class="dropdown-list-1"><a class="dropdown-item-1" href="{{ route(get_current_user_role().'.manage.profile') }}">{{ get_phrase('My Profile') }}</a>
                     </li>
                     <li class="dropdown-list-1"><a class="dropdown-item-1" href="{{route(get_current_user_role() . '.system_settings')}}">{{ get_phrase('Settings') }}</a>
                     </li>
                 </ul>
-                <a href="{{ route('logout') }}" class="dropdown-item-1 bg-transparent d-inline-flex">{{ get_phrase('Sign Out') }}</a>
+                <a href="{{ route('logout') }}" class="dropdown-item-1 d-inline-flex">{{ get_phrase('Sign Out') }}</a>
             </div>
         </div>
     </div>
 </div>
+
+@push('js')
+<script>
+    $('#header-image').on('click', function(event){
+        $(this).addClass('image-bordered');
+    });
+    $('#header-help').on('click', function(event){
+        $(this).addClass('image-bordered');
+    });
+    $('#header-lan').on('click', function(event){
+        $(this).addClass('image-bordered');
+    });
+
+    $(document).on('click', function(){
+        $('#header-image, #header-lan, #header-help').removeClass('image-bordered');
+        // $('.ol-icon-dropdown-transparent').removeClass('image-bordered');
+    });
+</script>
+@endpush

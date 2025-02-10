@@ -445,8 +445,8 @@ span[class="fi-rr-"]:before {
     background: #fffcf1;
     color: #f6c000;
     border: 1px solid #fff6d8;
-    border-radius: 6px;
-    padding: 2px 8px;
+    border-radius: 4px;
+    padding: 3px 6px;
     font-size: 12px;
 }
 .processing {
@@ -469,11 +469,11 @@ span[class="fi-rr-"]:before {
 }
 .not_started {
     display: inline-block;
-    background-color: #ffe1e4;
+    background-color: #FFF1F4;
     color: #f8285a;
-    border: 1px solid #ffe1e8;
-    border-radius: 6px;
-    padding: 2px 8px;
+    border: 1px solid #FFE1E8;
+    border-radius: 4px;
+    padding: 3px 6px;
     font-size: 12px;
 }
 .unpaid {
@@ -499,8 +499,8 @@ span[class="fi-rr-"]:before {
     background: #ECFDF3;
     color: #17c653;
     border: 1px solid #D5FDE5;
-    border-radius: 6px;
-    padding: 2px 8px;
+    border-radius: 4px;
+    padding: 3px 6px;
     font-size: 12px;
 }
 .paid {
@@ -1688,6 +1688,27 @@ span[data-bs-original-title="AI Assistant"] path {
     border-radius: 50%;
 }
 
+.header-dropdown-menu-md .user-profile-sm {
+    width: 36px !important;
+    height: 36px !important;
+}
+
+.color-ass {
+    color: #6D718C;
+}
+.ol-icon-dropdown-transparent {
+    border: 1px solid #E4E7F1;
+}
+.header-image:active, .header-image:focus, .header-image:hover, .image-bordered, .ol-icon-dropdown-transparent:hover {
+    border: 1px solid #1B84FF;
+}
+.ol-icon-dropdown-transparent:hover svg path {
+    fill: #1B84FF;
+}
+.context-menu .ol-icon-dropdown-transparent {
+    border: 0;
+}
+
 .header-dropdown-menu-md {
     position: absolute;
     top: calc(100% + 8px);
@@ -1702,6 +1723,7 @@ span[data-bs-original-title="AI Assistant"] path {
     opacity: 0;
     pointer-events: none;
     transition: 0.3s;
+    padding: 10px;
 }
 
 .header-dropdown-menu-md.active {
@@ -1712,23 +1734,27 @@ span[data-bs-original-title="AI Assistant"] path {
     z-index: 99999999;
 }
 
-.dropdown-list-1:not(:last-child) {
-    margin-bottom: 15px;
-}
 
 .dropdown-item-1 {
     font-weight: 500;
     font-size: 12px;
-    line-height: 12px;
     color: var(--text-color);
     width: 100%;
     transition: 0.3s;
+    padding: 8px;
+    border-radius: 5px;
 }
 
 .dropdown-item-1:hover {
     color: var(--active-color);
+    background: #F7F7F9;
 }
-
+.mb-8px {
+    margin-bottom: 8px;
+}
+.pb-8px {
+    padding-bottom: 8px;
+}
 .dropdown-list-submenu {
     padding-top: 10px;
     display: none;
@@ -2581,7 +2607,7 @@ textarea.ol-form-textarea {
     align-items: center;
     justify-content: center;
     transition: 0.3s;
-    border: 1px solid #e4e7f1;
+    /* border: 1px solid #e4e7f1; */
 }
 
 .ol-icon-dropdown .dropdown-toggle:active,
@@ -2595,7 +2621,7 @@ textarea.ol-form-textarea {
     border-radius: 8px;
     background: var(--card-background-color);
     box-shadow: 0px 4px 40px 0px var(--shadow);
-    padding: 4px;
+    padding: 10px;
     border: none;
     min-width: 200px;
 }
@@ -2613,7 +2639,7 @@ textarea.ol-form-textarea {
     font-style: normal;
     font-weight: 400;
     line-height: 16px;
-    padding: 6px 8px;
+    padding: 10px;
 }
 
 .ol-icon-dropdown .dropdown-menu li a:hover,
@@ -4767,13 +4793,13 @@ input.daterangepicker {
 .ol-icon-dropdown .dropdown-menu,
 .ol-text-dropdown .dropdown-menu li a,
 .ol-icon-dropdown .dropdown-menu li a {
-    padding: 8px;
+    padding: 10px;
 }
 
 .ol-icon-dropdown .dropdown-menu {
     width: max-content;
     max-width: 250px;
-    min-width: 200px;
+    min-width: 160px;
 }
 
 .ol-icon-dropdown .dropdown-menu a {
@@ -5042,9 +5068,10 @@ div.dt-container .dt-paging {
 }
 
 .custom-dropdown .dropdown-list li a:hover {
-    background: var(--hover-background-color);
+    background: var(--hover-background-color) !important;
     color: var(--active-color);
 }
+
 
 /* Custom dropdown */
 
@@ -5241,8 +5268,13 @@ div.dt-container .dt-paging {
 }
 
 .header-content-right .dropdown.ol-icon-dropdown {
-    height: 24px;
-    margin-top: 3px;
+    height: 30px;
+    width: 30px;
+    border-radius: 50px;
+}
+
+.gap-14 {
+    gap: 14px;
 }
 
 .header-content-right .selected-show {
@@ -5686,12 +5718,21 @@ td .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
 .fc-list-button:hover {
     color: white !important;
     background-color: #1b84ff !important;
-    padding: 0px 10px;
+    /* padding: 0px 10px; */
     border-radius: 6px !important;
     border: 1px solid !important;
 }
 .fc-toolbar-chunk .fc-button-group button {
     font-size: 14px !important;
+    transition: .5s;
+}
+.fc-toolbar-chunk .fc-button {
+    padding: 8px 21px;
+}
+
+.fc-button-group {
+    border: 1px solid #DBDFEB !important;
+    background: #fff;
 }
 
 #chart_div {
@@ -6517,6 +6558,9 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 .dropdown-export li a:hover {
     background: #f7f7f9 !important;
 }
+.dropdown-export li a:hover svg path {
+    fill: var(--active-color);
+}
 .custom-dropdown .dropdown-menu {
     border: 0;
 }
@@ -6556,14 +6600,14 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
     list-style: none;
     box-shadow: 0px 4px 40px 0px var(--shadow);
     display: none;
-    padding: 5px;
+    padding: 10px;
     border: 0;
     border-radius: 6px;
     min-width: 200px;
 }
 
 .custom-context-menu li {
-    padding: 8px 20px;
+    padding: 8px 10px;
     cursor: pointer;
 }
 .custom-context-menu li {
@@ -6992,3 +7036,7 @@ g text {
 .grid-list .context-menu {
     border-bottom: 1px solid rgb(228, 231, 241) !important;
 }
+.noUi-handle {
+    box-shadow: 0 0 0 0 !important;
+}
+

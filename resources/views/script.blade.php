@@ -1,109 +1,12 @@
+
 <script>
     "use strict";
-    $(document).ready(function() {
-        // Initialize context menu
-        $.contextMenu({
-            selector: '.context-menu',
-            autoHide: false,
-            items: {
-                Edit: {
-                    name: "Edit",
-                    callback: function(itemKey, opt, e) {
-                        const code = opt.$trigger.attr("data-code");
-                        rightCanvas("{{ url(get_current_user_role() . '/project/edit/') }}" + '/' +
-                            code,
-                            'Edit project')
-                    }
-                },
-                Delete: {
-                    name: "Delete",
-                    callback: function(itemKey, opt, e) {
-                        const code = opt.$trigger.attr("data-code");
-                        confirmModal("{{ url(get_current_user_role() . '/project/delete/') }}" +
-                            '/' + code)
-                    }
-                },
-                View_Project: {
-                    name: "View Project",
-                    items: {
-                        Milestone: {
-                            name: "Milestone",
-                            callback: function(itemKey, opt, e) {
-                                const code = opt.$trigger.attr("data-code");
-                                window.location.href =
-                                    "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                    code +
-                                    '/milestone'
-                            }
-                        },
-                        Task: {
-                            name: "Task",
-                            callback: function(itemKey, opt, e) {
-                                const code = opt.$trigger.attr("data-code");
-                                window.location.href =
-                                    "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                    code +
-                                    '/task'
-                            }
-                        },
-                        File: {
-                            name: "File",
-                            callback: function(itemKey, opt, e) {
-                                const code = opt.$trigger.attr("data-code");
-                                window.location.href =
-                                    "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                    code +
-                                    '/file'
-                            }
-                        },
-                        Meeting: {
-                            name: "Meeting",
-                            callback: function(itemKey, opt, e) {
-                                const code = opt.$trigger.attr("data-code");
-                                window.location.href =
-                                    "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                    code +
-                                    '/meeting'
-                            }
-                        },
-                        Invoice: {
-                            name: "Invoice",
-                            callback: function(itemKey, opt, e) {
-                                const code = opt.$trigger.attr("data-code");
-                                window.location.href =
-                                    "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                    code +
-                                    '/invoice'
-                            }
-                        },
-                        Timesheet: {
-                            name: "Timesheet",
-                            callback: function(itemKey, opt, e) {
-                                const code = opt.$trigger.attr("data-code");
-                                window.location.href =
-                                    "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                    code +
-                                    '/timesheet'
-                            }
-                        },
-                        Gantt_Chart: {
-                            name: "Gantt Chart",
-                            callback: function(itemKey, opt, e) {
-                                window.location.href =
-                                    "{{ url(get_current_user_role() . '/project/') }}" +
-                                    '/gantt_chart'
-                            }
-                        },
-
-                    }
-                }
-            }
+    const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search, .select2-search__field');
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
     });
-</script>
-
-<script>
-    "use strict";
 
     $(function() {
         $('a[href="#"]').on('click', function(event) {

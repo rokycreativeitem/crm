@@ -154,12 +154,6 @@
 @include('components.datatable')
 @push('js')
     <script>
-        const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search__field');
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        });
         setTimeout(function() {
             server_side_datatable('["id","title","payment","time","due_date","payment_status","options"]', "{{ route(get_current_user_role() . '.invoice') }}");
         }, 500);

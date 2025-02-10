@@ -37,6 +37,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('project/update/{code}', 'update')->name('project.update');
         Route::get('project/{code}/{tab?}', 'show')->name('project.details');
         Route::post('project/multi-delete', 'multiDelete')->name('project.multi-delete');
+        Route::get('project-export/{file}', 'exportFile')->name('project.export-file');
 
         Route::get('categories', 'categories')->name('project.categories');
         Route::get('project-category/create', 'category_create')->name('project.category.create');

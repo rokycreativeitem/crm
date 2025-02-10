@@ -223,12 +223,6 @@
 @include('components.datatable')
 @push('js')
     <script>
-        const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search__field');
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        });
         var role = "{{ auth()->user()->role_id }}";
         var hasRolePermission;
 

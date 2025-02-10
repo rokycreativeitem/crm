@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment_history;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class DashboardController extends Controller
         $project_status = ['completed', 'in_progress', 'not_started'];
         $status         = collect($project_status)->map(function ($status) {
             return [
-                'title'  => $status,
+                'title'  => ucwords(str_replace('_',' ',$status)),
                 'amount' => Project::where('status', $status)->count(),
             ];
         });
@@ -42,6 +43,8 @@ class DashboardController extends Controller
         $page_data['project_status'] = $status;
         $page_data['revenue'] = $revenue_status;
         $page_data['resent_projects'] = Project::orderBy('id','DESC')->get();
+        $page_data['active_projects'] = Project::where('status','in_progress')->get();
+        $page_data['resent_tasks'] = Task::orderBy('id','DESC')->get();
 
         $page_data['clients'] = User::where('role_id', 2)->get();
         $page_data['staffs'] = User::where('role_id', 3)->get();

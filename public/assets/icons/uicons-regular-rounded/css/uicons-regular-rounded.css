@@ -2491,6 +2491,9 @@ line-height: 1;
         .fi-rr-file-pdf:before {
     content: "\f439";
     }
+        .fi-rr-file-csv:before {
+    content: "\f439";
+    }
         .fi-rr-file-powerpoint:before {
     content: "\f43a";
     }

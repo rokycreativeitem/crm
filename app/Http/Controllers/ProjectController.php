@@ -12,6 +12,7 @@ use App\Models\Role;
 use App\Models\Task;
 use App\Models\Timesheet;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -278,11 +279,62 @@ class ProjectController extends Controller
         return view('projects.category.edit', $page_data);
     }
 
-    // public function server_side_table(Request $request) {
+    public function exportFile($file) {
+        if($file == 'pdf') {
+            $page_data['projects'] = Project::get();
+            // return view('projects.pdf', $page_data);
+            $pdf = FacadePdf::loadView('projects.pdf', $page_data);
+            return $pdf->download('projects.pdf');
+        }
+        
+        if ($file == 'csv') {
+            $fileName = 'projects.csv';
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+        
+            $columns = ['#', 'Title', 'Code', 'Client', 'Staff', 'Budget', 'Progress', 'Status'];
+        
+            $projects = Project::all(); // Fetch all projects
+        
+            $callback = function() use ($columns, $projects) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns); // Write the header row
+        
+                $count = 1;
+                foreach ($projects as $project) {
+                    $staffs     = $project->staffs ? json_decode($project->staffs, true) : [];
+                    $staffNames = [];
+                    foreach ($staffs as $staff) {
+                        $user = get_user($staff);
+                        if ($user) {
+                            $staffNames[] = $user?->name;
+                        }
+                    }
+                    $staff_name = implode(', ', $staffNames);
 
-    //     if($request->type == 'project') {
-
-    //     }
-
-    // }
+                    fputcsv($file, [
+                        $count,
+                        $project->title,
+                        $project->code,
+                        $project->user?->name,
+                        $staff_name,
+                        currency($project->budget),
+                        $project->progress . '%',
+                        ucwords(str_replace('_', ' ', $project->status)),
+                    ]);
+                    $count++;
+                }
+        
+                fclose($file);
+            };
+        
+            return response()->stream($callback, 200, $headers);
+        }
+        
+    }
 }
