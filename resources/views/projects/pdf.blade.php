@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project List</title>
+    <title>{{get_phrase('Project List')}}</title>
 
     <style>
         body {
@@ -13,13 +13,6 @@
             margin: 0;
             padding: 20px;
         }
-
-        /* .header {
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #333;
-            margin-bottom: 20px;
-        } */
 
         h2 {
             margin: 0;

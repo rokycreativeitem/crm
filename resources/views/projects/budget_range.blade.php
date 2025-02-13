@@ -1,4 +1,4 @@
-<script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script> --}}
 <link rel="stylesheet" href="{{ asset('assets/css/nouislider.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
 @php

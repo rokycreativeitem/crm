@@ -1747,7 +1747,7 @@ span[data-bs-original-title="AI Assistant"] path {
 
 .dropdown-item-1:hover {
     color: var(--active-color);
-    background: #F7F7F9;
+    background: var(--hover-background-color);
 }
 .mb-8px {
     margin-bottom: 8px;
@@ -4104,6 +4104,9 @@ custom tab style end
 .mt-0px {
     margin-top: 0px !important;
 }
+.mt-20px {
+    margin-top: 20px;
+}
 
 /*Margin bottom*/
 .mb-80px {
@@ -4181,6 +4184,9 @@ custom tab style end
 /*Margin right*/
 .me-80px {
     margin-right: 80px !important;
+}
+.me-17px {
+    margin-right: 17px !important;
 }
 
 .me-70px {
@@ -4973,7 +4979,7 @@ div.dt-container .dt-paging {
         margin-left: auto !important;
     }
 }
-.dt-layout-row .dt-layout-cell .dt-info {
+.dt-info {
     display: none;
 }
 
@@ -6081,6 +6087,8 @@ div.dt-container .dt-paging .dt-paging-button.disabled:active {
     border: none;
     background: #f7f7f9;
     box-shadow: none;
+    border-radius: 5px;
+    overflow: hidden;
 }
 button.dt-paging-button.previous {
     border: none !important;
@@ -6213,7 +6221,7 @@ table.dataTable thead > tr > td.dt-orderable-desc:hover {
     color: #6b708a;
 }
 .margin--40px {
-    margin-top: -48px;
+    margin-top: -40px;
 }
 
 #page-length-select:focus {
@@ -6252,8 +6260,15 @@ nav > .dt-paging-button.next {
     background: transparent !important;
     font-size: 15px;
 }
-.dt-paging nav button {
-    margin: 5px;
+div.dt-container div.dt-paging ul.pagination {
+    margin: 2px 0;
+    flex-wrap: wrap;
+    margin-right: 30px !important;
+    gap: 5px;
+}
+.dt-processing.card {
+    border: none;
+    background: transparent;
 }
 .dt-paging nav {
     margin-right: -36px;
@@ -6282,7 +6297,6 @@ ul.pagination .active .page-link {
     background-color: #1b84ff !important;
     color: #fff !important;
     border-radius: 6px;
-    margin-right: 10px;
 }
 button.btn.ol-btn-secondary.dropdown-toggle {
     background-color: #f7f7f9 !important;
@@ -6337,7 +6351,9 @@ table.dataTable > tbody > tr > td {
 .dropdown-header {
     z-index: 9;
 }
-
+.object-fit {
+    object-fit: cover;
+}
 .filter-reset {
     position: relative;
     color: #6d718c;
@@ -6349,7 +6365,7 @@ table.dataTable > tbody > tr > td {
     color: #e4e7f1;
     z-index: 999;
 }
-.filter-dropdown .filter-count-display {
+.filter-count-display {
     background: #6d718c;
     color: #fff;
     border-radius: 79px;
@@ -7038,5 +7054,20 @@ g text {
 }
 .noUi-handle {
     box-shadow: 0 0 0 0 !important;
+}
+.dashboard-table .ol-icon-dropdown-transparent {
+    border: none;
+}
+button.btn.ol-btn-secondary.dropdown-toggle {
+    background-color: transparent !important;
+}
+.text-muted {
+    color: #6D718C !important;
+}
+.bg-progress-primary {
+    background-color: #1B84FF !important;
+}
+.grid-title .code {
+    text-transform: uppercase;
 }
 

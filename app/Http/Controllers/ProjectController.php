@@ -43,19 +43,19 @@ class ProjectController extends Controller
                 if ($request->customSearch) {
                     $projects = Project::where('title', 'like', '%' . $request->customSearch . '%');
                 }
-                if ($request->category != 'all') {
+                if ($request->category && $request->category != 'all') {
                     $filter_count[] = $request->category;
                     $projects       = $projects->where('category_id', $request->category);
                 }
-                if ($request->status != 'all') {
+                if ($request->status && $request->status != 'all') {
                     $filter_count[] = $request->status;
                     $projects       = $projects->where('status', $request->status);
                 }
-                if ($request->client != 'all') {
+                if ($request->client && $request->client != 'all') {
                     $filter_count[] = $request->client;
                     $projects       = $projects->where('client_id', $request->client);
                 }
-                if ($request->staff != 'all') {
+                if ($request->staff && $request->staff != 'all') {
                     $filter_count[] = $request->staff;
                     $staff          = json_encode($request->staff);
                     $staff          = str_replace('[', '', $staff);
@@ -113,7 +113,7 @@ class ProjectController extends Controller
         $project_status = ['completed', 'in_progress', 'not_started'];
         $status         = collect($project_status)->map(function ($status) {
             return [
-                'title'  => $status,
+                'title'  => ucwords(str_replace('_',' ',$status)),
                 'amount' => Task::where('status', $status)->count(),
             ];
         });
@@ -254,7 +254,7 @@ class ProjectController extends Controller
     public function category_store(Request $request, $id = "")
     {
         $data['name']       = $request->name;
-        $data['parent']     = $request->parent;
+        $data['parent']     = $request->parent??0;
         $data['status']     = $request->status;
         $data['created_at'] = Carbon::now();
         if ($id) {
@@ -279,14 +279,52 @@ class ProjectController extends Controller
         return view('projects.category.edit', $page_data);
     }
 
-    public function exportFile($file) {
-        if($file == 'pdf') {
-            $page_data['projects'] = Project::get();
-            // return view('projects.pdf', $page_data);
+    public function exportFile(Request $request, $file) {
+        // Build the query based on the filters
+        $query = Project::query();
+    
+        // Apply category filter
+        if ($request->category != 'all') {
+            $query = $query->where('category_id', $request->category);
+        }
+    
+        // Apply status filter
+        if ($request->status != 'all') {
+            $query = $query->where('status', $request->status);
+        }
+    
+        // Apply client filter
+        if ($request->client != 'all') {
+            $query = $query->where('client_id', $request->client);
+        }
+    
+        // Apply staff filter
+        if ($request->staff != 'all') {
+            $staff = json_decode($request->staff, true); // Decode the staff JSON
+            if (!empty($staff)) {
+                foreach ($staff as $staffId) {
+                    $query = $query->where('staffs', 'like', "%$staffId%");
+                }
+            }
+        }
+    
+        // Apply price filter
+        $maxPrice = (int) str_replace('$', '', $request->maxPrice);
+        $minPrice = (int) str_replace('$', '', $request->minPrice);
+        if ($minPrice > 0 && $maxPrice > 0) {
+            $query = $query->whereBetween('budget', [$minPrice, $maxPrice]);
+        }
+    
+        // Check the file type and generate the appropriate response
+        if ($file == 'pdf') {
+            $page_data['projects'] = $query->exists() ? $query->get() : Project::get();
             $pdf = FacadePdf::loadView('projects.pdf', $page_data);
             return $pdf->download('projects.pdf');
+            // return response()->streamDownload(function() use ($pdf) {
+            //     echo $pdf->output();
+            // }, 'projects.pdf');
         }
-        
+    
         if ($file == 'csv') {
             $fileName = 'projects.csv';
             $headers = [
@@ -296,15 +334,16 @@ class ProjectController extends Controller
                 "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
                 "Expires"             => "0"
             ];
-        
+    
+            // Use the filtered query to get the projects for CSV
+            $projects = $query->exists() ? $query->get() : Project::all();
+    
             $columns = ['#', 'Title', 'Code', 'Client', 'Staff', 'Budget', 'Progress', 'Status'];
-        
-            $projects = Project::all(); // Fetch all projects
-        
+            
             $callback = function() use ($columns, $projects) {
                 $file = fopen('php://output', 'w');
-                fputcsv($file, $columns); // Write the header row
-        
+                fputcsv($file, $columns);
+    
                 $count = 1;
                 foreach ($projects as $project) {
                     $staffs     = $project->staffs ? json_decode($project->staffs, true) : [];
@@ -312,11 +351,11 @@ class ProjectController extends Controller
                     foreach ($staffs as $staff) {
                         $user = get_user($staff);
                         if ($user) {
-                            $staffNames[] = $user?->name;
+                            $staffNames[] = $user->name;
                         }
                     }
                     $staff_name = implode(', ', $staffNames);
-
+    
                     fputcsv($file, [
                         $count,
                         $project->title,
@@ -329,12 +368,24 @@ class ProjectController extends Controller
                     ]);
                     $count++;
                 }
-        
+    
                 fclose($file);
             };
-        
+    
             return response()->stream($callback, 200, $headers);
         }
-        
+    
+        // If no valid file type was provided
+        return response()->json(['error' => 'Invalid file type'], 400);
+    }    
+    
+
+    public function filter($param) {
+        if($param == 'project') {
+            $page_data['clients']    = User::where('role_id', 2)->get();
+            $page_data['staffs']     = User::where('role_id', 3)->get();
+            $page_data['categories'] = Category::where('parent', '!=', 0)->get();
+            return view('projects.filter', $page_data);
+        }
     }
 }

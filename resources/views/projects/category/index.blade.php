@@ -71,7 +71,6 @@
                 </div>
             </div>
 
-
             <input type="hidden" value="category" id="datatable_type">
             <button id="delete-selected" class="btn btn-custom-danger mt-3 d-none">
                 <i class="fi fi-rr-trash"></i>
@@ -80,10 +79,8 @@
 
         </div>
     </div>
-    @include('components.datatable')
 @endsection
 @push('js')
-
     <script>
         setTimeout(function() {
             server_side_datatable('["id","name","parent","status","options"]', '{{ route(get_current_user_role() . '.project.categories') }}');

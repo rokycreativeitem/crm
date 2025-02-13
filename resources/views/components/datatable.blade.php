@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="{{ asset('assets/datatable/dataTables.bootstrap5.css') }}">
-<script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script> --}}
 <script src="{{ asset('assets/datatable/dataTables.js') }}"></script>
 <script src="{{ asset('assets/datatable/dataTables.bootstrap5.js') }}"></script>
 
@@ -199,9 +199,9 @@
         });
 
         // Handle filter button click
-        $('#filter').on('click', function() {
-            reloadDataTable();
-        });
+        // $('#filter').on('click', function() {
+        //     reloadDataTable();
+        // });
 
         // Handle filter-reset button click
         $('#filter-reset').on('click', function() {

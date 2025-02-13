@@ -38,25 +38,25 @@ class ServerSideDataController extends Controller
         }
 
         $filter_count = [];
-        if ($category != 'all') {
+        if ($category && $category != 'all') {
             $filter_count[] = $category;
             $query->where(function ($q) use ($category) {
                 $q->where('category_id', $category);
             });
         }
-        if ($status != 'all') {
+        if ($status && $status != 'all') {
             $filter_count[] = $status;
             $query->where(function ($q) use ($status) {
                 $q->where('status', $status);
             });
         }
-        if ($client != 'all') {
+        if ($client && $client != 'all') {
             $filter_count[] = $client;
             $query->where(function ($q) use ($client) {
                 $q->where('client_id', $client);
             });
         }
-        if ($staff != 'all') {
+        if ($staff && $staff != 'all') {
             $filter_count[] = $staff;
             $staff          = json_encode($staff);
             $staff          = str_replace('[', '', $staff);
@@ -291,71 +291,84 @@ class ServerSideDataController extends Controller
             ->make(true);
     }
 
-    public function category_server_side($string, $category, $status, $client, $staff, $minPrice, $maxPrice)
+    public function category_server_side($string)
+{
+    // Fetch all categories
+    $categories = Category::orderBy('parent', 'asc')->orderBy('id', 'asc')->get();
+
+    // Recursive function to arrange categories in a hierarchical order
+    function getHierarchicalCategories($categories, $parentId = 0, &$result = [])
     {
-        $query = Category::query();
-        if (!empty($string)) {
-            $query->where(function ($q) use ($string) {
-                $q->where('name', 'like', "%{$string}%");
-            });
+        foreach ($categories as $category) {
+            if ($category->parent == $parentId) {
+                $result[] = $category;
+                getHierarchicalCategories($categories, $category->id, $result);
+            }
         }
+        return $result;
+    }
 
-        return datatables()
-            ->eloquent($query)
-            ->addColumn('id', function ($category) {
-                static $key = 1;
-                return '
-                    <div class="d-flex align-items-center">
-                        <input type="checkbox" class="checkbox-item me-2 table-checkbox">
-                        <p class="row-number fs-12px">' . $key++ . '</p>
-                        <input type="hidden" class="datatable-row-id" value="' . $category->id . '">
-                    </div>
+    // Get properly ordered categories
+    $sortedCategories = getHierarchicalCategories($categories);
+
+    // Apply search filter if required
+    if (!empty($string)) {
+        $sortedCategories = collect($sortedCategories)->filter(function ($category) use ($string) {
+            return stripos($category->name, $string) !== false;
+        })->values();
+    }
+
+    return datatables()
+        ->collection($sortedCategories) // Use collection instead of eloquent
+        ->addColumn('id', function ($category) {
+            static $key = 1;
+            return '
+                <div class="d-flex align-items-center">
+                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                    <p class="row-number fs-12px">' . $key++ . '</p>
+                    <input type="hidden" class="datatable-row-id" value="' . $category->id . '">
+                </div>
+            ';
+        })
+        ->addColumn('name', function ($category) {
+            $dash = '';
+            if($category->parent) {
+                $dash = '- ';
+            }
+            return $dash.$category?->name;
+        })
+        ->addColumn('parent', function ($category) {
+            return $category->parent ? Category::find($category->parent)?->name : '';
+        })
+        ->addColumn('status', function ($category) {
+            return $category->status == 1
+                ? '<span class="completed">' . get_phrase('Active') . '</span>'
+                : '<span class="in_progress">' . get_phrase('De-Active') . '</span>';
+        })
+        ->addColumn('options', function ($category) {
+            $editRoute   = route(get_current_user_role() . '.project.category.edit', $category->id);
+            $deleteRoute = route(get_current_user_role() . '.project.category.delete', $category->id);
+            $options = '';
+
+            if (has_permission('project.category.edit')) {
+                $options .= '
+                    <li>
+                        <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit category\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
+                    </li>
                 ';
-            })
-            ->addColumn('name', function ($category) {
-                return $category?->name;
-            })
-            ->addColumn('parent', function ($category) {
-                if ($category->parent != 0) {
-                    $category_parent = Category::find($category->parent);
-                    return $category_parent?->name;
-                } else {
-                    return '';
-                }
-            })
-            ->addColumn('status', function ($category) {
-                $statusLabel = '';
-                if ($category->status == 1) {
-                    $statusLabel = '<span class="completed">' . get_phrase('Active') . '</span>';
-                } elseif ($category->status == 0) {
-                    $statusLabel = '<span class="in_progress">' . get_phrase('De-Active') . '</span>';
-                }
-                return $statusLabel;
-            })
-            ->addColumn('options', function ($category) {
-                $editRoute   = route(get_current_user_role() . '.project.category.edit', $category->id);
-                $deleteRoute = route(get_current_user_role() . '.project.category.delete', $category->id);
+            }
+            if (has_permission('project.category.delete')) {
+                $options .= '
+                    <li>
+                        <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
+                    </li>
+                ';
+            }
+            if (empty($options)) {
+                $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+            }
 
-                $options = '';
-                if (has_permission('project.category.edit')) {
-                    $options .= '
-                        <li>
-                            <a class="dropdown-item" onclick="rightCanvas(\'' . $editRoute . '\', \'Edit category\')" href="javascript:void(0)">' . get_phrase('Edit') . '</a>
-                        </li>
-
-                    ';
-                }
-                if (has_permission('project.category.delete')) {
-                    $options .= '
-                        <li>
-                            <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
-                        </li>
-                    ';
-                }
-                if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
-                }
-                return '
+            return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
                     <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi-rr-menu-dots-vertical"></span>
@@ -363,50 +376,13 @@ class ServerSideDataController extends Controller
                     <ul class="dropdown-menu">' . $options . '</ul>
                 </div>
             ';
-            })
-            ->addColumn('context_menu', function ($category) {
-                $editUrl   = route(get_current_user_role() . '.project.category.edit', $category->id);
-                $deleteUrl = route(get_current_user_role() . '.project.category.delete', $category->id);
-                // Generate the context menu
-                $contextMenu = [];
-                if (has_permission('project.category.edit')) {
-                    $contextMenu['Edit'] = [
-                        'type'        => 'ajax',
-                        'name'        => get_phrase('Edit'),
-                        'action_link' => $editUrl,
-                        'title'       => get_phrase('Edit category'),
-                    ];
-                }
-                if (has_permission('project.category.delete')) {
-                    $contextMenu['Delete'] = [
-                        'type'        => 'ajax',
-                        'name'        => get_phrase('Delete'),
-                        'action_link' => $deleteUrl,
-                        'title'       => get_phrase('Delete category'),
-                    ];
-                }
-                // Fallback for empty context menu
-                if (empty($contextMenu)) {
-                    $contextMenu = [
-                        'NoActions' => [
-                            'type'  => 'info',
-                            'name'  => get_phrase('No actions available'),
-                            'action_link' => 'javascript:void(0)',
-                            'title' => get_phrase('No actions are permitted for this project'),
-                        ],
-                    ];
-                }
-                // JSON encode with unescaped slashes for cleaner URLs
-                return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            })
-            ->rawColumns(["id", "name", "parent", "status", "options"])
-            // ->setRowClass('category-context-menu')
-            ->setRowClass(function () {
-                return 'context-menu';
-            })
-            ->with('filter_count', 0)
-            ->make(true);
-    }
+        })
+        ->rawColumns(["id", "name", "parent", "status", "options"])
+        ->setRowClass('context-menu')
+        ->with('filter_count', count($sortedCategories))
+        ->make(true);
+}
+
 
     public function milestone_server_side($project_code, $string, $task, $start_date, $end_date)
     {
@@ -1314,7 +1290,12 @@ class ServerSideDataController extends Controller
                 return $addon->version;
             })
             ->addColumn('status', function ($addon) {
-                return $addon->status;
+                if ($addon->status == 1) {
+                    $statusLabel = '<span class="completed">' . get_phrase('Active') . '</span>';
+                } else {
+                    $statusLabel = '<span class="not_started">' . get_phrase('Deactive') . '</span>';
+                }
+                return $statusLabel;
             })
             ->addColumn('options', function ($addon) {
                 // Generate routes dynamically .milestone.edit', $milestone->id
@@ -1617,6 +1598,19 @@ class ServerSideDataController extends Controller
                 <input type="hidden" class="datatable-row-id" value="' . $user->id . '">
             </div>';
             })
+            ->addColumn('photo', function ($user) {
+
+                $photoPath = $user->photo ? get_image($user->photo) : get_image('assets/global/images/default.jpg');
+
+                
+            
+                $photo = '
+                    <img src="'.$photoPath.'" width="40" height="40" class="object-fit rounded" alt="">
+                ';
+                
+                return $photo;
+            })
+            
             ->addColumn('name', function ($user) {
                 return $user?->name;
             })
@@ -1687,7 +1681,7 @@ class ServerSideDataController extends Controller
                 // JSON encode with unescaped slashes for cleaner URLs
                 return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             })
-            ->rawColumns(['id', 'name', 'email', 'options'])
+            ->rawColumns(['id', 'photo', 'name', 'email', 'options'])
             ->setRowClass(function () {
                 return 'context-menu';
             })

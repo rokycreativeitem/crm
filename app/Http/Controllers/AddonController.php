@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ZipArchive;
@@ -218,4 +219,64 @@ class AddonController extends Controller
             return false;
         }
     }
+
+    public function exportFile(Request $request, $file) {
+
+        $query = Addon::query();
+
+    
+        if ($file == 'pdf') {
+            $page_data['addons'] = $query->exists() ? $query->get() : Addon::get();
+            $pdf = FacadePdf::loadView('addon.pdf', $page_data);
+            return $pdf->download('addon.pdf');
+        }
+
+        if ($file == 'print') {
+            $page_data['addons'] = $query->exists() ? $query->get() : Addon::get();
+            $pdf = FacadePdf::loadView('addon.pdf', $page_data);
+            return $pdf->stream('addon.pdf');
+        }
+    
+        if ($file == 'csv') {
+            $fileName = 'addon.csv';
+
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+    
+            // Use the filtered query to get the projects for CSV
+            $users = $query->exists() ? $query->get() : Addon::all();
+    
+            $columns = ['#', 'name', 'identifier', 'version', 'status', 'about'];
+            
+            $callback = function() use ($columns, $users) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+    
+                $count = 1;
+                foreach ($users as $item) {    
+                    fputcsv($file, [
+                        $count,
+                        $item->name,
+                        $item->unique_identifier,
+                        $item->version,
+                        $item->status == 1 ? 'Active':'Deactive',
+                        $item->about
+                    ]);
+                    $count++;
+                }
+    
+                fclose($file);
+            };
+    
+            return response()->stream($callback, 200, $headers);
+        }
+    
+        // If no valid file type was provided
+        return response()->json(['error' => 'Invalid file type'], 400);
+    }  
 }

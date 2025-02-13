@@ -94,8 +94,6 @@
     @include('modal')
     @include('toastr')
     @include('script')
-
-
     @stack('js')
 </body>
 

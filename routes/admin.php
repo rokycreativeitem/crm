@@ -45,6 +45,8 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::get('project-category/delete/{id}', 'category_delete')->name('project.category.delete');
         Route::get('project-category/edit/{id}', 'category_edit')->name('project.category.edit');
         // Route::post('project-category/update/{id}', 'category_update')->name('project.category.update');
+        Route::get('filter/{param}', 'filter')->name('filter');
+        
     });
 
     Route::controller(MilestoneController::class)->group(function () {
@@ -96,7 +98,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::get('user/edit/{id}', 'edit')->name('user.edit');
         Route::post('user/update/{id}', 'update')->name('user.update');
         Route::post('user/multi-delete', 'multiDelete')->name('user.multi-delete');
-
+        Route::get('user-export/{file}', 'exportFile')->name('user.export-file');
         Route::get('manage_profile', 'manage_profile')->name('manage.profile');
         Route::post('manage_profile/update', 'manage_profile_update')->name('manage.profile.update');
 
@@ -183,6 +185,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('addon/store/{id?}', 'store')->name('addon.store');
         Route::get('addon/edit/{id}', 'edit')->name('addon.edit');
         Route::get('addon/delete/{id}', 'delete')->name('addon.delete');
+        Route::get('addon-export/{file}', 'exportFile')->name('addon.export-file');
     });
 
     Route::controller(ControllersUpdater::class)->group(function () {

@@ -1,4 +1,3 @@
-
 <script>
     "use strict";
     const dropdownItems = document.querySelectorAll('.dropdown-menu, .select2-search, .select2-search__field');
@@ -179,73 +178,73 @@
         }
     }
 
-    function downloadPDF(elem = ".server-side-datatable", fileName = 'data') {
-        try {
-            $('.print-d-none:not(.row, .ol-header, .ol-card)').addClass('d-none');
-            $('.d-lpaginate').addClass('d-none');
+    // function downloadPDF(elem = ".server-side-datatable", fileName = 'data') {
+    //     try {
+    //         $('.print-d-none:not(.row, .ol-header, .ol-card)').addClass('d-none');
+    //         $('.d-lpaginate').addClass('d-none');
 
-            const table = document.querySelector(elem);
-            if (!table) {
-                throw new Error(`Element with selector "${elem}" not found`);
-            }
+    //         const table = document.querySelector(elem);
+    //         if (!table) {
+    //             throw new Error(`Element with selector "${elem}" not found`);
+    //         }
 
-            const options = {
-                margin: 0.5,
-                filename: fileName,
-                image: {
-                    type: 'jpeg',
-                    quality: 0.98
-                },
-                html2canvas: {
-                    scale: 2
-                },
-                jsPDF: {
-                    unit: 'in',
-                    format: 'letter',
-                    orientation: 'portrait'
-                }
-            };
+    //         const options = {
+    //             margin: 0.5,
+    //             filename: fileName,
+    //             image: {
+    //                 type: 'jpeg',
+    //                 quality: 0.98
+    //             },
+    //             html2canvas: {
+    //                 scale: 2
+    //             },
+    //             jsPDF: {
+    //                 unit: 'in',
+    //                 format: 'letter',
+    //                 orientation: 'portrait'
+    //             }
+    //         };
 
-            html2pdf().from(table).set(options).save().then(() => {
-                setTimeout(() => {
-                    $('.print-d-none').removeClass('d-none');
-                }, 2000);
-            });
+    //         html2pdf().from(table).set(options).save().then(() => {
+    //             setTimeout(() => {
+    //                 $('.print-d-none').removeClass('d-none');
+    //             }, 2000);
+    //         });
 
-        } catch (error) {
-            console.error("Error in downloadPDF function:", error.message);
-        }
-    }
+    //     } catch (error) {
+    //         console.error("Error in downloadPDF function:", error.message);
+    //     }
+    // }
 
 
-    function downloadTableAsCSV(elem, filename = 'data.csv') {
-        var table = document.querySelector(elem);
-        var csv = [];
+    // function downloadTableAsCSV(elem, filename = 'data.csv') {
+    //     var table = document.querySelector(elem);
+    //     var csv = [];
 
-        var rows = table.rows;
-        for (var i = 0; i < rows.length; i++) {
-            var row = [],
-                cols = rows[i].cells;
+    //     var rows = table.rows;
+    //     for (var i = 0; i < rows.length; i++) {
+    //         var row = [],
+    //             cols = rows[i].cells;
 
-            for (var j = 0; j < cols.length; j++) {
-                row.push(cols[j].innerText);
-            }
+    //         for (var j = 0; j < cols.length; j++) {
+    //             row.push(cols[j].innerText);
+    //         }
 
-            csv.push(row.join(','));
-        }
+    //         csv.push(row.join(','));
+    //     }
 
-        var csvData = csv.join('\n');
-        var blob = new Blob([csvData], {
-            type: 'text/csv'
-        });
+    //     var csvData = csv.join('\n');
+    //     var blob = new Blob([csvData], {
+    //         type: 'text/csv'
+    //     });
 
-        var link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = filename + '.csv';
-        document.body.appendChild(link);
-        link.trigger('click');
-        document.body.removeChild(link);
-    }
+    //     var link = document.createElement('a');
+    //     link.href = window.URL.createObjectURL(blob);
+    //     link.download = filename + '.csv';
+    //     document.body.appendChild(link);
+    //     link.trigger('click');
+    //     document.body.removeChild(link);
+    // }
 
     function printDiv(divId) {
         var printContents = document.getElementById(divId).outerHTML;
@@ -263,24 +262,21 @@
         navigator.clipboard.writeText(copyText.value);
         $(e).html('<i class="far fa-copy"></i> Copied!')
     }
-</script>
 
-<script>
-    "use strict";
 
-    function processServerResponse(response) {
-        if (response.success) {
-            success(response.success)
-        }
+    // function processServerResponse(response) {
+    //     if (response.success) {
+    //         success(response.success)
+    //     }
 
-        if (response.error) {
-            error(response.error)
-        }
+    //     if (response.error) {
+    //         error(response.error)
+    //     }
 
-        if (response.validationError) {
-            error(JSON.stringify(response.validationError))
-        }
-    }
+    //     if (response.validationError) {
+    //         error(JSON.stringify(response.validationError))
+    //     }
+    // }
 
     // When the "Select All" checkbox is changed
     $(document).on('change', '#select-all', function() {
@@ -327,4 +323,108 @@
             }
         });
     }
+
+
+    function handleAjaxFormSubmission(ajaxFormId) {
+        const form = document.getElementById(ajaxFormId);
+        if (!form) return;
+
+        let formData = new FormData(form);
+        let url = form.getAttribute("action");
+        let method = form.getAttribute("method") || "POST";
+
+        fetch(url, {
+                method: method,
+                body: formData,
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.querySelectorAll(".offcanvas, .offcanvas-backdrop").forEach(el => {
+                    el.style.display = "none";
+                });
+
+                processServerResponse(data);
+
+                if (window.location.pathname.includes("/admin/events")) {
+                    location.reload();
+                }
+                if (typeof grid_view === "function") {
+                    grid_view();
+                }
+                if (typeof reloadDataTable === "function") {
+                    reloadDataTable();
+                }
+            })
+            .catch(error => {
+                console.error("AJAX Error:", error);
+            });
+    }
+
+    function applyFilter(divId) {
+        collectAndAppendInputs('filter-section', divId);
+        reloadDataTable();
+    }
+
+    function collectAndAppendInputs(formId, targetDivId) {
+        $('#' + targetDivId).empty(); // Clear existing content
+
+        let inputs = {};
+
+        // Collect all input, select, and textarea values dynamically
+        $('#' + formId + ' :input').each(function() {
+            let name = $(this).attr('name');
+            let value = $(this).val();
+
+            if (name) { // Ensure name exists to avoid undefined issues
+                inputs[name] = value;
+            }
+        });
+
+        // Append collected inputs as readonly fields
+        $.each(inputs, function(name, value) {
+            let rowHtml =
+                `<input type="text" id="${name}" name="${name}" value="${value}" readonly class="form-control">`;
+            $('#' + targetDivId).append(rowHtml);
+        });
+        document.querySelectorAll(".offcanvas, .offcanvas-backdrop").forEach(el => {
+            el.style.display = "none";
+        });
+        
+        if (typeof grid_view === "function") {
+            grid_view();
+        } else {
+
+        }
+    }
+
+    function exportFile(url) {
+        let params = new URLSearchParams();
+
+        $('#project-filter :input').each(function() {
+            if (this.name) {
+                params.append(this.name, $(this).val() || '');
+            }
+        });
+
+        window.location.href = url + '?' + params.toString();
+    }
+
+    function printFile(url) {
+        let printWindow = window.open(url, '_blank'); // Open the print page in a new tab
+
+        if (printWindow) {
+            printWindow.focus(); // Focus on the new tab
+
+            // Wait for the new tab to load and trigger the print dialog
+            printWindow.onload = function () {
+                printWindow.print(); 
+            };
+        } else {
+            alert("Popup blocked! Please allow popups for this site.");
+        }
+    }
 </script>
+@include('components.datatable')

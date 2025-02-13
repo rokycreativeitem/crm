@@ -59,7 +59,7 @@
                                 </defs>
                             </svg>
                         </div>
-                        <span class="note-body">{{ $project->note }}</span>
+                        <span class="note-body fs-12px">{{ $project->note }}</span>
                     </div>
         
                     <div>
@@ -90,10 +90,10 @@
         
                 <!-- Task Info Section -->
                 <div class="grid-title">
-                    <span>{{ $project->title }}</span>
-                    <div>
-                        <span>{{ $project->title }}</span>
-                        <span>{{ $project->code }}</span>
+                    <span class="fs-14px">{{ $project->title }}</span>
+                    <div class="fs-12px">
+                        <span>{{ $project->user->name }}</span>
+                        <span class="code">{{ $project->code }}</span>
                     </div>
                 </div>
                 
@@ -129,14 +129,14 @@
                         <span class="text-muted">{{ $project->progress }}%</span>
                     </div>
                     <div class="bg-light rounded overflew-hidden" style="height: 8px;">
-                        <div class="bg-primary"
+                        <div class="bg-progress-primary"
                             style="width: {{ $project->progress }}%; height: 100%; border-radius: 8px;"></div>
                     </div>
                 </div>
         
         
                 <!-- View Details Link -->
-                <div style="margin-top: 12px;">
+                <div class="mt-20px text-muted fs-12px">
                     <a href="{{ route(get_current_user_role() . '.project.details', $project->code) }}">
                         <div class="d-inline">
                             <span>{{ get_phrase('View Details') }}</span>
@@ -169,7 +169,7 @@
 <div class="d-flex justify-content-between align-items-center">
     <div class="page-length-select fs-12px d-flex align-items-center mt-3 w-260">
         <label for="page-length-select" class="pe-2">Showing:</label>
-        <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
+        <select id="page-length-select" class="form-select fs-12px w-auto ol-niceSelect">
             <option value="10" {{$page_item == 10 ? 'selected':''}}>10</option>
             <option value="20" {{$page_item == 20 ? 'selected':''}}>20</option>
             <option value="50" {{$page_item == 50 ? 'selected':''}}>50</option>

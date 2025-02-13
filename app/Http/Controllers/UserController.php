@@ -9,15 +9,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $type)
     {
         if ($request->ajax()) {
             return app(ServerSideDataController::class)->user_server_side($request->customSearch);
         }
 
+        $page_data['type_id'] = Role::where('title', $type)->value('id');
         $page_data['users'] = User::get();
 
         return view('users.index', $page_data);
@@ -175,4 +178,67 @@ class UserController extends Controller
         return redirect()->back()->with('success', get_phrase('Your changes has been saved.'));
 
     }
+
+    public function exportFile(Request $request, $file) {
+
+        $query = User::query();
+
+        $query = $query->where('role_id', $request->role);
+    
+        if ($file == 'pdf') {
+            $page_data['users'] = $query->exists() ? $query->get() : User::get();
+            $pdf = FacadePdf::loadView('users.pdf', $page_data);
+    
+            return $pdf->download('users.pdf');
+        }
+        if ($file == 'print') {
+            $page_data['users'] = $query->exists() ? $query->get() : User::get();
+            $pdf = FacadePdf::loadView('users.pdf', $page_data);
+    
+            return $pdf->stream('users.pdf');
+        }
+    
+        if ($file == 'csv') {
+            $fileName = 'user.csv';
+
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+    
+            // Use the filtered query to get the projects for CSV
+            $users = $query->exists() ? $query->get() : User::all();
+    
+            $columns = ['#', 'name', 'email', 'about', 'facebook', 'linkedin', 'twitter'];
+            
+            $callback = function() use ($columns, $users) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+    
+                $count = 1;
+                foreach ($users as $item) {    
+                    fputcsv($file, [
+                        $count,
+                        $item->name,
+                        $item->email,
+                        $item->about,
+                        $item->facebook,
+                        $item->linkedin,
+                        $item->twitter
+                    ]);
+                    $count++;
+                }
+    
+                fclose($file);
+            };
+    
+            return response()->stream($callback, 200, $headers);
+        }
+    
+        // If no valid file type was provided
+        return response()->json(['error' => 'Invalid file type'], 400);
+    }   
 }

@@ -9,7 +9,7 @@
                     </div>
                     <div class="fpb-7 mb-3">
                         <label class="form-label ol-form-label">{{ get_phrase('Select Client') }}</label>
-                        <select class="form-select ol-select2 ol-form-control" name="client_id" required>
+                        <select class="form-select ol-modal-select2 ol-select2 ol-form-control" name="client_id" required>
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">{{ $client->name }}</option>
                             @endforeach
@@ -25,7 +25,7 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="category_id">{{ get_phrase('Category') }}</label>
-                        <select class="form-select ol-select2 ol-form-control" name="category_id" required>
+                        <select class="form-select ol-modal-select2 ol-select2 ol-form-control" name="category_id" required>
                             <option value=""> {{get_phrase('Select category')}} </option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -52,7 +52,7 @@
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="status">{{ get_phrase('Status') }}</label>
-                        <select class="form-control ol-form-control ol-niceSelect" id="status" name="status" required>
+                        <select class="form-control ol-form-control ol-niceSelect ol-modal-niceSelect" id="status" name="status" required>
                             <option value="in_progress">{{ get_phrase('In Progress') }}</option>
                             <option value="not_started">{{ get_phrase('Not Started') }}</option>
                             <option value="completed">{{ get_phrase('Completed') }}</option>
@@ -61,7 +61,7 @@
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="note">{{ get_phrase('Progress') }}</label>
-                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="progress" name="progress" required>
+                        <select class="form-control ol-form-control ol-modal-select2 ol-select2" data-toggle="select2" id="progress" name="progress" required>
                             <option value="">{{ get_phrase('Select progress') }}</option>
                             @php
                                 for ($i = 1; $i <= 100; $i++) {
@@ -73,7 +73,7 @@
 
                     <div class="fpb7 mb-2">
                         <label class="form-label ol-form-label" for="privacy">{{ get_phrase('Privacy') }}</label>
-                        <select class="form-control ol-form-control ol-niceSelect" data-toggle="select2" id="privacy" name="privacy" required>
+                        <select class="form-control ol-form-control ol-niceSelect ol-modal-niceSelect" data-toggle="select2" id="privacy" name="privacy" required>
                             <option value="">{{ get_phrase('Select Privacy') }}</option>
                             <option value="public">{{ get_phrase('Public') }}</option>
                             <option value="private">{{ get_phrase('Private') }}</option>
@@ -88,13 +88,10 @@
     </div>
 </div>
 <script>
-    $(".ol-select2").select2({
+    $(".ol-modal-select2").select2({
         dropdownParent: $('#ajaxOffcanvas')
     });
-    $(".ol-niceSelect").niceSelect({
+    $(".ol-modal-niceSelect").niceSelect({
         dropdownParent: $('#ajaxOffcanvas')
     });
 </script>
-@include('ajax')
-{{-- @include('init_js') --}}
-{{-- @include('projects.budget_range') --}}

@@ -85,7 +85,6 @@
     </div>
 </div>
 
-@push('js')
 <script>
     "use strict";
     function confirmModal(url, elem = false, actionType = null, content = null) {
@@ -192,6 +191,4 @@
         });
     }
 </script>
-@endpush
-
 {{-- @include('toastr') --}}

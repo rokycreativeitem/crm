@@ -156,47 +156,51 @@
         <div class="col-sm-8">
             <div class="dashboard-table">
                 <div class="d-flex align-items-center justify-content-between">
-                    <h4> Recent Project </h4>
-                    <a href="" class="btn ol-btn-light view-btn"> View Project </a>
+                    <h4> {{get_phrase('Recent Project')}} </h4>
+                    <a href="{{ route(get_current_user_role() . '.projects', ['layout' => get_settings('list_view_type') ?? 'list']) }}" class="btn ol-btn-light view-btn"> {{get_phrase('View Project')}} </a>
                 </div>
                 <table class="table mt-2">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Staffs</th>
-                            <th scope="col">Progress</th>
-                            <th scope="col" class="d-flex justify-content-center">Action</th>
+                            <th scope="col">{{get_phrase('Title')}}</th>
+                            <th scope="col">{{get_phrase('Client')}}</th>
+                            <th scope="col">{{get_phrase('Status')}}</th>
+                            <th scope="col">{{get_phrase('Progress')}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($resent_projects as $key => $recent)
+                        @php
+                            if($key == 5) {
+                                continue;
+                            }
+                        @endphp
                             <tr>
                                 <th scope="row"> {{ $key + 1 }} </th>
                                 <td> {{ $recent->title }} </td>
-                                <td> {{ count(json_decode($recent->staffs)) }} </td>
+                                <td> {{ $recent->user->name }} </td>
                                 <td>
-                                    <div class="d-flex align-items-start flex-column min-w-100px">
-                                        <span class="p-2 pt-0 fs-12px">{{ $recent->progress }}%</span>
-                                        <div class="progress ms-2">
+                                    @php
+                                        $task        = $recent->status;
+                                        $statusLabel = '';
+                                        if ($task == 'in_progress') {
+                                            $statusLabel = '<span class="in_progress">' . get_phrase('In Progress') . '</span>';
+                                        } elseif ($task == 'not_started') {
+                                            $statusLabel = '<span class="not_started">' . get_phrase('Not Started') . '</span>';
+                                        } elseif ($task == 'completed') {
+                                            $statusLabel = '<span class="completed">' . get_phrase('Completed') . '</span>';
+                                        }
+                                        echo $statusLabel;
+                                    @endphp     
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2 min-w-100px">
+                                        <div class="progress">
                                             <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $recent->progress }}%; " aria-valuenow="{{ $recent->progress }}" aria-valuemin="0" aria-valuemax="100">
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
-                                        <button class="btn ol-btn-secondary dropdown-toggle m-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <span class="fi-rr-menu-dots-vertical"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <a class="dropdown-item" href=""> Edit </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href=""> Delete </a>
-                                            </li>
-                                        </ul>
+                                        <span class="fs-12px">{{ $recent->progress }}%</span>
                                     </div>
                                 </td>
                             </tr>
