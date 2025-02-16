@@ -184,6 +184,14 @@ class UserController extends Controller
         $query = User::query();
 
         $query = $query->where('role_id', $request->role);
+
+        if (isset($request->customSearch)) {
+            $string = $request->customSearch;
+            $query->where(function ($q) use ($string) {
+                $q->where('name', 'like', "%{$string}%")
+                    ->orWhere('email', 'like', "%{$string}%");
+            });
+        }
     
         if ($file == 'pdf') {
             $page_data['users'] = $query->exists() ? $query->get() : User::get();

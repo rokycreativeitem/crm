@@ -1416,7 +1416,6 @@ class ServerSideDataController extends Controller
                 static $key = 1;
                 return '
                 <div class="d-flex align-items-center">
-                    <input type="checkbox" class="checkbox-item me-2 table-checkbox">
                     <p class="row-number fs-12px">' . $key++ . '</p>
                     <input type="hidden" class="datatable-row-id" value="' . $report->id . '">
                 </div>';
@@ -1454,9 +1453,9 @@ class ServerSideDataController extends Controller
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
                 $q->where('project_code', 'like', "%{$string}%")
-                    ->orWhereHas('user', function ($userQuery) use ($string) {
-                        $userQuery->where('name', 'like', "%{$string}%");
-                    });
+                ->orWhereHas('user', function ($userQuery) use ($string) {
+                    $userQuery->where('name', 'like', "%{$string}%");
+                });
             });
         }
 
@@ -1486,11 +1485,11 @@ class ServerSideDataController extends Controller
             ->eloquent($query)
             ->addColumn('id', function ($history) {
                 static $key = 1;
-            return '<div class="d-flex align-items-center">
-                        <input type="checkbox" class="checkbox-item me-2 table-checkbox">
-                        <p class="row-number fs-12px">' . $key++ . '</p>
-                        <input type="hidden" class="datatable-row-id" value="' . $history->id . '">
-                    </div>';
+                return '<div class="d-flex align-items-center">
+                            <input type="checkbox" class="checkbox-item me-2 table-checkbox">
+                            <p class="row-number fs-12px">' . $key++ . '</p>
+                            <input type="hidden" class="datatable-row-id" value="' . $history->id . '">
+                        </div>';
             })
             ->addColumn('date', function ($history) {
                 // return date('Y-m-d', strtotime($history->timestamp_start));

@@ -177,6 +177,10 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::get('projects_report', 'project_report')->name('project_report');
         Route::get('client_report', 'client_report')->name('client_report');
         Route::get('payment_history', 'payment_history')->name('payment_history');
+        Route::get('project-report-export/{file}', 'UserReportExportFile')->name('project-report.export-file');
+        Route::get('client-report-export/{file}', 'ClientReportExportFile')->name('client-report.export-file');
+        Route::get('payment-report-export/{file}', 'paymentReportExportFile')->name('payment-report.export-file');
+
 
     });
     Route::controller(AddonController::class)->group(function () {

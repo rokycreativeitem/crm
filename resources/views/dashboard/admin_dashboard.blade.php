@@ -111,7 +111,7 @@
                                         <tr>
                                             <th scope="row"> {{ $key + 1 }} </th>
                                             <td> {{ $recent->title }} </td>
-                                            <td> {{ $recent->user->name }} </td>
+                                            <td> {{ $recent->user?->name }} </td>
                                             <td>
                                                 @php
                                                     $task        = $recent->status;

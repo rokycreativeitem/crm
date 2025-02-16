@@ -143,8 +143,23 @@
         });
 
         $('#custom-search-box').on('keyup', function(e) {
+            let name = $(this).attr('name');
+            let value = $(this).val();
+            
+            let existingInput = $('#project-filter').find(`input[name="${name}"]`);
+            
+            if (existingInput.length) {
+                // Update existing input value
+                existingInput.val(value);
+            } else {
+                // Append new input field if it doesn't exist
+                let rowHtml = `<input type="text" id="${name}" name="${name}" value="${value}" readonly class="form-control">`;
+                $('#project-filter').append(rowHtml);
+            }
+
             table.ajax.reload();
         });
+
 
         $('#page-length-select').on('change', function() {
             var newLength = $(this).val();
@@ -199,14 +214,16 @@
         });
 
         // Handle filter button click
-        // $('#filter').on('click', function() {
-        //     reloadDataTable();
-        // });
+        $('#filter').on('click', function() {
+            reloadDataTable();
+        });
 
         // Handle filter-reset button click
         $('#filter-reset').on('click', function() {
             // Reset select elements to 'all'
             $('#status, #client, #staff, #category, #task, #team, #size, #uploaded_by, #type, #user, #payment_method').val('all');
+
+            $('#filter-section').empty();
 
             // Clear specific input fields
             $('#start_date, #end_date, #progress, .minPrice').val('');

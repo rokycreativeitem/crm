@@ -282,7 +282,18 @@ class ProjectController extends Controller
     public function exportFile(Request $request, $file) {
         // Build the query based on the filters
         $query = Project::query();
-    
+
+        if (isset($request->customSearch)) {
+            $string = $request->customSearch;
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%")
+                    ->orWhere('code', 'like', "%{$string}%")
+                    ->orWhereHas('user', function ($userQuery) use ($string) {
+                        $userQuery->where('name', 'like', "%{$string}%");
+                });
+            });
+        }
+
         // Apply category filter
         if ($request->category != 'all') {
             $query = $query->where('category_id', $request->category);
