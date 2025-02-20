@@ -7,7 +7,8 @@
     <div class="col-12">
         <div class="ol-card">
             <div class="ol-card-body p-3 position-relative" id="filters-container">
-                <div class="d-non" id="project-filter"></div>
+                <div class="d-none" id="project-filter">
+                </div>
                 <div class="ol-card radius-8px print-d-none">
                     <div class="ol-card-body px-2">
                         <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
@@ -46,7 +47,7 @@
                                     </button>
                                     <ul class="dropdown-list dropdown-export" >
                                         <li class="mb-1">
-                                            <a class="dropdown-item export-btn" href="javascript:void(0)" onclick="exportFile('{{ route(get_current_user_role() . '.task.export-file', ['file' => 'pdf']) }}')">
+                                            <a class="dropdown-item export-btn" href="javascript:void(0)" onclick="exportFile('{{ route(get_current_user_role() . '.task.export-file', ['file' => 'pdf','code'=>request()->route()->parameter('code')]) }}')">
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
@@ -57,7 +58,7 @@
                                         </li>
                                         <li class="mb-1">
                                             <a class="dropdown-item export-btn"
-                                                href="javascript:void(0)" onclick="exportFile('{{ route(get_current_user_role() . '.task.export-file', ['file' => 'csv']) }}')">
+                                                href="javascript:void(0)" onclick="exportFile('{{ route(get_current_user_role() . '.task.export-file', ['file' => 'csv','code'=>request()->route()->parameter('code')]) }}')">
 
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -81,7 +82,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item export-btn" href="javascript:void(0)" onclick="printFile('{{ route(get_current_user_role() . '.task.export-file', ['file' => 'print']) }}')">
+                                            <a class="dropdown-item export-btn" href="javascript:void(0)" onclick="exportFile('{{ route(get_current_user_role() . '.task.export-file', ['file' => 'print','code'=>request()->route()->parameter('code')]) }}')">
                                                 <svg width="16" height="16" viewBox="0 0 16 16"
                                                 fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path

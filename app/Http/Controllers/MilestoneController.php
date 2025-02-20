@@ -101,9 +101,10 @@ class MilestoneController extends Controller
         return view('projects.milestone.tasks', $page_data);
     }
 
-    public function exportFile(Request $request, $file) {
+    public function exportFile(Request $request, $file, $code) {
 
         $query = Milestone::query();
+        $query->where('project_id', project_id_by_code($code));
 
         if (isset($request->customSearch)) {
             $string = $request->customSearch;
@@ -130,14 +131,14 @@ class MilestoneController extends Controller
             });
         }
 
+        $page_data['milestones'] = count($request->all()) > 0 ? $query->get() : Milestone::where('project_id', project_id_by_code($code))->get();
         
         if ($file == 'pdf') {
-            $page_data['milestones'] = $query->exists() ? $query->get() : Milestone::get();
             $pdf = FacadePdf::loadView('projects.milestone.pdf', $page_data);
             return $pdf->download('milestone.pdf');
         }
         if ($file == 'print') {
-            $page_data['milestones'] = $query->exists() ? $query->get() : Milestone::get();
+            
             $pdf = FacadePdf::loadView('projects.milestone.pdf', $page_data);
             return $pdf->stream('milestone.pdf');
         }
@@ -154,7 +155,7 @@ class MilestoneController extends Controller
             ];
     
             // Use the filtered query to get the projects for CSV
-            $users = $query->exists() ? $query->get() : Milestone::all();
+            $users = count($request->all()) > 0 ? $query->get() : Milestone::where('project_id', project_id_by_code($code))->get();
     
             $columns = ['#', 'name', 'description', 'task'];
             

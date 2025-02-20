@@ -223,7 +223,9 @@
             // Reset select elements to 'all'
             $('#status, #client, #staff, #category, #task, #team, #size, #uploaded_by, #type, #user, #payment_method').val('all');
 
-            $('#filter-section').empty();
+            $('#filter-reset').toggleClass('d-none');
+            $('#filter-count-display').toggleClass('d-none');
+            // $('#filter-section').empty();
 
             // Clear specific input fields
             $('#start_date, #end_date, #progress, .minPrice').val('');

@@ -328,7 +328,7 @@ class ProjectController extends Controller
     
         // Check the file type and generate the appropriate response
         if ($file == 'pdf') {
-            $page_data['projects'] = $query->exists() ? $query->get() : Project::get();
+            $page_data['projects'] = count($request->all()) > 0 ? $query->get() : Project::get();
             $pdf = FacadePdf::loadView('projects.pdf', $page_data);
             return $pdf->download('projects.pdf');
             // return response()->streamDownload(function() use ($pdf) {
@@ -347,7 +347,7 @@ class ProjectController extends Controller
             ];
     
             // Use the filtered query to get the projects for CSV
-            $projects = $query->exists() ? $query->get() : Project::all();
+            $projects = count($request->all()) > 0 ? $query->get() : Project::all();
     
             $columns = ['#', 'Title', 'Code', 'Client', 'Staff', 'Budget', 'Progress', 'Status'];
             

@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class TimesheetController extends Controller
 {
@@ -93,5 +94,87 @@ class TimesheetController extends Controller
         }
 
         return response()->json(['error' => 'No timesheets selected for deletion.'], 400);
+    }
+
+    public function exportFile(Request $request, $file, $code) {
+
+        $query = Timesheet::query();
+        $query->where('project_id', project_id_by_code($code));
+
+        if (isset($request->customSearch)) {
+            $string = $request->customSearch;
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%");
+            });
+        }
+
+        if ($request->start_date && $request->end_date) {
+            $start_date     = date('Y-m-d H:i:s', strtotime($request->start_date));
+            $end_date       = date('Y-m-d H:i:s', strtotime($request->end_date));
+            $query->where(function ($q) use ($start_date, $end_date) {
+                $q->where('timestamp_start', '>=', $start_date);
+                $q->where('timestamp_end', '<=', $end_date);
+            });
+        }
+        
+        if ($request->user && $request->user != 'all') {
+            $user = $request->user;
+            $query->where(function ($q) use ($user) {
+                $q->where('user_id', $user);
+            });
+        }
+
+        $page_data['timesheets'] = count($request->all()) > 0 ? $query->get() : Timesheet::where('project_id', project_id_by_code($code))->get();
+
+        if ($file == 'pdf') {
+            $pdf = FacadePdf::loadView('projects.timesheet.pdf', $page_data);
+            return $pdf->download('timesheet.pdf');
+        }
+        if ($file == 'print') {
+            $pdf = FacadePdf::loadView('projects.timesheet.pdf', $page_data);
+            return $pdf->stream('timesheet.pdf');
+        }
+    
+        if ($file == 'csv') {
+            $fileName = 'timesheet.csv';
+
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+    
+            // Use the filtered query to get the projects for CSV
+            $users = count($request->all()) > 0 ? $query->get() : User::where('project_id', project_id_by_code($code))->get();
+    
+            $columns = ['#', 'title', 'user', 'staff', 'start_date', 'end_date'];
+            
+            $callback = function() use ($columns, $users) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+    
+                $count = 1;
+                foreach ($users as $item) {    
+                    fputcsv($file, [
+                        $count,
+                        $item->title,
+                        User::where('id', $item->user_id)->first()->name,
+                        User::where('id', $item->staff)->first()->name,
+                        date('d-M-y h:i A', strtotime($item->timestamp_start)),
+                        date('d-M-y h:i A', strtotime($item->timestamp_end))
+                    ]);
+                    $count++;
+                }
+    
+                fclose($file);
+            };
+    
+            return response()->stream($callback, 200, $headers);
+        }
+    
+        // If no valid file type was provided
+        return response()->json(['error' => 'Invalid file type'], 400);
     }
 }

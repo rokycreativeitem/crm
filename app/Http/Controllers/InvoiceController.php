@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class InvoiceController extends Controller
 {
@@ -144,6 +145,77 @@ class InvoiceController extends Controller
 
         Session::put(['payment_details' => $payment_details]);
         return redirect()->route('payment');
+    }
+
+    public function exportFile(Request $request, $file, $code) {
+
+        $query = Invoice::query();
+
+        $query->where('project_id', project_id_by_code($code));
+
+        if (isset($request->customSearch)) {
+            $string = $request->customSearch;
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%");
+            });
+        }
+
+        if ($request->date) {
+            $start_date     = date('Y-m-d', strtotime($request->date));
+            $query->whereDate('timestamp_start', $start_date);
+        }
+    
+        $page_data['invoices'] = count($request->all()) > 0 ? $query->get() : Invoice::where('project_id', project_id_by_code($code))->get();
+
+        if ($file == 'pdf') {
+            $pdf = FacadePdf::loadView('projects.invoice.pdf', $page_data);
+            return $pdf->download('invoice.pdf');
+        }
+        if ($file == 'print') {
+            $pdf = FacadePdf::loadView('projects.invoice.pdf', $page_data);
+            return $pdf->stream('invoice.pdf');
+        }
+    
+        if ($file == 'csv') {
+            $fileName = 'invoice.csv';
+
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+    
+            // Use the filtered query to get the projects for CSV
+            $users = count($request->all()) > 0 ? $query->get() : User::where('project_id', project_id_by_code($code))->get();
+    
+            $columns = ['#', 'title', 'payment', 'status', 'due_date'];
+            
+            $callback = function() use ($columns, $users) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+    
+                $count = 1;
+                foreach ($users as $item) {    
+                    fputcsv($file, [
+                        $count,
+                        $item->title,
+                        currency($item->payment),
+                        $item->payment_status,
+                        date('d-M-y h:i A', strtotime($item->due_date))
+                    ]);
+                    $count++;
+                }
+    
+                fclose($file);
+            };
+    
+            return response()->stream($callback, 200, $headers);
+        }
+    
+        // If no valid file type was provided
+        return response()->json(['error' => 'Invalid file type'], 400);
     }
 
 }

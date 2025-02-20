@@ -140,9 +140,10 @@ class FileController extends Controller
         return Response::download($file_path);
     }
 
-    public function exportFile(Request $request, $file) {
+    public function exportFile(Request $request, $file, $code) {
 
         $query = File::query();
+        $query->where('project_id', project_id_by_code($code));
 
         if (isset($request->customSearch)) {
             $string = $request->customSearch;
@@ -172,13 +173,13 @@ class FileController extends Controller
             $query->whereBetween('size', [$minSize, $maxSize]);
         }
 
+        $page_data['files'] = count($request->all()) > 0 ? $query->get() : File::where('project_id', project_id_by_code($code))->get();
+        
         if ($file == 'pdf') {
-            $page_data['files'] = $query->exists() ? $query->get() : File::get();
             $pdf = FacadePdf::loadView('projects.file.pdf', $page_data);
             return $pdf->download('files.pdf');
         }
         if ($file == 'print') {
-            $page_data['files'] = $query->exists() ? $query->get() : File::get();
             $pdf = FacadePdf::loadView('projects.file.pdf', $page_data);
             return $pdf->stream('files.pdf');
         }
@@ -195,7 +196,7 @@ class FileController extends Controller
             ];
     
             // Use the filtered query to get the projects for CSV
-            $users = $query->exists() ? $query->get() : File::all();
+            $users = count($request->all()) > 0 ? $query->get() : File::where('project_id', project_id_by_code($code))->get();
     
             $columns = ['#', 'title', 'user', 'extension', 'size'];
             

@@ -129,13 +129,13 @@ class ReportController extends Controller
         }
     
         if ($file == 'pdf') {
-            $page_data['reports'] = $query->exists() ? $query->get() : $all_query->get();
+            $page_data['reports'] = count($request->all()) > 0 ? $query->get() : $all_query->get();
             $pdf = FacadePdf::loadView('reports.project_pdf', $page_data);
             return $pdf->download('project_reports.pdf');
         }
 
         if ($file == 'print') {
-            $page_data['reports'] =$query->exists() || $request->customSearch ? $query->get() : $all_query->get();
+            $page_data['reports'] =count($request->all()) > 0 || $request->customSearch ? $query->get() : $all_query->get();
             $pdf = FacadePdf::loadView('reports.project_pdf', $page_data);
             return $pdf->stream('project_reports.pdf');
         }
@@ -151,7 +151,7 @@ class ReportController extends Controller
             ];
     
             // Use the filtered query to get the projects for CSV
-            $reports = $query->exists() ? $query->get() : $all_query->get();
+            $reports = count($request->all()) > 0 ? $query->get() : $all_query->get();
             $columns = ['#', 'project_code', 'payment_types', 'amount', 'date_added'];
             $callback = function() use ($columns, $reports) {
                 $file = fopen('php://output', 'w');
@@ -224,13 +224,13 @@ class ReportController extends Controller
         }
     
         if ($file == 'pdf') {
-            $page_data['reports'] = $query->exists() ? $query->get() : $all_query->get();
+            $page_data['reports'] = count($request->all()) > 0 ? $query->get() : $all_query->get();
             $pdf = FacadePdf::loadView('reports.client_pdf', $page_data);
             return $pdf->download('client_reports.pdf');
         }
 
         if ($file == 'print') {
-            $page_data['reports'] =$query->exists() || $request->customSearch ? $query->get() : $all_query->get();
+            $page_data['reports'] =count($request->all()) > 0 || $request->customSearch ? $query->get() : $all_query->get();
             $pdf = FacadePdf::loadView('reports.client_pdf', $page_data);
             return $pdf->stream('client_reports.pdf');
         }
@@ -246,7 +246,7 @@ class ReportController extends Controller
             ];
     
             // Use the filtered query to get the projects for CSV
-            $reports = $query->exists() ? $query->get() : $all_query->get();
+            $reports = count($request->all()) > 0 ? $query->get() : $all_query->get();
             $columns = ['#', 'project_code', 'payment_types', 'amount', 'date_added'];
             $callback = function() use ($columns, $reports) {
                 $file = fopen('php://output', 'w');
@@ -303,13 +303,13 @@ class ReportController extends Controller
         }
     
         if ($file == 'pdf') {
-            $page_data['payments'] = $query->exists() ? $query->get() : Payment_history::get();
+            $page_data['payments'] = count($request->all()) > 0 ? $query->get() : Payment_history::get();
             $pdf = FacadePdf::loadView('reports.payment_pdf', $page_data);
             return $pdf->download('payment_history.pdf');
         }
 
         if ($file == 'print') {
-            $page_data['payments'] =$query->exists() || $request->customSearch ? $query->get() : Payment_history::get();
+            $page_data['payments'] =count($request->all()) > 0 || $request->customSearch ? $query->get() : Payment_history::get();
             $pdf = FacadePdf::loadView('reports.payment_pdf', $page_data);
             return $pdf->stream('payment_history.pdf');
         }
@@ -325,7 +325,7 @@ class ReportController extends Controller
             ];
     
             // Use the filtered query to get the projects for CSV
-            $reports = $query->exists() ? $query->get() : Payment_history::get();
+            $reports = count($request->all()) > 0 ? $query->get() : Payment_history::get();
             $columns = ['#', 'project_code', 'name', 'payment_type', 'amount','invoice', 'date_added'];
             $callback = function() use ($columns, $reports) {
                 $file = fopen('php://output', 'w');

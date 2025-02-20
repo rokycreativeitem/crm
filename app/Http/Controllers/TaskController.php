@@ -114,9 +114,10 @@ class TaskController extends Controller
         return response()->json(['error' => 'No tasks selected for deletion.'], 400);
     }
 
-    public function exportFile(Request $request, $file) {
+    public function exportFile(Request $request, $file, $code) {
 
         $query = Task::query();
+        $query->where('project_id', project_id_by_code($code));
 
         if (isset($request->customSearch)) {
             $string = $request->customSearch;
@@ -153,14 +154,15 @@ class TaskController extends Controller
                 $q->where('progress', $progress);
             });
         }
-
+        
+        $page_data['tasks'] = count($request->all()) > 0 ? $query->get() : Task::where('project_id', project_id_by_code($code))->get();
+        
         if ($file == 'pdf') {
-            $page_data['tasks'] = $query->exists() ? $query->get() : Task::get();
             $pdf = FacadePdf::loadView('projects.task.pdf', $page_data);
             return $pdf->download('tasks.pdf');
         }
+     
         if ($file == 'print') {
-            $page_data['tasks'] = $query->exists() ? $query->get() : Task::get();
             $pdf = FacadePdf::loadView('projects.task.pdf', $page_data);
             return $pdf->stream('tasks.pdf');
         }
@@ -177,7 +179,7 @@ class TaskController extends Controller
             ];
     
             // Use the filtered query to get the projects for CSV
-            $users = $query->exists() ? $query->get() : Task::all();
+            $users = count($request->all()) > 0 ? $query->get() : Task::where('project_id', project_id_by_code($code))->get();
     
             $columns = ['#', 'title', 'status', 'progress', 'team', 'start_date', 'end_date'];
             

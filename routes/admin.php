@@ -58,7 +58,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('milestone/update/{id}', 'update')->name('milestone.update');
         Route::post('milestone/multi-delete', 'multiDelete')->name('milestone.multi-delete');
         Route::get('milestone/tasks/{id}', 'show')->name('milestone.tasks');
-        Route::get('milestone-export/{file}', 'exportFile')->name('milestone.export-file');
+        Route::get('milestone-export/{file}/{code}', 'exportFile')->name('milestone.export-file');
 
     });
 
@@ -72,7 +72,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('task/multi-delete', 'multiDelete')->name('task.multi-delete');
 
         Route::get('tasks-datatable', 'index')->name('tasks.datatable');
-        Route::get('task-export/{file}', 'exportFile')->name('task.export-file');
+        Route::get('task-export/{file}/{code}', 'exportFile')->name('task.export-file');
 
     });
 
@@ -89,7 +89,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('file/update/{id}', 'update')->name('file.update');
         Route::post('file/multi-delete', 'multiDelete')->name('file.multi-delete');
         Route::get('file/download/{id}', 'download')->name('file.download');
-        Route::get('file-export/{file}', 'exportFile')->name('file.export-file');
+        Route::get('file-export/{file}/{code}', 'exportFile')->name('file.export-file');
 
     });
 
@@ -129,6 +129,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('invoice/multi-delete', 'multiDelete')->name('invoice.multi-delete');
         Route::get('invoice/payout/{id}', 'payout')->name('invoice.payout');
         Route::get('invoice/view/{id}', 'view')->name('invoice.view');
+        Route::get('invoice-export/{file}/{code}', 'exportFile')->name('invoice.export-file');
     });
 
     Route::controller(TimesheetController::class)->group(function () {
@@ -139,6 +140,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::get('timesheet/edit/{id}', 'edit')->name('timesheet.edit');
         Route::post('timesheet/update/{id}', 'update')->name('timesheet.update');
         Route::post('timesheet/multi-delete', 'multiDelete')->name('timesheet.multi-delete');
+        Route::get('timesheet-export/{file}/{code}', 'exportFile')->name('timesheet.export-file');
     });
 
     // manage roles

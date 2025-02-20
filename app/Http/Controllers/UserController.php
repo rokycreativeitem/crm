@@ -194,13 +194,13 @@ class UserController extends Controller
         }
     
         if ($file == 'pdf') {
-            $page_data['users'] = $query->exists() ? $query->get() : User::get();
+            $page_data['users'] = count($request->all()) > 0 ? $query->get() : User::get();
             $pdf = FacadePdf::loadView('users.pdf', $page_data);
     
             return $pdf->download('users.pdf');
         }
         if ($file == 'print') {
-            $page_data['users'] = $query->exists() ? $query->get() : User::get();
+            $page_data['users'] = count($request->all()) > 0 ? $query->get() : User::get();
             $pdf = FacadePdf::loadView('users.pdf', $page_data);
     
             return $pdf->stream('users.pdf');
@@ -218,7 +218,7 @@ class UserController extends Controller
             ];
     
             // Use the filtered query to get the projects for CSV
-            $users = $query->exists() ? $query->get() : User::all();
+            $users = count($request->all()) > 0 ? $query->get() : User::all();
     
             $columns = ['#', 'name', 'email', 'about', 'facebook', 'linkedin', 'twitter'];
             

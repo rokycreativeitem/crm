@@ -6,7 +6,8 @@
     <div class="col-12">
         <div class="ol-card">
             <div class="ol-card-body p-3 position-relative" id="filters-container">
-                <div class="d-none" id="project-filter"></div>
+                <div class="d-none" id="project-filter">
+                </div>
                 <div class="ol-card radius-8px print-d-none">
                     <div class="ol-card-body px-2">
                         <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
@@ -51,7 +52,7 @@
                                     <ul class="dropdown-list dropdown-export">
                                         <li class="mb-1">
                                             <a class="dropdown-item export-btn" href="javascript:void(0)"
-                                                onclick="exportFile('{{ route(get_current_user_role() . '.file.export-file', ['file' => 'pdf']) }}')">
+                                                onclick="exportFile('{{ route(get_current_user_role() . '.file.export-file', ['file' => 'pdf','code'=>request()->route()->parameter('code')]) }}')">
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path
@@ -62,7 +63,7 @@
                                         </li>
                                         <li class="mb-1">
                                             <a class="dropdown-item export-btn" href="javascript:void(0)"
-                                                onclick="exportFile('{{ route(get_current_user_role() . '.file.export-file', ['file' => 'csv']) }}')">
+                                                onclick="exportFile('{{ route(get_current_user_role() . '.file.export-file', ['file' => 'csv','code'=>request()->route()->parameter('code')]) }}')">
 
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +88,7 @@
                                         </li>
                                         <li>
                                             <a class="dropdown-item export-btn" href="javascript:void(0)"
-                                                onclick="printFile('{{ route(get_current_user_role() . '.file.export-file', ['file' => 'print']) }}')">
+                                                onclick="exportFile('{{ route(get_current_user_role() . '.file.export-file', ['file' => 'print','code'=>request()->route()->parameter('code')]) }}')">
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path
@@ -111,10 +112,8 @@
                                     </ul>
                                 </div>
 
-                                <div class="custom-dropdown dropdown filter-dropdown btn-group" id="export-btn">
-                                    <button class="dropdown-header btn ol-btn-light dropdown-toggle-split"
-                                        type="button" id="filterDropdownButton" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
+                                <div class="custom-dropdown filter-dropdown btn-group" id="export-btn">
+                                    <button class="dropdown-header btn ol-btn-light dropdown-toggle-split">
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -143,8 +142,7 @@
                                     </a>
 
                                     <!-- Dropdown Menu -->
-                                    <div class="dropdown-list custom-dropdown-300px px-14px"
-                                        aria-labelledby="filterDropdownButton" id="filter-section">
+                                    <div class="dropdown-list custom-dropdown-300px px-14px" id="filter-section">
 
                                         <div class="mb-3">
                                             <label for="type"

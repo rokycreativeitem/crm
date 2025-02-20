@@ -372,29 +372,34 @@
     }
 
     function exportFile(url) {
-        let params = new URLSearchParams();
 
-        $('#project-filter :input').each(function() {
-            if (this.name) {
-                params.append(this.name, $(this).val() || '');
+        let urlObj = new URL(url, window.location.origin);
+        
+        let segments = urlObj.pathname.split('/').filter(segment => segment);  
+        let firstParam = segments.length > 1 ? segments[segments.length - 2] : null;
+
+        if (firstParam.toLowerCase() === 'print') {
+            let printWindow = window.open(url, '_blank'); // Open the print page in a new tab
+            if (printWindow) {
+                printWindow.focus(); // Focus on the new tab
+
+                // Wait for the new tab to load and trigger the print dialog
+                printWindow.onload = function () {
+                    printWindow.print(); 
+                };
+            } else {
+                alert("Popup blocked! Please allow popups for this site.");
             }
-        });
-
-        window.location.href = url + '?' + params.toString();
-    }
-
-    function printFile(url) {
-        let printWindow = window.open(url, '_blank'); // Open the print page in a new tab
-
-        if (printWindow) {
-            printWindow.focus(); // Focus on the new tab
-
-            // Wait for the new tab to load and trigger the print dialog
-            printWindow.onload = function () {
-                printWindow.print(); 
-            };
         } else {
-            alert("Popup blocked! Please allow popups for this site.");
+            let params = new URLSearchParams();
+    
+            $('#project-filter :input').each(function() {
+                if (this.name) {
+                    params.append(this.name, $(this).val() || '');
+                }
+            });
+            window.location.href = url + '?' + params.toString();
         }
+        
     }
 </script>

@@ -143,7 +143,7 @@ if (!function_exists('project_id_by_code')) {
     function project_id_by_code($code = "")
     {
         $project = Project::where('code', $code)->first();
-        return $project->id;
+        return $project?->id;
     }
 }
 
