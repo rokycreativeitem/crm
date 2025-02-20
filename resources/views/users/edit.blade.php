@@ -1,6 +1,6 @@
 <div class="ol-card p-3">
     <div class="ol-card-body">
-        <form action="{{ route(get_current_user_role() . '.user.update', $user->id) }}" method="post" enctype="multipart/form-data" id="ajaxForm">@csrf
+        <form action="{{ route(get_current_user_role() . '.user.update', $user->id) }}" method="post" enctype="multipart/form-data" id="ajaxUserForm">@csrf
             <div class="row">
                 <div class="col-12">
                     <div class="fpb7 mb-2">
@@ -33,12 +33,10 @@
                     </div>
 
                     <div class="fpb7 mb-2">
-                        <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Edit user') }}</button>
+                        <button type="button" class="btn ol-btn-primary" onclick="handleAjaxFormSubmission('ajaxUserForm')">{{ get_phrase('Update') }}</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-@include('script')
-@include('ajax')

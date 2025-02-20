@@ -12,8 +12,9 @@
                             <p class="title fs-16px">{{ get_phrase('Chat') }}</p>
                         </div>
                         @if(has_permission('message.thread.store'))
-                        <a href="javascript:void(0)" onclick="modal('{{ get_phrase('Create a new thread') }}', '{{ route(get_current_user_role() . '.message.message_new') }}')" class="btn ol-btn-light ol-icon-btn ol-icon-btn-sm">
+                        <a href="javascript:void(0)" onclick="modal('{{ get_phrase('Create a new thread') }}', '{{ route(get_current_user_role() . '.message.message_new') }}')" class="btn ol-btn-outline-secondary d-flex align-items-center cg-10px">
                             <span class="fi-rr-plus"></span>
+                            <span> {{get_phrase('New Message')}} </span>
                         </a>
                         @endif
                     </div>

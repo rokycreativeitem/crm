@@ -1,7 +1,7 @@
 <div class="ol-card">
     <div class="ol-card-body">
         <form action="{{ route(get_current_user_role() . '.timesheet.update', $timesheet->id) }}" method="post"
-            id="ajaxForm">
+            id="ajaxTimeSheetForm">
             @csrf
             <div class="row">
                 <div class="col-12">
@@ -13,7 +13,7 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label for="user" class="form-label">{{ get_phrase('Assign staff') }}</label>
-                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="staff" name="staff" required>
+                        <select class="form-control ol-form-control ol-modal-select2" id="staff" name="staff" required>
                             <option value="all">{{ get_phrase('Select staff') }}</option>
                             @foreach ($staffs as $staff)
                                 <option value="{{$staff->id}}" {{$staff->id == $timesheet->staff ? 'selected':''}}> {{$staff->name}} </option>
@@ -32,12 +32,15 @@
                             name="timestamp_end" value="{{ $timesheet->timestamp_end }}" required>
                     </div>
                     <div class="fpb7 mb-2">
-                        <button type="submit" class="btn ol-btn-primary">Submit</button>
+                        <button type="button" onclick="handleAjaxFormSubmission('ajaxTimeSheetForm')" class="btn ol-btn-primary">{{get_phrase('Submit')}}</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
-@include('ajax')
+<script>
+    $(".ol-modal-select2").select2({
+        dropdownParent: $('#ajaxOffcanvas')
+    });
+</script>

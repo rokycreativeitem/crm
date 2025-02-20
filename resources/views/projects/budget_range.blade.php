@@ -5,7 +5,7 @@
     if(request()->is(get_current_user_role().'/client_report') || request()->is(get_current_user_role().'/projects_report') || request()->is(get_current_user_role().'/payment_history')) {
         $max_value = App\Models\Payment_history::sum('amount');
     } elseif(request()->is(get_current_user_role().'/offline-payments')){
-        $max_value = App\Models\OfflinePayment::max('total_amount');
+        $max_value = App\Models\offlinePayment::max('total_amount');
     } else {
         $max_value = App\Models\Project::select(DB::raw('CAST(budget AS UNSIGNED) as numeric_budget'))->orderBy('numeric_budget', 'desc')->value('numeric_budget');
     }

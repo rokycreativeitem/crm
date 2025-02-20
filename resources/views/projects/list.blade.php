@@ -29,7 +29,7 @@
                                         id="custom-search-box" placeholder="Search">
                                 </div>
                                 <a href="{{ route('admin.projects', ['layout' => 'grid']) }}"
-                                    class="grid-icon {{ request('layout') === 'grid' ? 'active' : '' }}">
+                                    class="grid-icon {{ request('layout') === 'grid' ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{get_phrase('Grid View')}}">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <g clip-path="url(#clip0_185_2549)">
@@ -54,7 +54,7 @@
                                     </svg>
                                 </a>
                                 <a href="{{ route('admin.projects', ['layout' => 'list']) }}"
-                                    class="grid-icon {{ request('layout') === 'list' || request('layout') == '' ? 'active' : '' }}">
+                                    class="grid-icon {{ request('layout') === 'list' || request('layout') == '' ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{get_phrase('List View')}}">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -73,7 +73,7 @@
                                 </a>
 
                                 <div class="custom-dropdown" id="export-btn1">
-                                    <button class="dropdown-header btn ol-btn-light">
+                                    <button class="dropdown-header btn ol-btn-light" >
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -253,33 +253,6 @@
 
 @push('js')
     <script>
-        
-
-        // function exportFile(url) {
-        //     $.ajax({
-        //         url: url,
-        //         type: 'GET',
-        //         data: (function() {
-        //             var data = {};
-        //             $('#project-filter :input').each(function() {
-        //                 var name = $(this).attr('name');
-        //                 var value = $(this).val();
-        //                 if (name) {
-        //                     data[name] = value || null;
-        //                 }
-        //             });
-        //             return data;
-        //         })(),
-        //         success: function(response) {
-        //             console.log(response);
-        //         },
-        //         error: function(xhr, error, thrown) {
-        //             console.log(xhr.responseText);
-        //         }
-        //     });
-        // }
-
-
         setTimeout(function() {
             server_side_datatable('["id","title","code","client","staff","budget","progress","status","options"]',
                 "{{ route(get_current_user_role() . '.projects', ['layout' => 'list']) }}");

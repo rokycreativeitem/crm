@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class TaskController extends Controller
 {
@@ -112,5 +113,110 @@ class TaskController extends Controller
 
         return response()->json(['error' => 'No tasks selected for deletion.'], 400);
     }
+
+    public function exportFile(Request $request, $file) {
+
+        $query = Task::query();
+
+        if (isset($request->customSearch)) {
+            $string = $request->customSearch;
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%");
+            });
+        }
+
+        if ($request->team && $request->team != 'all') {
+            $team           = json_encode($request->team);
+            $team           = str_replace('[', '', $team);
+            $team           = str_replace(']', '', $team);
+            $query->where(function ($q) use ($team) {
+                $q->where('team', 'like', "%{$team}%");
+            });
+        }
+        if ($request->start_date && $request->end_date) {
+            $start_date     = strtotime($request->start_date);
+            $end_date       = strtotime($request->end_date);
+            $query->where(function ($q) use ($start_date, $end_date) {
+                $q->where('start_date', '>=', $start_date);
+                $q->where('end_date', '<=', $end_date);
+            });
+        }
+        if ($request->status && $request->status != 'all') {
+            $status = $request->status;
+            $query->where(function ($q) use ($status) {
+                $q->where('status', $status);
+            });
+        }
+        if ($request->progress) {
+            $progress = $request->progress;
+            $query->where(function ($q) use ($progress) {
+                $q->where('progress', $progress);
+            });
+        }
+
+        if ($file == 'pdf') {
+            $page_data['tasks'] = $query->exists() ? $query->get() : Task::get();
+            $pdf = FacadePdf::loadView('projects.task.pdf', $page_data);
+            return $pdf->download('tasks.pdf');
+        }
+        if ($file == 'print') {
+            $page_data['tasks'] = $query->exists() ? $query->get() : Task::get();
+            $pdf = FacadePdf::loadView('projects.task.pdf', $page_data);
+            return $pdf->stream('tasks.pdf');
+        }
+    
+        if ($file == 'csv') {
+            $fileName = 'tasks.csv';
+
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+    
+            // Use the filtered query to get the projects for CSV
+            $users = $query->exists() ? $query->get() : Task::all();
+    
+            $columns = ['#', 'title', 'status', 'progress', 'team', 'start_date', 'end_date'];
+            
+            $callback = function() use ($columns, $users) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+                $count = 1;
+            
+                foreach ($users as $item) { 
+                    $userName = []; // Store task titles as an array
+            
+                    foreach (json_decode($item->team) as $user) {
+                        $taskModel = User::where('id', $user)->first();
+                        if ($taskModel) {
+                            $userName[] = $taskModel->name;
+                        }
+                    }
+                    fputcsv($file, [
+                        $count,
+                        $item->title,
+                        ucwords(str_replace('_', '', $item->status)),
+                        $item->progress.'%',
+                        implode(', ', $userName),
+                        date('d-M-y h:i A', $item->start_date),
+                        date('d-M-y h:i A', $item->end_date)
+                    ]);
+                    $count++;
+                }
+            
+                fclose($file);
+            };
+            
+            
+    
+            return response()->stream($callback, 200, $headers);
+        }
+    
+        // If no valid file type was provided
+        return response()->json(['error' => 'Invalid file type'], 400);
+    }  
 
 }

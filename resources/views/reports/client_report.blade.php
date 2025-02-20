@@ -86,7 +86,7 @@
                                     </div>
 
                                     <div class="custom-dropdown dropdown filter-dropdown btn-group" id="export-btn">
-                                        <button class="dropdown-header btn ol-btn-light dropdown-toggle-split" type="button" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="dropdown-header btn ol-btn-light dropdown-toggle-split">
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M7.29327 15.1C6.97327 15.1 6.65993 15.02 6.3666 14.86C5.77993 14.5333 5.4266 13.94 5.4266 13.2733V9.73999C5.4266 9.40666 5.2066 8.90666 4.99993 8.65333L2.5066 6.01333C2.0866 5.59333 1.7666 4.87333 1.7666 4.33333V2.79999C1.7666 1.73333 2.57327 0.899994 3.59993 0.899994H12.3999C13.4133 0.899994 14.2333 1.71999 14.2333 2.73333V4.19999C14.2333 4.89999 13.8133 5.69333 13.4199 6.08666L10.5333 8.63999C10.2533 8.87333 10.0333 9.38666 10.0333 9.79999V12.6667C10.0333 13.26 9.65993 13.9467 9.19327 14.2267L8.27327 14.82C7.97327 15.0067 7.63327 15.1 7.29327 15.1ZM3.59993 1.89999C3.13327 1.89999 2.7666 2.29333 2.7666 2.79999V4.33333C2.7666 4.57999 2.9666 5.05999 3.21993 5.31333L5.75994 7.98666C6.09994 8.40666 6.43327 9.10666 6.43327 9.73333V13.2667C6.43327 13.7 6.73327 13.9133 6.85993 13.98C7.13994 14.1333 7.47993 14.1333 7.73993 13.9733L8.6666 13.38C8.85327 13.2667 9.03994 12.9067 9.03994 12.6667V9.79999C9.03994 9.08666 9.3866 8.29999 9.8866 7.87999L12.7399 5.35333C12.9666 5.12666 13.2399 4.58666 13.2399 4.19333V2.73333C13.2399 2.27333 12.8666 1.89999 12.4066 1.89999H3.59993Z"
@@ -108,7 +108,7 @@
                                         </a>
 
                                         <!-- Dropdown Menu -->
-                                        <div class="dropdown-menu px-14px" id="filter-section" aria-labelledby="filterDropdownButton">
+                                        <div class="dropdown-list custom-dropdown-300px px-14px" id="filter-section">
                                             <div class="mb-3">
                                                 <label for="payment_method" class="form-label">{{ get_phrase('Payment Method') }}</label>
                                                 <select class="form-control px-14px ol-form-control ol-select2" name="payment_method" id="payment_method">
@@ -224,7 +224,6 @@
             </div>
         </div>
     </div>
-    @include('components.datatable')
     @include('projects.budget_range')
 @endsection
 
@@ -269,11 +268,7 @@
             var barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
             barChart.render();
         });
-    </script>
 
-
-    <script>
-        "use strict";
         document.addEventListener('DOMContentLoaded', function() {
             let dataArr = @json($payments).map(function(payment) {
                 return {

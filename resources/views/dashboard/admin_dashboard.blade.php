@@ -14,7 +14,7 @@
                                 <path d="M20.09 17.1125C17.9975 15.7175 14.585 15.7175 12.4775 17.1125C11.525 17.75 11 18.6125 11 19.535C11 20.4575 11.525 21.3125 12.47 21.9425C13.52 22.6475 14.9 23 16.28 23C17.66 23 19.04 22.6475 20.09 21.9425C21.035 21.305 21.56 20.45 21.56 19.52C21.5525 18.5975 21.035 17.7425 20.09 17.1125Z" fill="#5B93FF"/>
                             </svg>
                             <h3> {{count($clients)}} </h3>
-                            <p>{{ get_phrase('Clients') }}</p>
+                            <p class="text-muted">{{ get_phrase('Clients') }}</p>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -27,7 +27,7 @@
                             </svg>
     
                             <h3> {{count($active_projects)}}+ </h3>
-                            <p> {{ get_phrase('Active Projects') }} </p>
+                            <p class="text-muted"> {{ get_phrase('Active Projects') }} </p>
     
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                             </svg>
     
                             <h3> {{count($staffs)}}+ </h3>
-                            <p> {{ get_phrase('Staffs') }} </p>
+                            <p class="text-muted"> {{ get_phrase('Staffs') }} </p>
     
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M19.6977 12.25C19.7216 12.1968 19.7328 12.1389 19.7304 12.0807H19.75C19.6661 10.0794 18.0137 8.5 16.0037 8.5C13.9937 8.5 12.3413 10.0794 12.2574 12.0807C12.2475 12.1367 12.2475 12.194 12.2574 12.25L12.1988 12.25C11.2377 12.25 10.2103 12.8845 9.91198 14.5901L9.32868 19.2361C8.85143 22.6472 10.608 23.5 12.9014 23.5H19.1189C21.4057 23.5 23.1092 22.2652 22.6849 19.2361L22.1083 14.5901C21.757 12.9322 20.7627 12.25 19.8148 12.25L19.6977 12.25ZM18.6199 12.25C18.599 12.196 18.588 12.1386 18.5872 12.0807C18.5872 10.6426 17.4174 9.47679 15.9743 9.47679C14.5312 9.47679 13.3614 10.6426 13.3614 12.0807C13.3713 12.1367 13.3713 12.194 13.3614 12.25H18.6199ZM13.8227 16.1114C13.4567 16.1114 13.1599 15.806 13.1599 15.4292C13.1599 15.0524 13.4567 14.747 13.8227 14.747C14.1888 14.747 14.4856 15.0524 14.4856 15.4292C14.4856 15.806 14.1888 16.1114 13.8227 16.1114ZM17.5015 15.4292C17.5015 15.806 17.7983 16.1114 18.1644 16.1114C18.5304 16.1114 18.8272 15.806 18.8272 15.4292C18.8272 15.0524 18.5304 14.747 18.1644 14.747C17.7983 14.747 17.5015 15.0524 17.5015 15.4292Z" fill="#FFC327"/>
                             </svg>
                             <h3> {{count($resent_projects)}}+ </h3>
-                            <p> {{ get_phrase('Total Projects') }} </p>
+                            <p class="text-muted"> {{ get_phrase('Total Projects') }} </p>
     
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                                                 @endphp     
                                             </td>
                                             <td>
-                                                <div class="d-flex align-items-center gap-2 min-w-100px">
+                                                <div class="d-flex align-items-center justify-content-start gap-2 min-w-100px">
                                                     <div class="progress">
                                                         <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $recent->progress }}%; " aria-valuenow="{{ $recent->progress }}" aria-valuemin="0" aria-valuemax="100">
                                                         </div>
@@ -188,7 +188,7 @@
                                                 @endphp     
                                             </td>
                                             <td>
-                                                <div class="d-flex align-items-center gap-2 min-w-100px">
+                                                <div class="d-flex align-items-center justify-content-start gap-2 min-w-100px">
                                                     <div class="progress">
                                                         <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $recent->progress }}%; " aria-valuenow="{{ $recent->progress }}" aria-valuemin="0" aria-valuemax="100">
                                                         </div>

@@ -29,7 +29,7 @@
                                         id="custom-search-box" placeholder="Search">
                                 </div>
                                 <a href="{{ route('admin.projects', ['layout' => 'grid']) }}"
-                                    class="grid-icon {{ request('layout') === 'grid' ? 'active' : '' }}">
+                                    class="grid-icon {{ request('layout') === 'grid' ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{get_phrase('Grid View')}}">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <g clip-path="url(#clip0_185_2549)">
@@ -54,7 +54,7 @@
                                     </svg>
                                 </a>
                                 <a href="{{ route('admin.projects', ['layout' => 'list']) }}"
-                                    class="grid-icon {{ request('layout') === 'list' || request('layout') == '' ? 'active' : '' }}">
+                                    class="grid-icon {{ request('layout') === 'list' || request('layout') == '' ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{get_phrase('List View')}}">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -262,6 +262,38 @@
                                                 <ul class="dropdown-menu">
                                                     <li>
                                                         <a class="dropdown-item"
+                                                            href="{{ route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'dashboard']) }}">{{ get_phrase('Dashboard') }}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'milestone']) }}">{{ get_phrase('Milestone') }}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'task']) }}">{{ get_phrase('Task') }}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'file']) }}">{{ get_phrase('File') }}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'meeting']) }}">{{ get_phrase('Meeting') }}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'invoice']) }}">{{ get_phrase('Invoice') }}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'timesheet']) }}">{{ get_phrase('Timesheet') }}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'gantt_chart']) }}">{{ get_phrase('Gantt Chart') }}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item"
                                                             onclick="rightCanvas('{{ route(get_current_user_role() . '.project.edit', $project->code) }}', 'Edit project')"
                                                             href="#">{{ get_phrase('Edit') }}</a>
                                                     </li>
@@ -269,10 +301,6 @@
                                                         <a class="dropdown-item"
                                                             onclick="confirmModal('{{ route(get_current_user_role() . '.project.delete', $project->code) }}')"
                                                             href="javascript:void(0)">{{ get_phrase('Delete') }}</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item"
-                                                            href="{{ route(get_current_user_role() . '.project.details', $project->code) }}">{{ get_phrase('view project') }}</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -393,6 +421,84 @@
                 selector: '.context-menu',
                 autoHide: false,
                 items: {
+                    Dashboard: {
+                        name: "Dashboard",
+                        callback: function(itemKey, opt, e) {
+                            const code = opt.$trigger.attr("data-code");
+                            window.location.href =
+                                "{{ url(get_current_user_role() . '/project/') }}" + '/' +
+                                code +
+                                '/dashboard'
+                        }
+                    },
+                    Milestone: {
+                        name: "Milestone",
+                        callback: function(itemKey, opt, e) {
+                            const code = opt.$trigger.attr("data-code");
+                            window.location.href =
+                                "{{ url(get_current_user_role() . '/project/') }}" + '/' +
+                                code +
+                                '/milestone'
+                        }
+                    },
+                    Task: {
+                        name: "Task",
+                        callback: function(itemKey, opt, e) {
+                            const code = opt.$trigger.attr("data-code");
+                            window.location.href =
+                                "{{ url(get_current_user_role() . '/project/') }}" + '/' +
+                                code +
+                                '/task'
+                        }
+                    },
+                    File: {
+                        name: "File",
+                        callback: function(itemKey, opt, e) {
+                            const code = opt.$trigger.attr("data-code");
+                            window.location.href =
+                                "{{ url(get_current_user_role() . '/project/') }}" + '/' +
+                                code +
+                                '/file'
+                        }
+                    },
+                    Meeting: {
+                        name: "Meeting",
+                        callback: function(itemKey, opt, e) {
+                            const code = opt.$trigger.attr("data-code");
+                            window.location.href =
+                                "{{ url(get_current_user_role() . '/project/') }}" + '/' +
+                                code +
+                                '/meeting'
+                        }
+                    },
+                    Invoice: {
+                        name: "Invoice",
+                        callback: function(itemKey, opt, e) {
+                            const code = opt.$trigger.attr("data-code");
+                            window.location.href =
+                                "{{ url(get_current_user_role() . '/project/') }}" + '/' +
+                                code +
+                                '/invoice'
+                        }
+                    },
+                    Timesheet: {
+                        name: "Timesheet",
+                        callback: function(itemKey, opt, e) {
+                            const code = opt.$trigger.attr("data-code");
+                            window.location.href =
+                                "{{ url(get_current_user_role() . '/project/') }}" + '/' +
+                                code +
+                                '/timesheet'
+                        }
+                    },
+                    Gantt_Chart: {
+                        name: "Gantt Chart",
+                        callback: function(itemKey, opt, e) {
+                            window.location.href =
+                                "{{ url(get_current_user_role() . '/project/') }}" +
+                                '/gantt_chart'
+                        }
+                    },
                     Edit: {
                         name: "Edit",
                         callback: function(itemKey, opt, e) {
@@ -410,111 +516,40 @@
                                 '/' + code)
                         }
                     },
-                    View_Project: {
-                        name: "View Project",
-                        items: {
-                            Milestone: {
-                                name: "Milestone",
-                                callback: function(itemKey, opt, e) {
-                                    const code = opt.$trigger.attr("data-code");
-                                    window.location.href =
-                                        "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                        code +
-                                        '/milestone'
-                                }
-                            },
-                            Task: {
-                                name: "Task",
-                                callback: function(itemKey, opt, e) {
-                                    const code = opt.$trigger.attr("data-code");
-                                    window.location.href =
-                                        "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                        code +
-                                        '/task'
-                                }
-                            },
-                            File: {
-                                name: "File",
-                                callback: function(itemKey, opt, e) {
-                                    const code = opt.$trigger.attr("data-code");
-                                    window.location.href =
-                                        "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                        code +
-                                        '/file'
-                                }
-                            },
-                            Meeting: {
-                                name: "Meeting",
-                                callback: function(itemKey, opt, e) {
-                                    const code = opt.$trigger.attr("data-code");
-                                    window.location.href =
-                                        "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                        code +
-                                        '/meeting'
-                                }
-                            },
-                            Invoice: {
-                                name: "Invoice",
-                                callback: function(itemKey, opt, e) {
-                                    const code = opt.$trigger.attr("data-code");
-                                    window.location.href =
-                                        "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                        code +
-                                        '/invoice'
-                                }
-                            },
-                            Timesheet: {
-                                name: "Timesheet",
-                                callback: function(itemKey, opt, e) {
-                                    const code = opt.$trigger.attr("data-code");
-                                    window.location.href =
-                                        "{{ url(get_current_user_role() . '/project/') }}" + '/' +
-                                        code +
-                                        '/timesheet'
-                                }
-                            },
-                            Gantt_Chart: {
-                                name: "Gantt Chart",
-                                callback: function(itemKey, opt, e) {
-                                    window.location.href =
-                                        "{{ url(get_current_user_role() . '/project/') }}" +
-                                        '/gantt_chart'
-                                }
-                            },
-
-                        }
-                    }
+                    
                 }
             });
         });
 
-        function grid_view() {
-            $.ajax({
-                url: "{{ route(get_current_user_role() . '.projects', ['layout' => 'grid']) }}",
-                type: 'GET',
-                data: (function() {
-                    var formData = {};
-                    $('#filters-container :input').each(function() {
-                        var name = $(this).attr('name');
-                        var value = $(this).val();
-                        // console.log(value)
-                        if (value && value != 'undefined') {
-                            formData[name] = value || null;
-                        }
-                    });
-                    return formData;
-                })(),
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
-                },
-                success: function(response) {
-                    $("#grid-list").html(response);
-                },
-                error: function(xhr) {
-                    console.error("Error:", xhr.responseText);
+        var gridViewUrl = "{{ route(get_current_user_role() . '.projects', ['layout' => 'grid']) }}";
+
+function grid_view() {
+    $.ajax({
+        url: gridViewUrl, // Use the variable
+        type: 'GET',
+        data: (function() {
+            var formData = {};
+            $('#filters-container :input').each(function() {
+                var name = $(this).attr('name');
+                var value = $(this).val();
+                if (value && value != 'undefined') {
+                    formData[name] = value || null;
                 }
             });
+            return formData;
+        })(),
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            $("#grid-list").html(response);
+        },
+        error: function(xhr) {
+            console.error("Error:", xhr.responseText);
         }
+    });
+}
+
         $('#filter').on('click', function(e) {
             grid_view();
         })

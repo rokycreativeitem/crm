@@ -20,7 +20,7 @@
 
 <body>
 
-    <div class="ol-card rounded-0 vh-100">
+    <div class="ol-card rounded-0 bg-light vh-100">
         <div class="ol-card-body">
             <div class="container">
                 <div class="row">

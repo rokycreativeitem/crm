@@ -94,6 +94,7 @@
     @include('modal')
     @include('toastr')
     @include('script')
+    @include('components.datatable')
     @stack('js')
 </body>
 

@@ -153,8 +153,6 @@
     </div>
 </div>
 
-{{-- @include('projects.budget_range') --}}
-@include('components.datatable')
 @push('js')
     <script>
         setTimeout(function() {

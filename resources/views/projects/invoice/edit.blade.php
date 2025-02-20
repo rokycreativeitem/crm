@@ -1,6 +1,6 @@
 <div class="ol-card">
     <div class="ol-card-body">
-        <form action="{{ route(get_current_user_role() . '.invoice.update', $invoice->id) }}" method="post" id="ajaxForm">
+        <form action="{{ route(get_current_user_role() . '.invoice.update', $invoice->id) }}" method="post" id="ajaxInvoiceForm">
             @csrf
             <div class="row">
                 <div class="col-12">
@@ -18,12 +18,10 @@
                         <input class="form-control ol-form-control" type="datetime-local" id="due_date" value="{{$invoice->due_date}}" name="due_date" required>
                     </div>
                     <div class="fpb7 mb-2">
-                        <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Submit') }}</button>
+                        <button type="button" onclick="handleAjaxFormSubmission('ajaxInvoiceForm')" class="btn ol-btn-primary">{{ get_phrase('Submit') }}</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
-@include('ajax')

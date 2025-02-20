@@ -170,5 +170,3 @@
         </div>
     </div>
 @endsection
-@push('js')@endpush
-@include('ajax')

@@ -22,3 +22,18 @@ It accepts two parameters:
     - The function sends an AJAX request to the specified route.
     - This request is processed by the ServerSideDataController, where a relevant function retrieves the required rows from the database.
     - The response is then populated in the DataTable dynamically.
+
+2. Form Submit by AJAX
+----------------------------------------------------
+Function Name:
+    - handleAjaxFormSubmission()
+Location:
+    - resources/view/script.blade.php
+    - line - 313
+Purpose:
+    - The handleAjaxFormSubmission() function is responsible for submit form with ajax and data dynamically ADD, EDIT operation with database. It ensures efficient data handling, especially for first and improve crud operation
+Working Process:
+    - Ensure you create a normal form with post method
+    - The HTML structure of the DataTable must include <thead> and <tbody> elements.
+    - Call JavaScript Function
+    - The server_side_datatable() function is called within a script tag in the DataTable component.

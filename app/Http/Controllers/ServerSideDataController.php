@@ -8,7 +8,7 @@ use App\Models\File;
 use App\Models\Invoice;
 use App\Models\Meeting;
 use App\Models\Milestone;
-use App\Models\offlinePayment;
+use App\Models\offlinePayment as OfflinePayment;
 use App\Models\Payment_history;
 use App\Models\Payment_purpose;
 use App\Models\Project;
@@ -85,7 +85,7 @@ class ServerSideDataController extends Controller
             ';
             })
             ->addColumn('title', function ($project) {
-                return $project?->title;
+                return '<a href="'.route(get_current_user_role() . '.project.details', $project->code).'">'.$project?->title.'</a>';
             })
             ->addColumn('code', function ($project) {
                 return $project?->code;
@@ -138,8 +138,73 @@ class ServerSideDataController extends Controller
                 $editRoute   = route(get_current_user_role() . '.project.edit', $project->code);
                 $deleteRoute = route(get_current_user_role() . '.project.delete', $project->code);
                 $viewRoute   = route(get_current_user_role() . '.project.details', $project->code);
-
+                $dashboardRoute = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'dashboard']);
+                $milestoneRoute = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'milestone']);
+                $milestoneRoute = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'milestone']);
+                $taskRoute      = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'task']);
+                $fileRoute      = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'file']);
+                $meetingRoute   = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'meeting']);
+                $invoiceRoute   = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'invoice']);
+                $ganttRoute     = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'gantt_chart']);
+                $timesheetRoute = route(get_current_user_role() . '.project.details', ['code' => $project->code, 'tab' => 'timesheet']);
                 $options = '';
+               
+                if (has_permission('project.details')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="' . $dashboardRoute . '">' . get_phrase('Dashboard') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('milestones')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="' . $milestoneRoute . '">' . get_phrase('Milestone') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('tasks')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="' . $taskRoute . '">' . get_phrase('Task') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('files')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="' . $fileRoute . '">' . get_phrase('File') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('meetings')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="' . $meetingRoute . '">' . get_phrase('Meeting') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('invoice')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="' . $invoiceRoute . '">' . get_phrase('Invoice') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('timesheets')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="' . $timesheetRoute . '">' . get_phrase('Timesheet') . '</a>
+                        </li>
+                    ';
+                }
+                if (has_permission('gantt.chart')) {
+                    $options .= '
+                        <li>
+                            <a class="dropdown-item" href="' . $ganttRoute . '">' . get_phrase('Gantt Chart') . '</a>
+                        </li>
+                    ';
+                }
                 if (has_permission('project.edit')) {
                     $options .= '
                         <li>
@@ -151,13 +216,6 @@ class ServerSideDataController extends Controller
                     $options .= '
                         <li>
                             <a class="dropdown-item" onclick="confirmModal(\'' . $deleteRoute . '\')" href="javascript:void(0)">' . get_phrase('Delete') . '</a>
-                        </li>
-                    ';
-                }
-                if (has_permission('project.details')) {
-                    $options .= '
-                        <li>
-                            <a class="dropdown-item" href="' . $viewRoute . '">' . get_phrase('View Project') . '</a>
                         </li>
                     ';
                 }
@@ -605,15 +663,15 @@ class ServerSideDataController extends Controller
             })
             ->addColumn('progress', function ($task) {
                 $progress = $task->progress;
-                return '<div class="dAdmin_profile d-flex align-items-start flex-column min-w-200px">
-                <span class="p-2 pt-0 fs-12px">' . $progress . '%</span>
-                <div class="progress ms-2">
-                    <div class="progress-bar bg-primary" role="progressbar"
-                    style="width: ' . $progress . '%; "
-                    aria-valuenow="' . $progress . '" aria-valuemin="0"
-                    aria-valuemax="100">
-                    </div>
+                return '<div class="dAdmin_profile d-flex gap-2 align-items-center min-w-200px">
+                <div class="progress">
+                <div class="progress-bar bg-primary" role="progressbar"
+                style="width: ' . $progress . '%; "
+                aria-valuenow="' . $progress . '" aria-valuemin="0"
+                aria-valuemax="100">
                 </div>
+                </div>
+                <span class="fs-12px">' . $progress . '%</span>
             </div>';
             })
             ->addColumn('options', function ($task) {
@@ -1745,17 +1803,20 @@ class ServerSideDataController extends Controller
                     </div>';
             })
             ->addColumn('item_type', function ($payment) {
-                if ($payment->item_type === 'invoice') {
-                    $invoices     = Invoice::whereIn('id', json_decode($payment->items, true))->get();
-                    $invoiceLinks = '';
-                    foreach ($invoices as $invoice) {
-                        $invoiceLinks .= '<p class="sub-title text-12px">
-                                        <a href="javascript:void(0)" class="text-muted me-3">' . $invoice->title . '</a>
+                // if ($payment->item_type === 'invoice') {
+                //     $invoices     = Invoice::whereIn('id', json_decode($payment->items, true))->get();
+                //     $invoiceLinks = '';
+                //     foreach ($invoices as $invoice) {
+                //         $invoiceLinks .= '<p class="sub-title text-12px">
+                //                         <a href="javascript:void(0)" class="text-muted me-3">' . $invoice->title . '</a>
+                //                      </p>';
+                //     }
+                //     return $invoiceLinks;
+                // }
+                // return '';
+                return '<p class="sub-title text-12px">
+                                        <a href="javascript:void(0)" class="text-muted me-3">' . $payment->item->title . '</a>
                                      </p>';
-                    }
-                    return $invoiceLinks;
-                }
-                return '';
             })
             ->addColumn('total_amount', function ($payment) {
                 return currency($payment->total_amount);

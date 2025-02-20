@@ -1,6 +1,6 @@
 <div class="ol-card">
     <div class="ol-card-body">
-        <form action="{{ route('admin.user.store') }}" method="post" id="ajaxForm" enctype="multipart/form-data">@csrf
+        <form action="{{ route('admin.user.store') }}" method="post" id="ajaxUserForm" enctype="multipart/form-data">@csrf
             <div class="row">
                 <div class="col-12">
                     <div class="fpb7 mb-2">
@@ -35,13 +35,10 @@
                     </div>
 
                     <div class="fpb7 mb-2">
-                        <button type="submit" id="ajaxFormBtn" class="btn ol-btn-primary">{{ get_phrase('Add user') }}</button>
+                        <button type="button" id="ajaxFormBtn" class="btn ol-btn-primary" onclick="handleAjaxFormSubmission('ajaxUserForm')">{{ get_phrase('Add user') }}</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-@include('ajax')
-{{-- @include('script')
-@include('ajax') --}}

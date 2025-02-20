@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\File;
 use App\Models\FileUploader;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+
 
 class FileController extends Controller
 {
@@ -136,4 +139,92 @@ class FileController extends Controller
 
         return Response::download($file_path);
     }
+
+    public function exportFile(Request $request, $file) {
+
+        $query = File::query();
+
+        if (isset($request->customSearch)) {
+            $string = $request->customSearch;
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%");
+            });
+        }
+
+        if ($request->start_date && $request->end_date) {
+            $start_date     = date('Y-m-d H:i:s', strtotime($request->start_date));
+            $end_date       = date('Y-m-d H:i:s', strtotime($request->end_date));
+            $query->where(function ($q) use ($start_date, $end_date) {
+                $q->where('timestamp_start', '>=', $start_date);
+                $q->where('timestamp_end', '<=', $end_date);
+            });
+        }
+        if ($request->type && $request->type != 'all') {
+            $query->where('extension', $request->type);
+        }
+        if ($request->uploaded_by && $request->uploaded_by != 'all') {
+            $query->where('user_id', $request->uploaded_by);
+        }
+        if ($request->size && $request->size !== 'all') {
+            list($minSize, $maxSize) = explode('|', $request->size);
+            $minSize                 = (float) $minSize;
+            $maxSize                 = (float) $maxSize;
+            $query->whereBetween('size', [$minSize, $maxSize]);
+        }
+
+        if ($file == 'pdf') {
+            $page_data['files'] = $query->exists() ? $query->get() : File::get();
+            $pdf = FacadePdf::loadView('projects.file.pdf', $page_data);
+            return $pdf->download('files.pdf');
+        }
+        if ($file == 'print') {
+            $page_data['files'] = $query->exists() ? $query->get() : File::get();
+            $pdf = FacadePdf::loadView('projects.file.pdf', $page_data);
+            return $pdf->stream('files.pdf');
+        }
+    
+        if ($file == 'csv') {
+            $fileName = 'files.csv';
+
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+    
+            // Use the filtered query to get the projects for CSV
+            $users = $query->exists() ? $query->get() : File::all();
+    
+            $columns = ['#', 'title', 'user', 'extension', 'size'];
+            
+            $callback = function() use ($columns, $users) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+                $count = 1;
+            
+                foreach ($users as $item) { 
+                 
+                    fputcsv($file, [
+                        $count,
+                        $item->title,
+                        User::where('id', $item->user_id)->first()->name,
+                        $item->extension,
+                        $item->size
+                    ]);
+                    $count++;
+                }
+            
+                fclose($file);
+            };
+            
+            
+    
+            return response()->stream($callback, 200, $headers);
+        }
+    
+        // If no valid file type was provided
+        return response()->json(['error' => 'Invalid file type'], 400);
+    } 
 }

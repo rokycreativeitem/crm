@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Toggle dropdown visibility
             list.style.display = list.style.display === 'block' ? 'none' : 'block';
-
+ 
             // Adjust dropdown position based on available space
             var headerRect = header.getBoundingClientRect();
             var dropdownRect = list.getBoundingClientRect();
@@ -269,9 +269,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 list.style.left = '0';
                 list.style.right = 'auto';
             }
+
         });
     });
-
+    
     dropdownLists.forEach(function (list) {
         list.addEventListener('click', function (event) {
             if (event.target.tagName === 'LI') {
@@ -279,7 +280,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 var list = dropdown.querySelector('.dropdown-list');
                 list.style.display = 'none';
             }
+            $('.select2-search__field').on('click', function(event){
+                event.stopPropagation();
+            });
         });
+    });
+
+    $(document).on('click', '.select2-search__field', function (event) {
+        event.stopPropagation();
     });
 
     // Close dropdown when clicking outside of it

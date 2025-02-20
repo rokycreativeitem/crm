@@ -86,7 +86,6 @@
 </div>
     
     <script>
-
         $(".ol-modal-niceSelect").niceSelect({
             dropdownParent: $('#ajaxOffcanvas')
         });

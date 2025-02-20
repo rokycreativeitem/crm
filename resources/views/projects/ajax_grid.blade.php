@@ -1,13 +1,4 @@
-@if(isset($filter_count))
-    <script>
-        var count = {{$filter_count}};
-        if(count > 0) {
-            $('#filter-count-display').text(count);
-            $('#filter-count-display').removeClass('d-none');
-            $('#filter-reset').removeClass('d-none');
-        }
-    </script>
-@endif
+
 <div class="row pe-0 align-items-center">
     @if (count($projects))    
         @foreach ($projects as $project)
@@ -168,7 +159,7 @@
 
 <div class="d-flex justify-content-between align-items-center">
     <div class="page-length-select fs-12px d-flex align-items-center mt-3 w-260">
-        <label for="page-length-select" class="pe-2">Showing:</label>
+        <label for="page-length-select" class="pe-2">{{get_phrase('Showing')}}:</label>
         <select id="page-length-select" class="form-select fs-12px w-auto ol-niceSelect">
             <option value="10" {{$page_item == 10 ? 'selected':''}}>10</option>
             <option value="20" {{$page_item == 20 ? 'selected':''}}>20</option>
@@ -181,3 +172,13 @@
         {{$projects->links()}}
     </div>
 </div>
+@if(isset($filter_count))
+    <script>
+        var count = {{$filter_count}};
+        if(count > 0) {
+            $('#filter-count-display').text(count);
+            $('#filter-count-display').removeClass('d-none');
+            $('#filter-reset').removeClass('d-none');
+        }
+    </script>
+@endif

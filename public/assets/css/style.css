@@ -703,7 +703,7 @@ input.progress-range-input {
     align-items: center;
     background: #1b84ff;
     border-radius: 6px;
-    padding: 8px 12px;
+    padding: 9px 10px;
     font-weight: 500;
     font-size: 12px;
     letter-spacing: 0.01em;
@@ -2624,6 +2624,7 @@ textarea.ol-form-textarea {
     padding: 10px;
     border: none;
     min-width: 200px;
+    max-width: 250px;
 }
 
 .ol-icon-dropdown .dropdown-menu li:not(:last-child),
@@ -2631,15 +2632,14 @@ textarea.ol-form-textarea {
     margin-bottom: 2px;
 }
 
-.ol-icon-dropdown .dropdown-menu li a,
-.context-menu-list li {
+.ol-icon-dropdown .dropdown-menu li a, .context-menu-list li {
     border-radius: 4px;
     color: var(--text-color);
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
     line-height: 16px;
-    padding: 10px;
+    padding: 9px 10px !important;
 }
 
 .ol-icon-dropdown .dropdown-menu li a:hover,
@@ -4805,7 +4805,9 @@ input.daterangepicker {
 .ol-icon-dropdown .dropdown-menu {
     width: max-content;
     max-width: 250px;
-    min-width: 160px;
+    min-width: 200px;
+    box-shadow: 0px 4px 40px 0px var(--shadow);
+    background: #ffff;
 }
 
 .ol-icon-dropdown .dropdown-menu a {
@@ -5511,7 +5513,7 @@ div.dt-container .dt-paging {
     border-radius: 10px;
     border: 1px solid var(--border-color);
     background: transparent;
-    padding: 16px 29px 17px 29px;
+    padding: 15px;
     color: var(--text-color);
     font-size: 15px;
     font-style: normal;
@@ -5634,9 +5636,9 @@ div.dt-container .dt-paging {
     right: 22px;
 }
 
-.password-input-wrap .ol2-form-control {
+/* .password-input-wrap .ol2-form-control {
     padding: 16px 40px 17px 29px;
-}
+} */
 
 /* Login Page Css End ***
 ***********************/
@@ -6222,6 +6224,7 @@ table.dataTable thead > tr > td.dt-orderable-desc:hover {
 }
 .margin--40px {
     margin-top: -40px;
+    margin-left: 23px;
 }
 
 #page-length-select:focus {
@@ -6493,7 +6496,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 }
 .ol-btn-light:active,
 .ol-btn-light:hover {
-    background: transparent !important;
+    /* background: transparent !important; */
     border: 0;
 }
 .dropdown-export li a {
@@ -6636,7 +6639,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 
 .custom-context-menu li:hover {
     background: var(--hover-background-color);
-    border-radius: 6px;
+    border-radius: 4px;
     color: var(--active-color);
 }
 .project-dashboard-table th {
@@ -6741,7 +6744,7 @@ span.relative.inline-flex.items-center.px-2.py-2.text-sm.font-medium.text-gray-5
 }
 .role-card .form-check-input:checked {
     background-image: url("../images/icons/checked.svg");
-    background-size: 16px;
+    background-size: 10px;
 }
 
 .no-message .card-middle-banner {
@@ -7069,5 +7072,47 @@ button.btn.ol-btn-secondary.dropdown-toggle {
 }
 .grid-title .code {
     text-transform: uppercase;
+}
+div.dt-container div.dt-paging ul.pagination {
+    margin: 15px 0 !important;
+    flex-wrap: wrap;
+    margin-right: 50px !important;
+    margin-bottom: 15px !important;
+}
+.custom-dropdown-300px {
+    width: 300px;
+    padding: 20px;
+    overflow: hidden;
+    max-height: inherit;
+}
+.custom-dropdown-300px .select2-search--dropdown {
+    display: none !important;
+}
+.table > :not(caption) > * > * {
+    border: transparent;
+    text-align: start;
+}
+.dashboard-card svg {
+    margin-bottom: 16px !important;
+}
+.fc-license-message {
+    display: none;
+}
+.btn:focus-visible {
+    color: #fff;
+    background-color: var(--danger-normal);
+    border-color: var(--bs-btn-hover-border-color);
+    outline: 0;
+    box-shadow: none;
+}
+.btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
+    background: var(--hover-background-color);
+}
+.confirm-btn:active {
+    background: var(--danger-normal) !important;
+    color: #fff !important;
+}
+.btn-close:focus {
+    box-shadow: none !important;
 }
 

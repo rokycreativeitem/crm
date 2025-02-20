@@ -24,4 +24,10 @@ class offlinePayment extends Model
     public function user(){
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    public function invoice(){
+        return $this->belongsTo(Payment_purpose::class, 'payment_purpose', 'id');
+    }
+    public function item(){
+        return $this->belongsTo(Invoice::class, 'items', 'id');
+    }
 }

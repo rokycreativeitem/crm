@@ -1,6 +1,6 @@
 <div class="ol-card">
     <div class="ol-card-body">
-        <form action="{{ route(get_current_user_role() . '.project.update', $project->code) }}" method="post" id="ajaxForm">
+        <form action="{{ route(get_current_user_role() . '.project.update', $project->code) }}" method="post" id="ajaxProjectForm">
             @csrf
             <div class="row">
                 <div class="col-12">
@@ -93,7 +93,7 @@
                         </select>
                     </div>
                     <div class="fpb7 mb-2">
-                        <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Update') }}</button>
+                        <button type="button" class="btn ol-btn-primary" onclick="handleAjaxFormSubmission('ajaxProjectForm')">{{ get_phrase('Update') }}</button>
                     </div>
                 </div>
             </div>
@@ -108,5 +108,5 @@
         dropdownParent: $('#ajaxOffcanvas')
     });
 </script>
-@include('ajax')
-@include('script')
+{{-- 
+@include('script') --}}

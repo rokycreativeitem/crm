@@ -105,7 +105,6 @@
 
             calendar.render();
 
-
         });
     </script>
 @endpush

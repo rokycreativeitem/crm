@@ -58,6 +58,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('milestone/update/{id}', 'update')->name('milestone.update');
         Route::post('milestone/multi-delete', 'multiDelete')->name('milestone.multi-delete');
         Route::get('milestone/tasks/{id}', 'show')->name('milestone.tasks');
+        Route::get('milestone-export/{file}', 'exportFile')->name('milestone.export-file');
 
     });
 
@@ -71,6 +72,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('task/multi-delete', 'multiDelete')->name('task.multi-delete');
 
         Route::get('tasks-datatable', 'index')->name('tasks.datatable');
+        Route::get('task-export/{file}', 'exportFile')->name('task.export-file');
 
     });
 
@@ -87,6 +89,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('file/update/{id}', 'update')->name('file.update');
         Route::post('file/multi-delete', 'multiDelete')->name('file.multi-delete');
         Route::get('file/download/{id}', 'download')->name('file.download');
+        Route::get('file-export/{file}', 'exportFile')->name('file.export-file');
 
     });
 
@@ -238,6 +241,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         // Route::get('success_login', 'success_login')->name('success_login');
         // Route::get('payment', 'payment')->name('payment');
         // Route::get('invoice-template', 'invoice')->name('invoice.template');
+        Route::get('offline-report-export/{file}', 'ExportFile')->name('offline-report.export-file');
     });
 
     Route::post('payment/offline/store', [OfflinePaymentController::class, 'store'])->name('payment.offline.store');

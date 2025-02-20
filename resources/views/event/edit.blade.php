@@ -1,6 +1,6 @@
 <div class="ol-card">
     <div class="ol-card-body">
-        <form action="{{ route(get_current_user_role() . '.event.update', $event->id) }}" method="post" id="ajaxForm">
+        <form action="{{ route(get_current_user_role() . '.event.update', $event->id) }}" method="post" id="ajaxEventForm">
             @csrf
             <div class="row">
                 <div class="col-12">
@@ -20,12 +20,10 @@
                         @if (has_permission('event.delete'))
                         <a href="javascript:void(0)" onclick="confirmModal('{{route(get_current_user_role().'.event.delete',['id'=>$event->id])}}')" class="btn ol-btn-danger">{{ get_phrase('Delete') }}</a>
                         @endif
-                        <button type="submit" class="btn ol-btn-primary">{{ get_phrase('Update') }}</button>
+                        <button type="button" onclick="handleAjaxFormSubmission('ajaxEventForm')" class="btn ol-btn-primary">{{ get_phrase('Update') }}</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
-@include('ajax')

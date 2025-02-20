@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FileUploader;
 use App\Models\Invoice;
-use App\Models\OfflinePayment;
+use App\Models\offlinePayment as OfflinePayment;
 use App\Models\Payment_history;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+
 
 class OfflinePaymentController extends Controller
 {
@@ -85,7 +87,7 @@ class OfflinePaymentController extends Controller
 
     public function accept_payment($id)
     {
- 
+
         $session_payment_details = session('payment_details');
         // validate id
         if (empty($id)) {
@@ -149,5 +151,107 @@ class OfflinePaymentController extends Controller
     public function verify_email()
     {
         return view('smtp.verify_email');
+    }
+
+    public function ExportFile(Request $request, $file)
+    {
+        $query = OfflinePayment::query();
+
+        // Custom search
+        if (!empty($request->customSearch)) {
+            $string = $request->customSearch;
+            $query->whereHas('user', function ($userQuery) use ($string) {
+                $userQuery->where('name', 'like', "%{$string}%");
+            });
+        }
+
+        // Min & Max Price Filter
+        $maxPrice = (int) str_replace('$', '', $request->maxPrice);
+        $minPrice = (int) str_replace('$', '', $request->minPrice);
+        if ($minPrice > 0 || $maxPrice > 0) {
+            $query->whereBetween('total_amount', [
+                $minPrice > 0 ? $minPrice : 0,
+                $maxPrice > 0 ? $maxPrice : PHP_INT_MAX
+            ]);
+        }
+
+        // Status Filter
+        if (!empty($request->status) && $request->status != 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // User Filter
+        if (!empty($request->user) && $request->user != 'all') {
+            $query->where('user_id', $request->user);
+        }
+
+        // Start Date Filter
+        if (!empty($request->start_date)) {
+            $start_date = date('Y-m-d', strtotime($request->start_date));
+            $query->whereDate("created_at", $start_date);
+        }
+
+        // Fetch data
+        $payments = $query->count() > 0 ? $query->get() : OfflinePayment::get();
+
+        // PDF Export
+        if ($file == 'pdf') {
+            $pdf = FacadePdf::loadView('offline_payments.pdf', ['payments' => $payments]);
+            return $pdf->download('offline_payments.pdf');
+        }
+
+        // Print View
+        if ($file == 'print') {
+            $pdf = FacadePdf::loadView('offline_payments.pdf', ['payments' => $payments]);
+            return $pdf->stream('offline_payments.pdf');
+        }
+
+        // CSV Export
+        if ($file == 'csv') {
+            $fileName = 'offline_payments.csv';
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+
+            $columns = ['#', 'user_name', 'payment_type', 'amount', 'purpose', 'phone', 'bank', 'status', 'date_added'];
+
+            $callback = function () use ($columns, $payments) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+
+                $statuses = [
+                    1 => get_phrase('Accepted'),
+                    2 => get_phrase('Suspended'),
+                    0 => get_phrase('Pending'),
+                ];
+
+                $count = 1;
+                foreach ($payments as $item) {
+                    fputcsv($file, [
+                        $count,
+                        $item->user->name ?? 'N/A',
+                        $item->item_type,
+                        currency($item->total_amount),
+                        $item->invoice->title ?? 'N/A',
+                        $item->phone_no,
+                        $item->bank_no,
+                        $statuses[$item->status] ?? 'Unknown',
+                        date('d-M-y h:i A', strtotime($item->created_at))
+                    ]);
+                    $count++;
+                }
+
+                fclose($file);
+            };
+
+            return response()->stream($callback, 200, $headers);
+        }
+
+        // If no valid file type was provided
+        return response()->json(['error' => 'Invalid file type'], 400);
     }
 }

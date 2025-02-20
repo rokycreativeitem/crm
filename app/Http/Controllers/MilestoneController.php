@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class MilestoneController extends Controller
 {
@@ -69,8 +70,10 @@ class MilestoneController extends Controller
     {
 
         $project['title'] = $request->title;
+        $project['description'] = $request->description;
+        $project['tasks']       = json_encode($request->tasks);
 
-        Milestone::where('id', $request->id)->update($project);
+        Milestone::where('id', $id)->update($project);
 
         return response()->json([
             'success' => 'Milestone has been updated.',
@@ -97,5 +100,98 @@ class MilestoneController extends Controller
 
         return view('projects.milestone.tasks', $page_data);
     }
+
+    public function exportFile(Request $request, $file) {
+
+        $query = Milestone::query();
+
+        if (isset($request->customSearch)) {
+            $string = $request->customSearch;
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%");
+            });
+        }
+
+        if ($request->task && $request->task != 'all') {
+            $task           = json_encode($request->task);
+            $task           = str_replace('[', '', $task);
+            $task           = str_replace(']', '', $task);
+            $query->where(function ($q) use ($task) {
+                $q->where('tasks', 'like', "%{$task}%");
+            });
+        }
+
+        if ($request->start_date && $request->end_date) {
+            $start_date     = date('Y-m-d H:i:s', strtotime($request->start_date));
+            $end_date       = date('Y-m-d H:i:s', strtotime($request->end_date));
+            $query->where(function ($q) use ($start_date, $end_date) {
+                $q->where('timestamp_start', '>=', $start_date);
+                $q->where('timestamp_end', '<=', $end_date);
+            });
+        }
+
+        
+        if ($file == 'pdf') {
+            $page_data['milestones'] = $query->exists() ? $query->get() : Milestone::get();
+            $pdf = FacadePdf::loadView('projects.milestone.pdf', $page_data);
+            return $pdf->download('milestone.pdf');
+        }
+        if ($file == 'print') {
+            $page_data['milestones'] = $query->exists() ? $query->get() : Milestone::get();
+            $pdf = FacadePdf::loadView('projects.milestone.pdf', $page_data);
+            return $pdf->stream('milestone.pdf');
+        }
+    
+        if ($file == 'csv') {
+            $fileName = 'milestone.csv';
+
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+    
+            // Use the filtered query to get the projects for CSV
+            $users = $query->exists() ? $query->get() : Milestone::all();
+    
+            $columns = ['#', 'name', 'description', 'task'];
+            
+            $callback = function() use ($columns, $users) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+                $count = 1;
+            
+                foreach ($users as $item) {  
+                    $taskTitles = []; // Store task titles as an array
+            
+                    foreach ($item->tasks as $task) {
+                        $taskModel = Task::where('id', $task)->first();
+                        if ($taskModel) {
+                            $taskTitles[] = $taskModel->title;
+                        }
+                    }
+            
+                    fputcsv($file, [
+                        $count,
+                        $item->title,
+                        $item->description,
+                        implode(', ', $taskTitles) // Convert array to a comma-separated string
+                    ]);
+                    $count++;
+                }
+            
+                fclose($file);
+            };
+            
+            
+    
+            return response()->stream($callback, 200, $headers);
+        }
+    
+        // If no valid file type was provided
+        return response()->json(['error' => 'Invalid file type'], 400);
+    }   
 
 }

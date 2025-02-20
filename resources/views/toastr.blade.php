@@ -53,6 +53,7 @@
         $("#message").html(message);
         var toasterMessage = $("#toaster-content").html();
         $('.toast-container').html(toasterMessage);
+        $('.toast-container .toast').addClass(type);
 
         var toast = new bootstrap.Toast('.toast');
         toast.show();
