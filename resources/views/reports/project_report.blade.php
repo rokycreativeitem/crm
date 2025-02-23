@@ -5,12 +5,16 @@
     .apexcharts-menu-icon {
         display: none;
     }
+    .h-250px {
+        min-height: 250px;
+    }
 </style>
 
 @section('content')
     <!-- Start Admin area -->
-    <div class="row">
-        <div class="col-12">
+    <div class="position-relative h-250px">
+        <div class="row d-none" id="table-body">
+            <div class="col-12">
             <div class="ol-card">
                 <div class="ol-card-body p-3 mb-10 position-relative" id="filters-container">
                     <div id="project-filter" class="d-none">
@@ -190,7 +194,9 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
+        @include('preloader')
     </div>
 
     <div class="row mt-4">
@@ -212,17 +218,13 @@
         </div>
     </div>
 
-    @include('projects.budget_range')
     @endsection
     
     @push('js')
     <script>
-        setTimeout(function() {
-            server_side_datatable('["id","date","project","amount","payment_types"]', "{{ route(get_current_user_role() . '.project_report') }}");
-        }, 500);
-    </script>
-    <script>
         "use strict";
+        server_side_datatable('["id","date","project","amount","payment_types"]', "{{ route(get_current_user_role() . '.project_report') }}");
+
         document.addEventListener('DOMContentLoaded', function() {
             let payments = {!! json_encode($payments) !!};
             let colors = [
@@ -259,7 +261,7 @@
                     type: 'category'
                 },
                 title: {
-                    text: 'Project Income Bar',
+                    text: '{{get_phrase('Project Reports')}}',
                     align: 'left'
                 },
                 colors: colors // Ensure colors are applied
@@ -289,7 +291,7 @@
                 series: values,
                 labels: labels,
                 title: {
-                    text: 'Project Income Donut',
+                    text: '{{get_phrase('Project Reports')}}',
                     align: 'left'
                 },
                 colors: [

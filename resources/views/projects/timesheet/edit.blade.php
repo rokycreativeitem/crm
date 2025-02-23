@@ -13,7 +13,7 @@
                     </div>
                     <div class="fpb7 mb-2">
                         <label for="user" class="form-label">{{ get_phrase('Assign staff') }}</label>
-                        <select class="form-control ol-form-control ol-modal-select2" id="staff" name="staff" required>
+                        <select class="form-control ol-form-control ol-select2 ol-modal-select2" id="staff" name="staff" required>
                             <option value="all">{{ get_phrase('Select staff') }}</option>
                             @foreach ($staffs as $staff)
                                 <option value="{{$staff->id}}" {{$staff->id == $timesheet->staff ? 'selected':''}}> {{$staff->name}} </option>

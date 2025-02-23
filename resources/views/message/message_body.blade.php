@@ -14,14 +14,14 @@
             </div>
         </div>
         <div class="messenger-call-search d-flex align-items-center">
-            <form action="">
+            {{-- <form action="">
                 <div class="messenger-search">
                     <label>
                         <input type="search" class="form-control" placeholder="Search …" title="Search for:">
                     </label>
                     <button type="submit" hidden=""></button>
                 </div>
-            </form>
+            </form> --}}
         </div>
     </div>
     <ul class="messenger-body" id="scrollAbleContent">

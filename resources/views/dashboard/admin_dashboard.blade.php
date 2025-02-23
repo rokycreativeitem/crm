@@ -110,7 +110,9 @@
                                     @endphp
                                         <tr>
                                             <th scope="row"> {{ $key + 1 }} </th>
-                                            <td> {{ $recent->title }} </td>
+                                            <td>
+                                                <a href="{{route(get_current_user_role() . '.project.details', $recent->code)}}">{{$recent->title}}</a>
+                                            </td>
                                             <td> {{ $recent->user?->name }} </td>
                                             <td>
                                                 @php
@@ -229,12 +231,13 @@
                 },
     
                 series: [{
+                    name: '{{get_phrase('Total Revenue In This Month')}}',
                     data: dataArr
                 }],
     
     
                 title: {
-                    text: 'Admin Revenue In this year',
+                    text: '{{get_phrase('Admin Revenue In this year')}}',
                     align: 'left'
                 }
             };

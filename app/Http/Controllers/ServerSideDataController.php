@@ -220,7 +220,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><a href="javascript:void(0)" class="dropdown-item">' . get_phrase('No actions available') . '</a></li>';
                 }
 
                 return '
@@ -396,7 +396,7 @@ class ServerSideDataController extends Controller
             return $dash.$category?->name;
         })
         ->addColumn('parent', function ($category) {
-            return $category->parent ? Category::find($category->parent)?->name : '';
+            return $category->parent ? Category::find($category->parent)?->name : 'N/A';
         })
         ->addColumn('status', function ($category) {
             return $category->status == 1
@@ -423,7 +423,7 @@ class ServerSideDataController extends Controller
                 ';
             }
             if (empty($options)) {
-                $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                $options = '<li><a href="javascript:void(0)" class="dropdown-item">' . get_phrase('No actions available') . '</a></li>';
             }
 
             return '
@@ -434,6 +434,41 @@ class ServerSideDataController extends Controller
                     <ul class="dropdown-menu">' . $options . '</ul>
                 </div>
             ';
+        })
+        ->addColumn('context_menu', function ($category) {
+            $editRoute   = route(get_current_user_role() . '.project.category.edit', $category->id);
+            $deleteRoute = route(get_current_user_role() . '.project.category.delete', $category->id);
+            $options = '';
+            // Generate the context menu
+            $contextMenu = [];
+            if (has_permission('project.category.edit')) {
+                $contextMenu['Edit'] = [
+                    'type'        => 'ajax',
+                    'name'        => get_phrase('Edit'),
+                    'action_link' => $editRoute,
+                    'title'       => get_phrase('Edit Category'),
+                ];
+            }
+            if (has_permission('project.category.delete')) {
+                $contextMenu['Delete'] = [
+                    'type'        => 'ajax',
+                    'name'        => get_phrase('Delete'),
+                    'action_link' => $deleteRoute,
+                    'title'       => get_phrase('Delete Category'),
+                ];
+            }
+            if (empty($contextMenu)) {
+                $contextMenu = [
+                    'NoActions' => [
+                        'type'  => 'info',
+                        'name'  => get_phrase('No actions available'),
+                        'action_link' => 'javascript:void(0)',
+                        'title' => get_phrase('No actions are permitted for this project'),
+                    ],
+                ];
+            }
+            // JSON encode with unescaped slashes for cleaner URLs
+            return json_encode($contextMenu, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         })
         ->rawColumns(["id", "name", "parent", "status", "options"])
         ->setRowClass('context-menu')
@@ -522,7 +557,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><a href="javascript:void(0)" class="dropdown-item">' . get_phrase('No actions available') . '</span></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -695,7 +730,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><a href="javascript:void(0)" class="dropdown-item">' . get_phrase('No actions available') . '</a></li>';
                 }
                 return '
                     <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -783,7 +818,7 @@ class ServerSideDataController extends Controller
             $query->whereBetween('size', [$minSize, $maxSize]);
         }
 
-            if (auth()->user()->role_id != 1 && has_permission('file.download')) {
+            if (auth()->user()->role_id != 1 && !has_permission('file.download')) {
                 $getRolePermissions = ["id", "title", "type", "size", "date", "updated_by", "options"];
             } else {
                 $getRolePermissions = ["id", "title", "type", "size", "date", "updated_by", "downloaded", "options"];
@@ -818,12 +853,13 @@ class ServerSideDataController extends Controller
                 return User::where('id', $file->user_id)->first()->name;
             })
             ->addColumn('downloaded', function ($file) {
-                return '<a href="' . asset($file->file) . '" download="project-file.' . $file->extension . '" class="download-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4.92958 5.39042L4.92958 5.39041L4.92862 5.3905C3.61385 5.5146 2.6542 5.93651 2.02459 6.70783C1.39588 7.47804 1.10332 8.58816 1.10332 10.0736V10.1603C1.10332 11.8027 1.45436 12.987 2.22713 13.7598C2.99991 14.5326 4.18424 14.8836 5.82665 14.8836H10.1733C11.8157 14.8836 13 14.5326 13.7728 13.7615C14.5456 12.9904 14.8967 11.8094 14.8967 10.1736V10.0869C14.8967 8.59144 14.5991 7.4745 13.9602 6.70257C13.3204 5.92962 12.3457 5.5112 11.0111 5.39715C10.7022 5.36786 10.4461 5.59636 10.4169 5.89543C10.3874 6.19756 10.6157 6.46083 10.9151 6.49005L10.9158 6.4901C11.9763 6.57958 12.6917 6.86862 13.1444 7.43161C13.5984 7.99634 13.7967 8.84694 13.7967 10.0803V10.1669C13.7967 11.5202 13.5567 12.4212 12.9921 12.9858C12.4275 13.5504 11.5265 13.7903 10.1733 13.7903H5.82665C4.47345 13.7903 3.57245 13.5504 3.00784 12.9858C2.44324 12.4212 2.20332 11.5202 2.20332 10.1669V10.0803C2.20332 8.85356 2.39823 8.00609 2.84423 7.44127C3.28876 6.8783 3.99097 6.58615 5.03125 6.49007L5.03139 6.49006C5.33896 6.46076 5.5591 6.18959 5.52975 5.88876C5.50032 5.58704 5.22199 5.36849 4.92958 5.39042Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
-                    <path d="M7.45 9.92028C7.45 10.2212 7.69905 10.4703 8 10.4703C8.30051 10.4703 8.55 10.2283 8.55 9.92028V1.33362C8.55 1.03267 8.30095 0.783618 8 0.783618C7.69905 0.783618 7.45 1.03267 7.45 1.33362V9.92028Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
-                    <path d="M7.61153 11.0556C7.7214 11.1655 7.86101 11.2169 8.00022 11.2169C8.13943 11.2169 8.27904 11.1655 8.38891 11.0556L10.6222 8.8223C10.8351 8.60944 10.8351 8.25778 10.6222 8.04492C10.4094 7.83206 10.0577 7.83206 9.84487 8.04492L8.00022 9.88957L6.15558 8.04492C5.94272 7.83206 5.59106 7.83206 5.3782 8.04492C5.16534 8.25778 5.16534 8.60944 5.3782 8.8223L7.61153 11.0556Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
-                    </svg>
-                </a>';
+                return '<b>test </b>';
+                // return 'uuu'.'<a href="' . asset($file->file) . '" download="project-file.' . $file->extension . '" class="download-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                //     <path d="M4.92958 5.39042L4.92958 5.39041L4.92862 5.3905C3.61385 5.5146 2.6542 5.93651 2.02459 6.70783C1.39588 7.47804 1.10332 8.58816 1.10332 10.0736V10.1603C1.10332 11.8027 1.45436 12.987 2.22713 13.7598C2.99991 14.5326 4.18424 14.8836 5.82665 14.8836H10.1733C11.8157 14.8836 13 14.5326 13.7728 13.7615C14.5456 12.9904 14.8967 11.8094 14.8967 10.1736V10.0869C14.8967 8.59144 14.5991 7.4745 13.9602 6.70257C13.3204 5.92962 12.3457 5.5112 11.0111 5.39715C10.7022 5.36786 10.4461 5.59636 10.4169 5.89543C10.3874 6.19756 10.6157 6.46083 10.9151 6.49005L10.9158 6.4901C11.9763 6.57958 12.6917 6.86862 13.1444 7.43161C13.5984 7.99634 13.7967 8.84694 13.7967 10.0803V10.1669C13.7967 11.5202 13.5567 12.4212 12.9921 12.9858C12.4275 13.5504 11.5265 13.7903 10.1733 13.7903H5.82665C4.47345 13.7903 3.57245 13.5504 3.00784 12.9858C2.44324 12.4212 2.20332 11.5202 2.20332 10.1669V10.0803C2.20332 8.85356 2.39823 8.00609 2.84423 7.44127C3.28876 6.8783 3.99097 6.58615 5.03125 6.49007L5.03139 6.49006C5.33896 6.46076 5.5591 6.18959 5.52975 5.88876C5.50032 5.58704 5.22199 5.36849 4.92958 5.39042Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
+                //     <path d="M7.45 9.92028C7.45 10.2212 7.69905 10.4703 8 10.4703C8.30051 10.4703 8.55 10.2283 8.55 9.92028V1.33362C8.55 1.03267 8.30095 0.783618 8 0.783618C7.69905 0.783618 7.45 1.03267 7.45 1.33362V9.92028Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
+                //     <path d="M7.61153 11.0556C7.7214 11.1655 7.86101 11.2169 8.00022 11.2169C8.13943 11.2169 8.27904 11.1655 8.38891 11.0556L10.6222 8.8223C10.8351 8.60944 10.8351 8.25778 10.6222 8.04492C10.4094 7.83206 10.0577 7.83206 9.84487 8.04492L8.00022 9.88957L6.15558 8.04492C5.94272 7.83206 5.59106 7.83206 5.3782 8.04492C5.16534 8.25778 5.16534 8.60944 5.3782 8.8223L7.61153 11.0556Z" fill="#6D718C" stroke="#6D718C" stroke-width="0.1"/>
+                //     </svg>
+                // </a>';
             })
             ->addColumn('options', function ($file) {
                 $editRoute   = route(get_current_user_role() . '.file.edit', $file->id);
@@ -845,7 +881,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><a href="javascript:void(0)" class="dropdown-item">' . get_phrase('No actions available') . '</a></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -965,7 +1001,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><a href="javascript:void(0)" class="dropdown-item">' . get_phrase('No actions available') . '</a></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -1098,7 +1134,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><a href="javascript:void(0)" class="dropdown-item">' . get_phrase('No actions available') . '</a></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -1251,7 +1287,7 @@ class ServerSideDataController extends Controller
                         ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><a href="javascript:void(0)" class="dropdown-item">' . get_phrase('No actions available') . '</a></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -1376,7 +1412,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -1595,7 +1631,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    return '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    return '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
                 }
             })
             ->addColumn('context_menu', function ($role) {
@@ -1694,7 +1730,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
                 }
                 return '
             <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">
@@ -1872,7 +1908,7 @@ class ServerSideDataController extends Controller
                     ';
                 }
                 if (empty($options)) {
-                    $options = '<li><span class="dropdown-item text-muted">' . get_phrase('No actions available') . '</span></li>';
+                    $options = '<li><span class="dropdown-item text-muted fs-12px">' . get_phrase('No actions available') . '</span></li>';
                 }
                 return '
                 <div class="dropdown disable-right-click ol-icon-dropdown ol-icon-dropdown-transparent">

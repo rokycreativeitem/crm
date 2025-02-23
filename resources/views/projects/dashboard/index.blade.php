@@ -178,7 +178,9 @@
                         @endphp
                             <tr>
                                 <th scope="row"> {{ $key + 1 }} </th>
-                                <td> {{ $recent->title }} </td>
+                                <td>
+                                    <a href="{{route(get_current_user_role() . '.project.details', $recent->code)}}">{{$recent->title}}</a>
+                                </td>
                                 <td> {{ $recent->user?->name }} </td>
                                 <td>
                                     @php
@@ -358,12 +360,13 @@
             },
 
             series: [{
+                name: '{{get_phrase('Total Tickets In This Category')}}',
                 data: dataArr
             }],
 
 
             title: {
-                text: 'Project Income Bar',
+                text: '{{get_phrase('Project Category Bar')}}',
                 align: 'left'
             }
         };

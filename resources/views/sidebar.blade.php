@@ -319,7 +319,8 @@
                         </a>
                     </li>
                 @endif
-                @if (has_permission('project_report', 'client_report', 'offline.payments', 'payment_history'))
+              
+                @if (has_permission('report.offline.payment', 'report.payment.history', 'report.project', 'report.client'))
                     <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.project_report' || $current_route == get_current_user_role() . '.client_report' || $current_route == get_current_user_role() . '.offline.payments' || $current_route == get_current_user_role() . '.payment_history') active showMenu @endif">
                         <a href="javascript:void(0);">
                             <span>
@@ -344,18 +345,26 @@
                             </div>
                         </a>
                         <ul class="first-sub-menu">
+                            @if(has_permission('report.project'))
                             <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.project_report') active showMenu @endif">
                                 <a href="{{ route(get_current_user_role() . '.project_report') }}">{{ get_phrase('Project Report') }}</a>
                             </li>
+                            @endif
+                            @if(has_permission('report.client'))
                             <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.client_report') active showMenu @endif">
                                 <a href="{{ route(get_current_user_role() . '.client_report') }}">{{ get_phrase('Client Report') }}</a>
                             </li>
+                            @endif
+                            @if(has_permission('report.offline.payment'))
                             <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.offline.payments') active showMenu @endif">
                                 <a href="{{ route(get_current_user_role() . '.offline.payments') }}">{{ get_phrase('Offline payment') }}</a>
                             </li>
+                            @endif
+                            @if(has_permission('report.payment.history'))
                             <li class="sidebar-second-li @if ($current_route == get_current_user_role() . '.payment_history') active showMenu @endif">
                                 <a href="{{ route(get_current_user_role() . '.payment_history') }}">{{ get_phrase('Payment history') }}</a>
                             </li>
+                            @endif
                         </ul>
                     </li>
                 @endif

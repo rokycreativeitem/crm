@@ -2,7 +2,8 @@
 @push('title', get_phrase('Payments History'))
 
 @section('content')
-    <div class="row">
+<div class="position-relative h-500px">
+    <div class="row d-none" id="table-body">
         <div class="col-12">
             <div class="ol-card">
                 <div class="ol-card-body p-3 mb-10 position-relative" id="filters-container">
@@ -192,16 +193,15 @@
             </div>
         </div>
     </div>
-    @include('projects.budget_range')
+    @include('preloader')
+</div>
 @endsection
 
 @push('js')
     <script>
         "use strict";
-        setTimeout(function() {
-            server_side_datatable(
+        server_side_datatable(
                 '["id","payment_type","invoice_id","amount","transaction_id","payment_purpose", "created_at"]',
                 "{{ route(get_current_user_role() . '.payment_history') }}");
-        }, 500);
     </script>
 @endpush

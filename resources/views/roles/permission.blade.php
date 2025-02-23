@@ -10,7 +10,7 @@
                                 @php
                                     // Fetch all permissions related to "project"
                                     $project_category_permissions = App\Models\Permission::where('route', 'like', '%project.categor%')->get();
-                                    $permission_array = App\Models\RolePermission::where('role_id', request()->query('role'))->pluck('permission_id')->toArray();
+                                    $permission_array = App\Models\RolePermission::where('role_id', request()->query('role'))->pluck('permission_id')->toArray();                                    
                                 @endphp
 
                                 @foreach ($project_category_permissions as $category_permission)
@@ -107,7 +107,7 @@
 
                                 @foreach ($file_permissions as $file)
                                 @php
-                                    if ($file->route == 'file.store' || $file->route == 'report.offile.payment' || $file->route == 'file.multi-delete' || $file->route == 'file.edit' || $file->route == 'manage.profile' || $file->route == 'manage.profile.update') {
+                                    if ($file->route == 'file.store' || $file->route == 'report.offline.payment' || $file->route == 'file.multi-delete' || $file->route == 'file.edit' || $file->route == 'manage.profile' || $file->route == 'manage.profile.update') {
                                         continue;
                                     }
                                 @endphp
@@ -263,4 +263,26 @@
         </div>
     </div>
 </div>
-@include('script')
+<script>
+    "use strict";
+    function create_permission(permission) {
+        var url = '{{ route(get_current_user_role() . '.store.permissions') }}';
+        var csrfToken = '{{ csrf_token() }}';
+        var role_id = @json(request()->query('role'));
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            data: {
+                role_id: role_id,
+                permission: permission
+            },
+            success: function(response) {
+                processServerResponse(response);
+            }
+        });
+    }
+</script>

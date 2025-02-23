@@ -1,8 +1,10 @@
 @extends('layouts.admin')
 @push('title', get_phrase('Projects'))
 @section('content')
-    <div class="ol-card">
-        <div class="ol-card-body p-3">
+
+<div class="position-relative h-500px">
+    <div class="ol-card d-none" id="table-body">
+        <div class="ol-card-body position-relative p-3">
 
             <div class="ol-card radius-8px print-d-none">
                 <div class="ol-card-body px-2" id="filters-container">
@@ -76,14 +78,15 @@
                 <i class="fi fi-rr-trash"></i>
                 {{ get_phrase('Delete') }}
             </button>
-
-        </div>
+            
+        </div>      
     </div>
+    @include('preloader')
+</div>
 @endsection
 @push('js')
     <script>
-        setTimeout(function() {
-            server_side_datatable('["id","name","parent","status","options"]', '{{ route(get_current_user_role() . '.project.categories') }}');
-        }, 500);
+        "use strict";
+        server_side_datatable('["id","name","parent","status","options"]', '{{ route(get_current_user_role() . '.project.categories') }}');
     </script>
 @endpush

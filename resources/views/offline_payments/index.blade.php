@@ -2,7 +2,8 @@
 @push('title', get_phrase('Offline payments'))
 
 @section('content')
-    <div class="row">
+<div class="position-relative h-500px">
+    <div class="row d-none" id="table-body">
         <div class="col-12">
             <div class="ol-card">
                 
@@ -186,7 +187,7 @@
                 <div class="d-none d-lg-block">
                     <div class="page-length-select fs-12px margin--40px d-flex align-items-center position-absolute">
                         <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>
-                        <select id="page-length-select" class="form-select fs-12px w-auto ol-select2">
+                        <select id="page-length-select" class="form-select fs-12px w-auto ol-niceSelect">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
                             <option value="50">50</option>
@@ -205,17 +206,15 @@
             </div>
         </div>
     </div>
-    </div>
-    @include('projects.budget_range')
+    @include('preloader')
+</div>
 
 @endsection
 @push('js')
 
     <script>
         "use strict";
-        setTimeout(function() {
-            server_side_datatable('["id","user_info","item_type","total_amount","date","download","status","options"]', "{{ route(get_current_user_role() . '.offline.payments') }}");
-        }, 500);
+        server_side_datatable('["id","user_info","item_type","total_amount","date","download","status","options"]', "{{ route(get_current_user_role() . '.offline.payments') }}");
        
     </script>
 @endpush

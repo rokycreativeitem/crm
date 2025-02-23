@@ -282,35 +282,34 @@ class ProjectController extends Controller
     public function exportFile(Request $request, $file) {
         // Build the query based on the filters
         $query = Project::query();
-
         if (isset($request->customSearch)) {
             $string = $request->customSearch;
             $query->where(function ($q) use ($string) {
                 $q->where('title', 'like', "%{$string}%")
-                    ->orWhere('code', 'like', "%{$string}%")
-                    ->orWhereHas('user', function ($userQuery) use ($string) {
-                        $userQuery->where('name', 'like', "%{$string}%");
+                ->orWhere('code', 'like', "%{$string}%")
+                ->orWhereHas('user', function ($userQuery) use ($string) {
+                    $userQuery->where('name', 'like', "%{$string}%");
                 });
             });
         }
 
         // Apply category filter
-        if ($request->category != 'all') {
+        if ($request->category && $request->category != 'all') {
             $query = $query->where('category_id', $request->category);
         }
     
         // Apply status filter
-        if ($request->status != 'all') {
+        if ($request->status && $request->status != 'all') {
             $query = $query->where('status', $request->status);
         }
     
         // Apply client filter
-        if ($request->client != 'all') {
+        if ($request->client && $request->client != 'all') {
             $query = $query->where('client_id', $request->client);
         }
     
         // Apply staff filter
-        if ($request->staff != 'all') {
+        if ($request->staff && $request->staff != 'all') {
             $staff = json_decode($request->staff, true); // Decode the staff JSON
             if (!empty($staff)) {
                 foreach ($staff as $staffId) {
@@ -320,11 +319,14 @@ class ProjectController extends Controller
         }
     
         // Apply price filter
-        $maxPrice = (int) str_replace('$', '', $request->maxPrice);
-        $minPrice = (int) str_replace('$', '', $request->minPrice);
-        if ($minPrice > 0 && $maxPrice > 0) {
-            $query = $query->whereBetween('budget', [$minPrice, $maxPrice]);
+        if($request->maxPrice && $request->minPrice) {
+            $maxPrice = (int) str_replace('$', '', $request->maxPrice);
+            $minPrice = (int) str_replace('$', '', $request->minPrice);
+            if ($minPrice > 0 && $maxPrice > 0) {
+                $query = $query->whereBetween('budget', [$minPrice, $maxPrice]);
+            }
         }
+
     
         // Check the file type and generate the appropriate response
         if ($file == 'pdf') {

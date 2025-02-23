@@ -10,11 +10,11 @@
                         <input class="form-control ol-form-control" type="text" id="title" name="title">
                     </div>
                     <div class="fpb7 mb-2">
-                        <label class="form-label ol-form-label" for="status">{{ get_phrase('Status') }}</label>
-                        <select class="form-control ol-form-control ol-select2" data-toggle="select2" id="status"
+                        <label class="form-label ol-form-label" for="status">{{ get_phrase('Task status') }}</label>
+                        <select class="form-control ol-form-control ol-select2 ol-modal-select2" id="status"
                             name="status" required>
                             <option value="">
-                                {{ get_phrase('Select') }}</option>
+                                {{ get_phrase('Select Status') }}</option>
                             <option value="in_progress">{{ get_phrase('In Progress') }}</option>
                             <option value="not_started">{{ get_phrase('Not Started') }}</option>
                             <option value="completed">{{ get_phrase('Completed') }}</option>
@@ -57,3 +57,13 @@
         </form>
     </div>
 </div>
+
+<script>
+    $(".ol-modal-select2").select2({
+        dropdownParent: $('#ajaxOffcanvas')
+    });
+    $(".ol-modal-niceSelect").niceSelect({
+        dropdownParent: $('#ajaxOffcanvas')
+    });
+</script>
+

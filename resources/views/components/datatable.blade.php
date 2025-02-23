@@ -12,6 +12,11 @@
     </div>
 </div>
 <script>
+    $(function(){
+        $('#loading-spinner').removeClass('d-none'); // Show preloader
+        $('#table-body').addClass('d-none');
+    })
+
     new DataTable('#basic-datatable', {
         orderCellsTop: true,
         ordering: false
@@ -19,6 +24,146 @@
 
     // server side data table rendering
     var tableInstance;
+    // function server_side_datatable(columnsParam, url) {
+    //     let columnsArray = Array.isArray(columnsParam) ? columnsParam : JSON.parse(columnsParam);
+    //     if (!Array.isArray(columnsArray)) {
+    //         console.error("{{ get_phrase('The columns parameter should be an array or a JSON-encoded array') }}.");
+    //         return;
+    //     }
+    //     let columns = columnsArray.map(columnKey => {
+    //         return {
+    //             data: columnKey
+    //         };
+    //     });
+    //     const noData = $('#table-data-not-found').html();
+    //     var table = new DataTable('.server-side-datatable', {
+    //         processing: true,
+    //         serverSide: true,
+    //         info: true,
+    //         ajax: {
+    //             url: url,
+    //             type: 'GET',
+    //             data: function(d) {
+    //                 $('#filters-container :input').each(function() {
+    //                     var name = $(this).attr('name');
+    //                     var value = $(this).val();
+    //                     if (name) {
+    //                         d[name] = value || null;
+    //                     }
+    //                 });
+    //             },
+    //             // success: function(response) {
+    //             //     console.log(response);
+    //             //     // $('#filter-count-display').text(response.filter_count);
+    //             // },
+    //             // error: function(xhr, error, thrown) {
+    //             //     console.log(xhr.responseText);
+    //             // }
+    //         },
+    //         columns: columns,
+    //         orderCellsTop: true,
+    //         ordering: false,
+    //         pageLength: 10,
+    //         paging: true,
+    //         language: {
+    //             emptyTable: noData,
+    //         },
+    //     });
+    //     tableInstance = table;
+
+    //     table.on('xhr', function(e, settings, json) {
+    //         // console.log(json.filter_count);
+    //         if (json.filter_count > 0) {
+    //             $('#filter-count-display').text(json.filter_count).removeClass('d-none');
+    //             $('#filter-reset').removeClass('d-none');
+    //         }
+    //     });
+
+    //     $('.server-side-datatable tbody').on('contextmenu', 'tr', function(e) {
+    //         e.preventDefault();
+    //         e.stopPropagation();
+
+    //         var rowData = table.row(this).data();
+    //         var contextMenuData;
+
+    //         try {
+    //             var rawContextMenu = decodeHtmlEntities(rowData.context_menu);
+    //             contextMenuData = JSON.parse(rawContextMenu);
+    //             // console.log(contextMenuData)
+    //         } catch (e) {
+    //             console.log("Error decoding or parsing context menu JSON:", e);
+    //             return;
+    //         }
+
+    //         // Build and display context menu
+    //         let menuHtml = '<ul class="custom-context-menu">';
+    //         for (const key in contextMenuData) {
+    //             const item = contextMenuData[key];
+    //             let linkHtml = '';
+
+    //             if (item.type === 'ajax' && item.name.toLowerCase() === 'edit') {
+    //                 linkHtml = `<a href="javascript:void(0)" onclick="rightCanvas('${item.action_link}')" title="${item.title}">${item.name}</a>`;
+    //             } else if (item.type === 'ajax' && item.name.toLowerCase() === 'delete') {
+    //                 linkHtml = `<a href="javascript:void(0)" onclick="confirmModal('${item.action_link}')" title="${item.title}">${item.name}</a>`;
+    //             } else {
+    //                 linkHtml = `<a href="${item.action_link}" title="${item.title}">${item.name}</a>`;
+    //             }
+
+    //             menuHtml += `<li>${linkHtml}</li>`;
+    //         }
+    //         menuHtml += '</ul>';
+
+    //         // Append and position the context menu
+    //         $('body').append(menuHtml);
+    //         $('.custom-context-menu').css({
+    //             top: e.pageY + 'px',
+    //             left: e.pageX + 'px'
+    //         }).show();
+    //     });
+
+    //     // Utility to decode HTML entities
+    //     function decodeHtmlEntities(str) {
+    //         var textarea = document.createElement('textarea');
+    //         textarea.innerHTML = str;
+    //         return textarea.value;
+    //     }
+
+    //     // Hide context menu when clicking elsewhere
+    //     $(document).on('click', function() {
+    //         $('.custom-context-menu').remove();
+    //     });
+
+    //     // Optional: Adjust context menu styling
+    //     $(document).on('contextmenu', function(e) {
+    //         $('.custom-context-menu').remove();
+    //     });
+
+    //     $('#custom-search-box').on('keyup', function(e) {
+    //         let name = $(this).attr('name');
+    //         let value = $(this).val();
+
+    //         let existingInput = $('#project-filter').find(`input[name="${name}"]`);
+
+    //         if (existingInput.length) {
+    //             // Update existing input value
+    //             existingInput.val(value);
+    //         } else {
+    //             // Append new input field if it doesn't exist
+    //             let rowHtml = `<input type="text" id="${name}" name="${name}" value="${value}" readonly class="form-control">`;
+    //             $('#project-filter').append(rowHtml);
+    //         }
+
+    //         table.ajax.reload();
+    //     });
+
+
+    //     $('#page-length-select').on('change', function() {
+    //         var newLength = $(this).val();
+    //         table.page.len(newLength).draw();
+    //     });
+
+    // }
+
     function server_side_datatable(columnsParam, url) {
         let columnsArray = Array.isArray(columnsParam) ? columnsParam : JSON.parse(columnsParam);
         if (!Array.isArray(columnsArray)) {
@@ -30,7 +175,9 @@
                 data: columnKey
             };
         });
+
         const noData = $('#table-data-not-found').html();
+
         var table = new DataTable('.server-side-datatable', {
             processing: true,
             serverSide: true,
@@ -47,13 +194,13 @@
                         }
                     });
                 },
-                // success: function(response) {
-                //     console.log(response);
-                //     // $('#filter-count-display').text(response.filter_count);
-                // },
-                // error: function(xhr, error, thrown) {
-                //     console.log(xhr.responseText);
-                // }
+                beforeSend: function() {
+                    
+                },
+                complete: function() {
+                        $('#loading-spinner').addClass('d-none'); // Hide preloader
+                        $('#table-body').removeClass('d-none');
+                }
             },
             columns: columns,
             orderCellsTop: true,
@@ -61,27 +208,18 @@
             pageLength: 10,
             paging: true,
             language: {
-                emptyTable: noData,
+                emptyTable: noData
             },
         });
+
         tableInstance = table;
 
         table.on('xhr', function(e, settings, json) {
-            // console.log(json.filter_count);
             if (json.filter_count > 0) {
                 $('#filter-count-display').text(json.filter_count).removeClass('d-none');
                 $('#filter-reset').removeClass('d-none');
             }
         });
-
-        
-
-        // $('.server-side-datatable').on('xhr.dt', function(e, settings, json) {
-        //     if (json.no_data) {
-        //         $('#server_side_table_wrapper').html(json.no_data);
-        //     }
-        // });
-
 
         $('.server-side-datatable tbody').on('contextmenu', 'tr', function(e) {
             e.preventDefault();
@@ -93,22 +231,22 @@
             try {
                 var rawContextMenu = decodeHtmlEntities(rowData.context_menu);
                 contextMenuData = JSON.parse(rawContextMenu);
-                // console.log(contextMenuData)
             } catch (e) {
                 console.log("Error decoding or parsing context menu JSON:", e);
                 return;
             }
 
-            // Build and display context menu
             let menuHtml = '<ul class="custom-context-menu">';
             for (const key in contextMenuData) {
                 const item = contextMenuData[key];
                 let linkHtml = '';
 
                 if (item.type === 'ajax' && item.name.toLowerCase() === 'edit') {
-                    linkHtml = `<a href="javascript:void(0)" onclick="rightCanvas('${item.action_link}')" title="${item.title}">${item.name}</a>`;
+                    linkHtml =
+                        `<a href="javascript:void(0)" onclick="rightCanvas('${item.action_link}')" title="${item.title}">${item.name}</a>`;
                 } else if (item.type === 'ajax' && item.name.toLowerCase() === 'delete') {
-                    linkHtml = `<a href="javascript:void(0)" onclick="confirmModal('${item.action_link}')" title="${item.title}">${item.name}</a>`;
+                    linkHtml =
+                        `<a href="javascript:void(0)" onclick="confirmModal('${item.action_link}')" title="${item.title}">${item.name}</a>`;
                 } else {
                     linkHtml = `<a href="${item.action_link}" title="${item.title}">${item.name}</a>`;
                 }
@@ -117,7 +255,6 @@
             }
             menuHtml += '</ul>';
 
-            // Append and position the context menu
             $('body').append(menuHtml);
             $('.custom-context-menu').css({
                 top: e.pageY + 'px',
@@ -125,19 +262,16 @@
             }).show();
         });
 
-        // Utility to decode HTML entities
         function decodeHtmlEntities(str) {
             var textarea = document.createElement('textarea');
             textarea.innerHTML = str;
             return textarea.value;
         }
 
-        // Hide context menu when clicking elsewhere
         $(document).on('click', function() {
             $('.custom-context-menu').remove();
         });
 
-        // Optional: Adjust context menu styling
         $(document).on('contextmenu', function(e) {
             $('.custom-context-menu').remove();
         });
@@ -145,31 +279,28 @@
         $('#custom-search-box').on('keyup', function(e) {
             let name = $(this).attr('name');
             let value = $(this).val();
-            
             let existingInput = $('#project-filter').find(`input[name="${name}"]`);
-            
+
             if (existingInput.length) {
-                // Update existing input value
                 existingInput.val(value);
             } else {
-                // Append new input field if it doesn't exist
-                let rowHtml = `<input type="text" id="${name}" name="${name}" value="${value}" readonly class="form-control">`;
+                let rowHtml =
+                    `<input type="text" id="${name}" name="${name}" value="${value}" readonly class="form-control">`;
                 $('#project-filter').append(rowHtml);
             }
 
             table.ajax.reload();
         });
 
-
         $('#page-length-select').on('change', function() {
             var newLength = $(this).val();
             table.page.len(newLength).draw();
         });
-
     }
 
-    
-    function reloadDataTable(){
+
+
+    function reloadDataTable() {
         tableInstance.ajax.reload();
     }
 
@@ -221,7 +352,8 @@
         // Handle filter-reset button click
         $('#filter-reset').on('click', function() {
             // Reset select elements to 'all'
-            $('#status, #client, #staff, #category, #task, #team, #size, #uploaded_by, #type, #user, #payment_method').val('all');
+            $('#status, #client, #staff, #category, #task, #team, #size, #uploaded_by, #type, #user, #payment_method')
+                .val('all');
 
             $('#filter-reset').toggleClass('d-none');
             $('#filter-count-display').toggleClass('d-none');

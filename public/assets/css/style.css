@@ -7115,4 +7115,25 @@ div.dt-container div.dt-paging ul.pagination {
 .btn-close:focus {
     box-shadow: none !important;
 }
+.apexcharts-datalabel {
+        fill: #fff !important;
+    }
+
+.table-preloader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+.h-500px {
+    height: 500px !important;
+}
+span.dropdown-item.text-muted.fs-12px {
+    padding: 0;
+    background: transparent;
+}
+span.dropdown-item.text-muted.fs-12px:hover {
+    color: var(--active-color) !important;
+}
 

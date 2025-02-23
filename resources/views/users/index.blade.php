@@ -1,8 +1,9 @@
 @extends('layouts.admin')
 @push('title', get_phrase('Users'))
-
 @section('content')
-    <div class="row">
+
+<div class="position-relative h-500px">
+    <div class="row d-none" id="table-body">
         <div class="col-12">
             <div class="ol-card">
                 <div class="ol-card-body p-3 mb-10 position-relative" id="filters-container">
@@ -131,14 +132,13 @@
             </div>
         </div>
     </div>
+@include('preloader')
+</div>
+
 @endsection
-
-
 @push('js')
     <script>
         "use strict";
-        setTimeout(function() {
-            server_side_datatable('["id","photo","name","email","options"]', "{{ route(get_current_user_role() . '.users', request()->route()->parameter('type')) }}");
-        }, 500);
+        server_side_datatable('["id","photo","name","email","options"]', "{{ route(get_current_user_role() . '.users', request()->route()->parameter('type')) }}");
     </script>
 @endpush

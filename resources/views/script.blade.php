@@ -220,27 +220,6 @@
         }
     }
 
-    function create_permission(permission) {
-        var url = '{{ route(get_current_user_role() . '.store.permissions') }}';
-        var csrfToken = '{{ csrf_token() }}';
-        var role_id = @json(request()->query('role'));
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            },
-            data: {
-                role_id: role_id,
-                permission: permission
-            },
-            success: function(response) {
-                processServerResponse(response);
-            }
-        });
-    }
-
     function handleAjaxFormSubmission(ajaxFormId) {
         const form = document.getElementById(ajaxFormId);
         if (!form) return;
@@ -283,6 +262,13 @@
             if (window.location.pathname.includes("/admin/events")) {
                 location.reload();
             }
+            if (window.location.pathname.includes("/client/events")) {
+                location.reload();
+            }
+            if (window.location.pathname.startsWith("/client/event/delete/")) {
+                location.reload();
+            }
+
             if (typeof grid_view === "function") {
                 grid_view();
             }
