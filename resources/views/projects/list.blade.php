@@ -28,7 +28,7 @@
                                     <input type="text" class="form-control" name="customSearch"
                                         id="custom-search-box" placeholder="Search">
                                 </div>
-                                <a href="{{ route('admin.projects', ['layout' => 'grid']) }}"
+                                <a href="{{ route(get_current_user_role().'.projects', ['layout' => 'grid']) }}"
                                     class="grid-icon {{ request('layout') === 'grid' ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{get_phrase('Grid View')}}">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +53,7 @@
                                         </defs>
                                     </svg>
                                 </a>
-                                <a href="{{ route('admin.projects', ['layout' => 'list']) }}"
+                                <a href="{{ route(get_current_user_role().'.projects', ['layout' => 'list']) }}"
                                     class="grid-icon {{ request('layout') === 'list' || request('layout') == '' ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{get_phrase('List View')}}">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -130,9 +130,8 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item export-btn" href="#"
-                                                onclick="window.print();">
-
+                                            <a class="dropdown-item export-btn" href="javascript:void(0)"
+                                            onclick="exportFile('{{ route(get_current_user_role() . '.project.export-file', ['file' => 'print']) }}')">
                                                 <svg width="16" height="16" viewBox="0 0 16 16"
                                                     fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path

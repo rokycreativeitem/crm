@@ -35,26 +35,32 @@ class ProjectController extends Controller
         $user                   = Auth::user();
         $page_data['layout']    = $layout;
         $page_data['page_item'] = 12;
-        if ($request->ajax() && $request->layout == 'grid') {
+
+        if ($request->ajax() && $layout == 'grid') {
             $pagination = $request->page_item ?? $page_data['page_item'];
             if ($request) {
                 $filter_count = [];
                 $projects     = Project::query();
+
                 if ($request->customSearch) {
                     $projects = Project::where('title', 'like', '%' . $request->customSearch . '%');
                 }
+
                 if ($request->category && $request->category != 'all') {
                     $filter_count[] = $request->category;
                     $projects       = $projects->where('category_id', $request->category);
                 }
+
                 if ($request->status && $request->status != 'all') {
                     $filter_count[] = $request->status;
                     $projects       = $projects->where('status', $request->status);
                 }
+
                 if ($request->client && $request->client != 'all') {
                     $filter_count[] = $request->client;
                     $projects       = $projects->where('client_id', $request->client);
                 }
+
                 if ($request->staff && $request->staff != 'all') {
                     $filter_count[] = $request->staff;
                     $staff          = json_encode($request->staff);
@@ -65,8 +71,6 @@ class ProjectController extends Controller
 
                 $maxPrice = (int) str_replace('$', '', $request->maxPrice);
                 $minPrice = (int) str_replace('$', '', $request->minPrice);
-                // $maxPrice = (int) $request->maxPrice;
-                // $minPrice = (int) $request->minPrice;
                 if ($minPrice > 0 && is_numeric($minPrice) && is_numeric($maxPrice)) {
                     $filter_count[] = $minPrice ?? $maxPrice;
                     $projects->whereBetween('budget', [$minPrice, $maxPrice]);
@@ -84,11 +88,10 @@ class ProjectController extends Controller
         if ($request->ajax() && $layout != 'grid') {
             return app(ServerSideDataController::class)->project_server_side($request->customSearch, $request->category, $request->status, $request->client, $request->staff, str_replace('$', '', $request->minPrice), str_replace('$', '', $request->maxPrice));
         }
-
         if (get_current_user_role() == 'client') {
-            $page_data['projects'] = Project::with('user')->where('client_id', $user->id)->get();
+            $page_data['projects'] = Project::with('user')->where('client_id', $user->id)->paginate(12);
         } elseif (get_current_user_role() == 'staff') {
-            $page_data['projects'] = Project::with('user')->whereJsonContains('staffs', (string) $user->id)->get();
+            $page_data['projects'] = Project::with('user')->whereJsonContains('staffs', (string) $user->id)->paginate(12);
         } else {
             $page_data['projects'] = Project::with('user')->paginate(12);
         }
@@ -282,6 +285,14 @@ class ProjectController extends Controller
     public function exportFile(Request $request, $file) {
         // Build the query based on the filters
         $query = Project::query();
+
+        $user = Auth::user();
+        if (get_current_user_role() == 'client') {
+            $query->where('client_id', $user->id);
+        } elseif (get_current_user_role() == 'staff') {
+            $query->whereJsonContains('staffs', (string) $user->id);
+        }
+
         if (isset($request->customSearch)) {
             $string = $request->customSearch;
             $query->where(function ($q) use ($string) {
@@ -329,10 +340,17 @@ class ProjectController extends Controller
 
     
         // Check the file type and generate the appropriate response
+        $page_data['projects'] = (count($request->all()) > 0 || get_current_user_role() != 'admin') ? $query->get() : Project::get();
         if ($file == 'pdf') {
-            $page_data['projects'] = count($request->all()) > 0 ? $query->get() : Project::get();
             $pdf = FacadePdf::loadView('projects.pdf', $page_data);
             return $pdf->download('projects.pdf');
+            // return response()->streamDownload(function() use ($pdf) {
+            //     echo $pdf->output();
+            // }, 'projects.pdf');
+        }
+        if ($file == 'print') {
+            $pdf = FacadePdf::loadView('projects.pdf', $page_data);
+            return $pdf->stream('projects.pdf');
             // return response()->streamDownload(function() use ($pdf) {
             //     echo $pdf->output();
             // }, 'projects.pdf');
@@ -349,7 +367,7 @@ class ProjectController extends Controller
             ];
     
             // Use the filtered query to get the projects for CSV
-            $projects = count($request->all()) > 0 ? $query->get() : Project::all();
+            $projects = (count($request->all()) > 0 || get_current_user_role() != 'admin') ? $query->get() : Project::all();
     
             $columns = ['#', 'Title', 'Code', 'Client', 'Staff', 'Budget', 'Progress', 'Status'];
             

@@ -19,6 +19,7 @@ use App\Models\Timesheet;
 use App\Models\User;
 use Faker\Provider\ar_EG\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ServerSideDataController extends Controller
@@ -27,6 +28,14 @@ class ServerSideDataController extends Controller
     public function project_server_side($string, $category, $status, $client, $staff, $minPrice, $maxPrice)
     {
         $query = Project::query();
+
+        $user = Auth::user();
+        if (get_current_user_role() == 'client') {
+            $query->where('client_id', $user->id);
+        } elseif (get_current_user_role() == 'staff') {
+            $query->whereJsonContains('staffs', (string) $user->id);
+        }
+
         if (!empty($string)) {
             $query->where(function ($q) use ($string) {
                 $q->where('title', 'like', "%{$string}%")

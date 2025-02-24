@@ -10,6 +10,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MilestoneController;
+use App\Http\Controllers\OfflinePaymentController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
@@ -42,6 +43,8 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::get('project-category/delete/{id}', 'category_delete')->name('project.category.delete');
         Route::get('project-category/edit/{id}', 'category_edit')->name('project.category.edit');
         // Route::post('project-category/update/{id}', 'category_update')->name('project.category.update');
+        Route::get('filter/{param}', 'filter')->name('filter');
+
     });
 
     Route::controller(MilestoneController::class)->group(function () {
@@ -53,6 +56,7 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::post('milestone/update/{id}', 'update')->name('milestone.update');
         Route::post('milestone/multi-delete', 'multiDelete')->name('milestone.multi-delete');
         Route::get('milestone/tasks/{id}', 'show')->name('milestone.tasks');
+        Route::get('milestone-export/{file}/{code}', 'exportFile')->name('milestone.export-file');
 
     });
 
@@ -66,6 +70,7 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::post('task/multi-delete', 'multiDelete')->name('task.multi-delete');
 
         Route::get('tasks-datatable', 'index')->name('tasks.datatable');
+        Route::get('task-export/{file}/{code}', 'exportFile')->name('task.export-file');
 
     });
 
@@ -82,6 +87,7 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::post('file/update/{id}', 'update')->name('file.update');
         Route::post('file/multi-delete', 'multiDelete')->name('file.multi-delete');
         Route::get('file/download/{id}', 'download')->name('file.download');
+        Route::get('file-export/{file}/{code}', 'exportFile')->name('file.export-file');
 
     });
 
@@ -121,6 +127,7 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::post('invoice/multi-delete', 'multiDelete')->name('invoice.multi-delete');
         Route::get('invoice/payout/{id}', 'payout')->name('invoice.payout');
         Route::get('invoice/view/{id}', 'view')->name('invoice.view');
+        Route::get('invoice-export/{file}/{code}', 'exportFile')->name('invoice.export-file');
     });
 
     Route::controller(TimesheetController::class)->group(function () {
@@ -131,6 +138,7 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::get('timesheet/edit/{id}', 'edit')->name('timesheet.edit');
         Route::post('timesheet/update/{id}', 'update')->name('timesheet.update');
         Route::post('timesheet/multi-delete', 'multiDelete')->name('timesheet.multi-delete');
+        Route::get('timesheet-export/{file}/{code}', 'exportFile')->name('timesheet.export-file');
     });
 
     // manage roles
@@ -163,12 +171,12 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::get('message/message_left_side_bar', 'message_left_side_bar')->name('message.message_left_side_bar');
     });
 
-    Route::controller(ReportController::class)->group(function () {
+    // Route::controller(ReportController::class)->group(function () {
 
-        Route::get('project_report', 'project_report')->name('project_report');
-        Route::get('client_report', 'client_report')->name('client_report');
+    //     Route::get('project_report', 'project_report')->name('project_report');
+    //     Route::get('client_report', 'client_report')->name('client_report');
 
-    });
+    // });
     Route::controller(AddonController::class)->group(function () {
         Route::get('update/center', 'index')->name('update.center');
         Route::get('addon/add', 'add')->name('addon.add');
@@ -198,6 +206,32 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::get('about', 'about')->name('about');
         Route::any('save_valid_purchase_code/{action_type?}', 'save_valid_purchase_code')->name('save_valid_purchase_code');
 
+    });
+
+    Route::controller(ReportController::class)->group(function () {
+
+        Route::get('projects_report', 'project_report')->name('project_report');
+        Route::get('client_report', 'client_report')->name('client_report');
+        Route::get('payment_history', 'payment_history')->name('payment_history');
+        Route::get('project-report-export/{file}', 'UserReportExportFile')->name('project-report.export-file');
+        Route::get('client-report-export/{file}', 'ClientReportExportFile')->name('client-report.export-file');
+        Route::get('payment-report-export/{file}', 'paymentReportExportFile')->name('payment-report.export-file');
+
+
+    });
+
+    Route::controller(OfflinePaymentController::class)->group(function () {
+        Route::get('offline-payments', 'index')->name('offline.payments');
+        Route::get('offline-payment/doc/{id}', 'download_doc')->name('offline.payment.doc');
+        Route::get('offline-payment/accept/{id}', 'accept_payment')->name('offline.payment.accept');
+        Route::get('offline-payment/decline/{id}', 'decline_payment')->name('offline.payment.decline');
+        
+        Route::get('confirm_email', 'confirm_email')->name('confirm_email');
+        // Route::get('verify_email', 'verify_email')->name('verify_email');
+        // Route::get('success_login', 'success_login')->name('success_login');
+        // Route::get('payment', 'payment')->name('payment');
+        // Route::get('invoice-template', 'invoice')->name('invoice.template');
+        Route::get('offline-report-export/{file}', 'ExportFile')->name('offline-report.export-file');
     });
 
     Route::get('select-language/{language}', [LanguageController::class, 'select_lng'])->name('select.language');

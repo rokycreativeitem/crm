@@ -28,7 +28,7 @@
                                     <input type="text" class="form-control" name="customSearch"
                                         id="custom-search-box" placeholder="Search">
                                 </div>
-                                <a href="{{ route('admin.projects', ['layout' => 'grid']) }}"
+                                <a href="{{ route(get_current_user_role().'.projects', ['layout' => 'grid']) }}"
                                     class="grid-icon {{ request('layout') === 'grid' ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{get_phrase('Grid View')}}">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +53,7 @@
                                         </defs>
                                     </svg>
                                 </a>
-                                <a href="{{ route('admin.projects', ['layout' => 'list']) }}"
+                                <a href="{{ route(get_current_user_role().'.projects', ['layout' => 'list']) }}"
                                     class="grid-icon {{ request('layout') === 'list' || request('layout') == '' ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{get_phrase('List View')}}">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -377,7 +377,7 @@
                             </div>
                         @endforeach
                     @else
-                        <div class="col-sm-6">
+                        <div class="col-sm-6 m-auto">
                             <div id="table-data-not-found" class="my-4">
                                 <div class="no-data py-5">
                                     <img src="{{ asset('assets/images/no-data.png') }}" alt="No Data" style="max-width: 150px;">
@@ -387,7 +387,7 @@
                             </div>
                         </div>
                     @endif
-
+                   
                     <div class="d-flex justify-content-between align-items-center d-lpaginate">
                         <div class="page-length-select fs-12px d-flex align-items-center mt-3 w-260">
                             <label for="page-length-select" class="pe-2">{{ get_phrase('Showing') }}:</label>

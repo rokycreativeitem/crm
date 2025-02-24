@@ -6071,7 +6071,7 @@ div.dt-container .dt-paging .dt-paging-button {
 div.dt-container .dt-paging .dt-paging-button:hover {
     color: white !important;
     background: #1b84ff;
-    border-color: #1b84ff !important;
+    border: 1px solid rgba(129, 129, 149, 0.2);
 }
 div.dt-container .dt-paging .dt-paging-button.current,
 div.dt-container .dt-paging .dt-paging-button.current:hover {

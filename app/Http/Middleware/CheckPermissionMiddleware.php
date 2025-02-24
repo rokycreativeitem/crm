@@ -84,8 +84,22 @@ class CheckPermissionMiddleware
         if(!isset($route)) {
             $route = Route::currentRouteName();
         }
-
-        if (!in_array($route, $prefixedRoutes)) {
+        // print_r($route);
+        // die;
+        if($route == get_current_user_role().'.project_report') {
+            $route = get_current_user_role().'.report.project';
+        }
+        if($route == get_current_user_role().'.client_report') {
+            $route = get_current_user_role().'.report.client';
+        }
+        if($route == get_current_user_role().'.payment_history') {
+            $route = get_current_user_role().'.report.payment.history';
+        }
+        if($route == get_current_user_role().'.offline.payments') {
+            $route = get_current_user_role().'.report.offline.payment';
+        }
+        
+        if ($route != get_current_user_role().'.project.export-file' && !in_array($route, $prefixedRoutes)) {
             return redirect()->route($dashboardRoute)->with('error', 'You do not have permission to access this page.');
         }
 

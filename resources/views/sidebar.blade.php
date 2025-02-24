@@ -302,6 +302,7 @@
                         </a>
                     </li>
                 @endif
+                
                 @if (has_permission('message', 'message.store', 'message.thread.store', 'message.message_new', 'message.message_left_side_bar'))
                     <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.message') active showMenu @endif ">
                         <a href="{{ route(get_current_user_role() . '.message') }}">
@@ -320,7 +321,7 @@
                     </li>
                 @endif
               
-                @if (has_permission('report.offline.payment', 'report.payment.history', 'report.project', 'report.client'))
+                @if (has_permission('report.offline.payment') || has_permission('report.payment.history') || has_permission('report.project') || has_permission('report.client'))
                     <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.project_report' || $current_route == get_current_user_role() . '.client_report' || $current_route == get_current_user_role() . '.offline.payments' || $current_route == get_current_user_role() . '.payment_history') active showMenu @endif">
                         <a href="javascript:void(0);">
                             <span>

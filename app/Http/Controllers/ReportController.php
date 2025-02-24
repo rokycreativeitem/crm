@@ -16,6 +16,7 @@ class ReportController extends Controller
     public function project_report(Request $request)
     {
 
+
         if ($request->ajax()) {
             return app(ServerSideDataController::class)->project_report_server_side($request->customSearch, $request->payment_method, $request->start_date, $request->minPrice, $request->maxPrice);
         }
