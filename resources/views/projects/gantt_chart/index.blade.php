@@ -51,23 +51,12 @@
                         'Task{{ $task->id }}', // Task ID
                         '{{ addslashes($task->title) }}', // Task Name
                         null, // Resource
-                        new Date(
-                            {{ (int) date('Y', $task->start_date) }},
-                            {{ (int) date('m', $task->start_date) - 1 }},
-                            {{ (int) date('d', $task->start_date) }}
-                        ), // Start Date
-                        new Date(
-                            {{ (int) date('Y', $task->end_date) }},
-                            {{ (int) date('m', $task->end_date) - 1 }},
-                            {{ (int) date('d', $task->end_date) }}
-                        ), // End Date
+                        new Date({{ $task->start_date * 1000 }}), // Convert UNIX timestamp to JavaScript Date
+                        new Date({{ $task->end_date * 1000 }}),  // End Date
                         null, // Duration
                         {{ $task->progress ?? 0 }}, // Progress
                         null, // Dependencies
-                    ]
-                    @if (!$loop->last)
-                        ,
-                    @endif
+                    ],
                 @endforeach
             ]);
 

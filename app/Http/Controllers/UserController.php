@@ -82,7 +82,7 @@ class UserController extends Controller
         $data['email'] = $request->email;
         if ($file) {
             $oldFilePath = public_path($file_record->photo);
-            if (file_exists($oldFilePath)) {
+            if ($file_record->photo && file_exists($oldFilePath)) {
                 unlink($oldFilePath);
             }
             $data['photo'] = FileUploader::upload($file, 'user_photos');

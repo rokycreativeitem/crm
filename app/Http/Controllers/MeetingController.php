@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+
 
 class MeetingController extends Controller
 {
@@ -212,5 +214,75 @@ class MeetingController extends Controller
         } else {
             return view('projects.meeting.zoom_meeting', ['meeting' => $meeting]);
         }
+    }
+    public function exportFile(Request $request, $file, $code) {
+
+        $query = Meeting::query();
+
+        $query->where('project_id', project_id_by_code($code));
+
+        if (isset($request->customSearch)) {
+            $string = $request->customSearch;
+            $query->where(function ($q) use ($string) {
+                $q->where('title', 'like', "%{$string}%");
+            });
+        }
+
+        if ($request->date) {
+            $start_date     = date('Y-m-d', strtotime($request->date));
+            $query->whereDate('timestamp_start', $start_date);
+        }
+    
+        $page_data['meetings'] = count($request->all()) > 0 ? $query->get() : Meeting::where('project_id', project_id_by_code($code))->get();
+
+        if ($file == 'pdf') {
+            $pdf = FacadePdf::loadView('projects.meeting.pdf', $page_data);
+            return $pdf->download('meeting.pdf');
+        }
+        if ($file == 'print') {
+            $pdf = FacadePdf::loadView('projects.meeting.pdf', $page_data);
+            return $pdf->stream('meeting.pdf');
+        }
+    
+        if ($file == 'csv') {
+            $fileName = 'meeting.csv';
+
+            $headers = [
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            ];
+    
+            // Use the filtered query to get the projects for CSV
+            $users = count($request->all()) > 0 ? $query->get() : Meeting::where('project_id', project_id_by_code($code))->get();
+    
+            $columns = ['#', 'title', 'project', 'provider', 'start_date'];
+            
+            $callback = function() use ($columns, $users) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+    
+                $count = 1;
+                foreach ($users as $item) {    
+                    fputcsv($file, [
+                        $count,
+                        $item->title,
+                        Project::where('id', $item->project_id)->value('title'),
+                        $item->provider,
+                        date('d-M-y h:i A', strtotime($item->timestamp_meeting))
+                    ]);
+                    $count++;
+                }
+    
+                fclose($file);
+            };
+    
+            return response()->stream($callback, 200, $headers);
+        }
+    
+        // If no valid file type was provided
+        return response()->json(['error' => 'Invalid file type'], 400);
     }
 }

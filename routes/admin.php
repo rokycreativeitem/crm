@@ -116,6 +116,7 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::post('meeting/update/{id}', 'update')->name('meeting.update');
         Route::post('meeting/multi-delete', 'multiDelete')->name('meeting.multi-delete');
         Route::get('meeting/join/{id}', 'join')->name('meeting.join');
+        Route::get('meeting-export/{file}/{code}', 'exportFile')->name('meeting.export-file');
 
     });
 
@@ -229,6 +230,8 @@ Route::middleware(['auth', 'verified', 'admin', 'inject'])->group(function () {
         Route::get('settings/email_temp', 'email_temp')->name('email.temp');
         Route::get('settings/email_temp/edit/{id}', 'email_temp_edit')->name('email.temp.edit');
         Route::post('settings/temp_update/{id}', 'email_temp_update')->name('temp.update');
+
+        Route::get('zoom-settings', 'zoom_settings')->name('zoom-settings');
 
     });
 

@@ -188,7 +188,7 @@ class InvoiceController extends Controller
             ];
     
             // Use the filtered query to get the projects for CSV
-            $users = count($request->all()) > 0 ? $query->get() : User::where('project_id', project_id_by_code($code))->get();
+            $users = count($request->all()) > 0 ? $query->get() : Invoice::where('project_id', project_id_by_code($code))->get();
     
             $columns = ['#', 'title', 'payment', 'status', 'due_date'];
             

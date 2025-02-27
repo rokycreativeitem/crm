@@ -50,7 +50,7 @@
                                 </defs>
                             </svg>
                         </div>
-                        <span class="note-body fs-12px">{{ $project->note }}</span>
+                        <span class="note-body fs-12px">{{ substr_replace($project->note,'...',20) }}</span>
                     </div>
         
                     <div>
@@ -82,7 +82,7 @@
                 <!-- Task Info Section -->
                 <div class="grid-title">
                     <span class="fs-14px">{{ $project->title }}</span>
-                    <div class="fs-12px">
+                    <div class="fs-12px pt-2">
                         <span>{{ $project->user->name }}</span>
                         <span class="code">{{ $project->code }}</span>
                     </div>

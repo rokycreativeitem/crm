@@ -6,6 +6,7 @@ use App\Models\FileUploader;
 use App\Models\Invoice;
 use App\Models\offlinePayment as OfflinePayment;
 use App\Models\Payment_history;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -87,8 +88,7 @@ class OfflinePaymentController extends Controller
 
     public function accept_payment($id)
     {
-
-        $session_payment_details = session('payment_details');
+      
         // validate id
         if (empty($id)) {
             Session::flash('error', get_phrase('Data not found.'));
@@ -97,10 +97,14 @@ class OfflinePaymentController extends Controller
 
         $payment_details = OfflinePayment::where('id', $id)->first();
 
+        $item = str_replace('[','',$payment_details['items']);
+        $item = str_replace(']','',$item);
+        $project_code = Project::where('id', $item)->value('code');
+
         $payment['user_id']         = $payment_details['user_id'];
         $payment['payment_type']    = 'offline';
         $payment['payment_purpose'] = $payment_details['payment_purpose'];
-        $payment['project_code']    = $session_payment_details['items'][0]['project_code'];
+        $payment['project_code']    = $project_code;
         $payment['date_added']      = time();
 
         if ($payment_details->item_type == 'invoice') {

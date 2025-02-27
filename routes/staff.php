@@ -114,6 +114,7 @@ Route::middleware(['auth', 'verified', 'staff', 'check.permission'])->group(func
         Route::post('meeting/update/{id}', 'update')->name('meeting.update');
         Route::post('meeting/multi-delete', 'multiDelete')->name('meeting.multi-delete');
         Route::get('meeting/join/{id}', 'join')->name('meeting.join');
+        Route::get('meeting-export/{file}/{code}', 'exportFile')->name('meeting.export-file');
 
     });
 

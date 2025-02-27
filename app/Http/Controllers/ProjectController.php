@@ -117,14 +117,15 @@ class ProjectController extends Controller
         $status         = collect($project_status)->map(function ($status) {
             return [
                 'title'  => ucwords(str_replace('_',' ',$status)),
-                'amount' => Task::where('status', $status)->count(),
+                'amount' => Task::where('project_id', $this->project->id)->where('status', $status)->count(),
             ];
         });
         $page_data['project_status'] = $status;
 
         $page_data['users']  = User::get();
-        $page_data['staffs'] = User::where('role_id', 3)->get();
+        // $page_data['staffs'] = User::where('role_id', 3)->get();
         $page_data['team']   = Project::where('id', $this->project->id)->first();
+        $page_data['staffs'] = count(json_decode($page_data['team']->staffs));
 
         return view('projects.details', $page_data);
     }
@@ -164,7 +165,7 @@ class ProjectController extends Controller
         }
 
         $project['title']           = $request->title;
-        $project['code']            = Str::random(6);
+        $project['code']            = $request->code;
         $project['description']     = $request->description;
         $project['category_id']     = $request->category_id;
         $project['client_id']       = $request->client_id;
@@ -341,6 +342,7 @@ class ProjectController extends Controller
     
         // Check the file type and generate the appropriate response
         $page_data['projects'] = (count($request->all()) > 0 || get_current_user_role() != 'admin') ? $query->get() : Project::get();
+        
         if ($file == 'pdf') {
             $pdf = FacadePdf::loadView('projects.pdf', $page_data);
             return $pdf->download('projects.pdf');

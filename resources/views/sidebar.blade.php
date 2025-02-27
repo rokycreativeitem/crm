@@ -249,7 +249,7 @@
                     </li>
                 @endif
 
-                @if (has_permission('events', 'event.create', 'event.edit', 'event.store', 'event.delete', 'event.update'))
+                @if (has_permission(['events', 'event.create', 'event.edit', 'event.store', 'event.delete', 'event.update']))
                     <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.events' || $current_route == get_current_user_role() . '.create' || $current_route == get_current_user_role() . '.edit') active showMenu @endif ">
                         <a href="{{ route(get_current_user_role() . '.events') }}">
                             <span>
@@ -278,7 +278,7 @@
                     </li>
                 @endif
 
-                @if (has_permission('dd'))
+                @if (has_permission('addon'))
                     <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.addons') active showMenu @endif">
                         <a href="{{ route(get_current_user_role() . '.addons') }}">
 
@@ -303,7 +303,7 @@
                     </li>
                 @endif
                 
-                @if (has_permission('message', 'message.store', 'message.thread.store', 'message.message_new', 'message.message_left_side_bar'))
+                @if (has_permission(['message', 'message.store', 'message.thread.store', 'message.message_new', 'message.message_left_side_bar']))
                     <li class="sidebar-first-li @if ($current_route == get_current_user_role() . '.message') active showMenu @endif ">
                         <a href="{{ route(get_current_user_role() . '.message') }}">
                             <span>
@@ -321,7 +321,7 @@
                     </li>
                 @endif
               
-                @if (has_permission('report.offline.payment') || has_permission('report.payment.history') || has_permission('report.project') || has_permission('report.client'))
+                @if (has_permission(['report.offline.payment', 'report.payment.history','report.project','report.client']))
                     <li class="sidebar-first-li first-li-have-sub @if ($current_route == get_current_user_role() . '.project_report' || $current_route == get_current_user_role() . '.client_report' || $current_route == get_current_user_role() . '.offline.payments' || $current_route == get_current_user_role() . '.payment_history') active showMenu @endif">
                         <a href="javascript:void(0);">
                             <span>
@@ -371,7 +371,7 @@
                 @endif
 
                 @if (has_permission(
-                        'system_settings',
+                        ['system_settings',
                         'system_settings.update',
                         'payment_settings',
                         'payment_settings.update',
@@ -386,13 +386,14 @@
                         'language.phrase.update',
                         'language.phrase.import',
                         'about',
-                        'save_valid_purchase_code'))
+                        'save_valid_purchase_code']))
                     <li class="sidebar-first-li first-li-have-sub @if (
                         $current_route == get_current_user_role() . '.system_settings' ||
                             $current_route == get_current_user_role() . '.payment_settings' ||
                             $current_route == get_current_user_role() . '.notification_settings' ||
                             $current_route == get_current_user_role() . '.manage_language' ||
                             $current_route == get_current_user_role() . '.email.temp' ||
+                            $current_route == get_current_user_role() . '.zoom-settings' ||
                             $current_route == get_current_user_role() . '.about') active showMenu @endif">
                         <a href="javascript:void(0);">
                             <span>
@@ -424,6 +425,9 @@
                             </li>
                             <li class="sidebar-second-li {{ $current_route == get_current_user_role() . '.manage_language' || $current_route == get_current_user_role() . '.language.phrase.edit' ? 'active' : '' }}">
                                 <a href="{{ route(get_current_user_role() . '.manage_language') }}">{{ get_phrase('Manage Language') }}</a>
+                            </li>
+                            <li class="sidebar-second-li {{ $current_route == get_current_user_role() . '.zoom-settings' ? 'active' : '' }}">
+                                <a href="{{ route(get_current_user_role() . '.zoom-settings') }}">{{ get_phrase('Zoom Settings') }}</a>
                             </li>
 
                             <li class="sidebar-second-li {{ $current_route == get_current_user_role() . '.about' ? 'active' : '' }}"><a href="{{ route(get_current_user_role() . '.about') }}">{{ get_phrase('About') }}</a></li>

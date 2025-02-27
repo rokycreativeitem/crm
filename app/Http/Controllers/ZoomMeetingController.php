@@ -9,9 +9,9 @@ class ZoomMeetingController extends Controller
 {
     public static function createToken()
     {
-        $clientId     = "mFgJ4QB0S_ue5YhRrbQ7yg";
-        $clientSecret = "OZ6m9dwejrFoWywAKDGQK1mh3yRyhyl3";
-        $accountId    = "RG4XYUQ3RKqu8NetilQ9UA";
+        $clientId     = get_settings('zoom_client_id');
+        $clientSecret = get_settings('zoom_client_secret');
+        $accountId    = get_settings('zoom_account_id');
         $oauthUrl     = 'https://zoom.us/oauth/token?grant_type=account_credentials&account_id=' . $accountId;
 
         try {
@@ -55,7 +55,7 @@ class ZoomMeetingController extends Controller
 
     public static function createMeeting($topic, $time)
     {
-        $zoom_account_email = "ponkojr1998@gmail.com";
+        $zoom_account_email = get_settings('zoom_account_email');
         $token              = self::createToken();
    
         // API Endpoint for creating a meeting

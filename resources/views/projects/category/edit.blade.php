@@ -7,6 +7,7 @@
     <div class="fpb7 mb-2">
         <label class="form-label ol-form-label" for="parent">{{ get_phrase('Parent Category') }}</label>
         <select class="form-select ol-form-control ol-select2 ol-modal-select2" name="parent" id="parent">
+            <option value=""> {{get_phrase('Select Parent Category')}} </option>
             @foreach ($categories as $parent)
                 <option value="{{ $parent->id }}" {{ $category->parent == $parent->id ? 'selected' : '' }}> {{ $parent->name }} </option>
             @endforeach

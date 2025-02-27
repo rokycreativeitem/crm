@@ -254,7 +254,7 @@
                                 </defs>
                             </svg>
                         </div>
-                        <span class="note-body">{{ $project->note }}</span>
+                        <span class="note-body">{{ substr_replace($project->note,'...',20) }}</span>
                     </div>
 
                     <div>
@@ -279,10 +279,10 @@
 
                 <!-- Task Info Section -->
                 <div class="grid-title pb-2">
-                    <span>{{ $project->title }}</span>
-                    <div>
-                        <span>{{ substr_replace($project->description, '..', 40) }}</span>
-                        <span>{{ $project->code }}</span>
+                    <span class="fs-14px">{{ $project->title }}</span>
+                    <div class="fs-12px pt-2">
+                        <span>{{ $project->user->name }}</span>
+                        <span class="code">{{ $project->code }}</span>
                     </div>
                 </div>
 
@@ -360,13 +360,13 @@
             },
 
             series: [{
-                name: '{{get_phrase('Total Tickets In This Category')}}',
+                name: '{{get_phrase('Total Task In This Project')}}',
                 data: dataArr
             }],
 
 
             title: {
-                text: '{{get_phrase('Project Category Bar')}}',
+                text: '{{get_phrase('Project Task Bar')}}',
                 align: 'left'
             }
         };

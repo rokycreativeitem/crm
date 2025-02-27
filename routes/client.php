@@ -113,6 +113,8 @@ Route::middleware(['auth', 'verified', 'client', 'inject', 'check.permission'])-
         Route::post('meeting/update/{id}', 'update')->name('meeting.update');
         Route::post('meeting/multi-delete', 'multiDelete')->name('meeting.multi-delete');
         Route::get('meeting/join/{id}', 'join')->name('meeting.join');
+        Route::get('meeting-export/{file}/{code}', 'exportFile')->name('meeting.export-file');
+
 
     });
 
@@ -235,7 +237,7 @@ Route::middleware(['auth', 'verified', 'client', 'inject', 'check.permission'])-
     //     Route::get('client_report', 'client_report')->name('client_report');
 
     // });
-
+    Route::post('payment/offline/store', [OfflinePaymentController::class, 'store'])->name('payment.offline.store');
     Route::get('select-language/{language}', [LanguageController::class, 'select_lng'])->name('select.language');
 
 });

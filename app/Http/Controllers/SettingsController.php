@@ -610,6 +610,10 @@ class SettingsController extends Controller
         return redirect()->back()->with('success', 'File updated successfully!');
     }
 
+    public function zoom_settings() {
+        return view('settings.zoom_setting');
+    }
+
 
 
 }

@@ -198,8 +198,18 @@
                                     <a
                                         href="{{ route('password.request') }}">{{ get_phrase('Forgot Password?') }}</a>
                                 </div>
-                                <button type="submit"
-                                    class="btn ol2-btn-primary w-100 mb-3">{{ get_phrase('Log in') }}</button>
+                                <button type="submit" class="btn ol2-btn-primary w-100 mb-3">{{ get_phrase('Log in') }}</button>
+                                <div class="row mt-2">
+                                    <div class="col-sm-4">
+                                        <button type="button" onclick="$('#email').val('admin@example.com'); $('#password').val('12345678')" class="btn ol2-btn-primary w-100 mb-3">{{ get_phrase('Admin') }}</button>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <button type="button" onclick="$('#email').val('client@example.com'); $('#password').val('12345678')" class="btn ol2-btn-primary w-100 mb-3">{{ get_phrase('Client') }}</button>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <button type="button" onclick="$('#email').val('staff@example.com'); $('#password').val('12345678')" class="btn ol2-btn-primary w-100 mb-3">{{ get_phrase('Staff') }}</button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>

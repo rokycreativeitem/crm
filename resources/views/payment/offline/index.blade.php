@@ -42,7 +42,7 @@
         {{ $bank_information }}
     </div>
 </div>
-<form action="{{ route('payment.offline.store') }}" method="post" enctype="multipart/form-data">@csrf
+<form action="{{ route(get_current_user_role().'.payment.offline.store') }}" method="post" enctype="multipart/form-data">@csrf
     <div class="mb-3">
         <label for="" class="form-label d-flex justify-content-between">
             <span>{{ get_phrase('Payment Document') }}</span>

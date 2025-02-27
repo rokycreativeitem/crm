@@ -98,8 +98,11 @@ class CheckPermissionMiddleware
         if($route == get_current_user_role().'.offline.payments') {
             $route = get_current_user_role().'.report.offline.payment';
         }
+        // if($route == get_current_user_role().'.offline.payments') {
+        //     $route = get_current_user_role().'.report.offline.payment';
+        // }
         
-        if ($route != get_current_user_role().'.project.export-file' && !in_array($route, $prefixedRoutes)) {
+        if (strpos($route, '-export/') < 0 && $route != get_current_user_role().'.project.export-file' && !in_array($route, $prefixedRoutes)) {
             return redirect()->route($dashboardRoute)->with('error', 'You do not have permission to access this page.');
         }
 
