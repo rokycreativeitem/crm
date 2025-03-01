@@ -1532,7 +1532,7 @@ class ServerSideDataController extends Controller
             })
 
             ->addColumn('project', function ($report) {
-                return Project::where('code', $report->project_code)->first()->title;
+                return Project::where('code', $report->project_code)->first()?->title;
             })
             ->addColumn('amount', function ($report) {
                 return currency($report->total_amount);

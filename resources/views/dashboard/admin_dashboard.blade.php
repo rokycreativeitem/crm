@@ -173,7 +173,7 @@
                                     @endphp
                                         <tr>
                                             <th scope="row"> {{ $key + 1 }} </th>
-                                            <td> {{ $recent->title }} <p>{{$recent->user?->name}}</p></td>
+                                            <td> {{ $recent->title }} </td>
                                             <td> {{ date('d-M-y h:i A', $recent->start_date) }} </td>
                                             <td>
                                                 @php

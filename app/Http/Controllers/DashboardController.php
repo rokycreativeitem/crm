@@ -45,7 +45,7 @@ class DashboardController extends Controller
         $page_data['revenue'] = $revenue_status;
         $page_data['resent_projects'] = Project::orderBy('id','DESC')->limit(5)->get();
         $page_data['active_projects'] = Project::where('status','in_progress')->limit(5)->get();
-        $page_data['resent_tasks'] = Task::orderBy('id','DESC')->get();
+        $page_data['resent_tasks'] = Task::orderBy('id','DESC')->limit(5)->get();
 
         $page_data['clients'] = User::where('role_id', 2)->get();
         $page_data['staffs'] = User::where('role_id', 3)->get();
